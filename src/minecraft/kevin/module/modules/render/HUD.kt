@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL20
 import java.awt.Color
 import java.io.Closeable
 import java.text.DecimalFormat
-import java.util.ArrayList
+import java.util.*
 
 class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCategory.RENDER) {
 
@@ -84,6 +84,11 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
     private val armorDamageCustomBlue = IntegerValue("ArmorDamageCustomBlue",255,0,255)
     private val armorDamageRainbowX = FloatValue("ArmorDamageRainbowX",-1000F, -2000F, 2000F)
     private val armorDamageRainbowY = FloatValue("ArmorDamageRainbowY",-1000F, -2000F, 2000F)
+
+    private val packetCounterHeight = IntegerValue("PacketCounterHeight", 50, 30, 150)
+    private val packetCounterWidth = IntegerValue("PacketCounterWidth", 100, 100, 300)
+    private val packetCounterUpdateDelay = IntegerValue("PacketCounterUpdateDelay",500,0,2000)
+    private val packetCounterMessage = ListValue("PacketCounterMessageMode", arrayOf("None","Right","Up"),"Right")
 
 
     private val notifications = mutableListOf<Notification>()
@@ -1010,19 +1015,22 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
     @ElementInfo(name = "PacketCounter")
     class PacketCounter(x: Double = 100.0, y: Double = 30.0, scale: Float = 1F, side: Side = Side(Side.Horizontal.LEFT, Side.Vertical.UP)) : Element(x, y, scale, side) {
 
-        private val height = IntegerValue("Height", 50, 30, 150)
-        private val width = IntegerValue("Width", 100, 100, 300)
-
         var sentPackets = 0
         var receivedPackets = 0
         private var sentPacketsList = ArrayList<Int>()
         private var receivedPacketsList = ArrayList<Int>()
-        private var lastTick = -1
+        private var Timer = MSTimer()
 
         override fun drawElement(): Border {
-            val width = width.get()
-            if (lastTick != mc.thePlayer!!.ticksExisted) {
-                lastTick = mc.thePlayer!!.ticksExisted
+            val hud = Kevin.getInstance.moduleManager.getModule("HUD") as HUD
+
+            val height = hud.packetCounterHeight
+            val width = hud.packetCounterWidth.get()
+            val delay = hud.packetCounterUpdateDelay.get()
+            val tickdelay = delay/50
+            val messageMode = hud.packetCounterMessage.get()
+            if (Timer.hasTimePassed(delay.toLong())) {
+                Timer.reset()
                 sentPacketsList.add(sentPackets)
                 receivedPacketsList.add(receivedPackets)
                 sentPackets = 0
@@ -1049,20 +1057,20 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
             val sentStart = (if (sentSize > width) sentSize - width else 0)
             val receivedStart = (if (receivedSize > width) receivedSize - width else 0)
             for (i in sentStart until sentSize - 1) {
-                val y = sentPacketsList[i] * 10 * 0.25F
-                val y1 = sentPacketsList[i + 1] * 10 * 0.25F
+                val y = sentPacketsList[i] * 10 * 0.25F / tickdelay
+                val y1 = sentPacketsList[i + 1] * 10 * 0.25F / tickdelay
 
                 RenderUtils.glColor(Color(255, 0, 0, 255))
                 GL11.glVertex2d(i.toDouble() - sentStart, height.get() + 1 - y.coerceAtMost(height.get().toFloat()).toDouble())
                 GL11.glVertex2d(i + 1.0 - sentStart, height.get() + 1 - y1.coerceAtMost(height.get().toFloat()).toDouble())
             }
             for (i in receivedStart until receivedSize - 1) {
-                val y = receivedPacketsList[i] * 10 * 0.03F
-                val y1 = receivedPacketsList[i + 1] * 10 * 0.03F
+                val y = receivedPacketsList[i] * 10 * 0.03F / tickdelay
+                val y1 = receivedPacketsList[i + 1] * 10 * 0.03F / tickdelay
 
                 RenderUtils.glColor(Color(0, 255, 0, 255))
-                GL11.glVertex2d(i.toDouble() - receivedStart, height.get()*2 + 1 - y.coerceAtMost(height.get().toFloat()).toDouble())
-                GL11.glVertex2d(i + 1.0 - receivedStart, height.get()*2 + 1 - y1.coerceAtMost(height.get().toFloat()).toDouble())
+                GL11.glVertex2d(i.toDouble() - receivedStart, height.get()*2 + 1 - y.coerceAtMost(height.get().toFloat()).toDouble() + if (messageMode.equals("Up",true)) Kevin.getInstance.fontManager.font35!!.fontHeight else 0)
+                GL11.glVertex2d(i + 1.0 - receivedStart, height.get()*2 + 1 - y1.coerceAtMost(height.get().toFloat()).toDouble() + if (messageMode.equals("Up",true)) Kevin.getInstance.fontManager.font35!!.fontHeight else 0)
             }
 
             GL11.glEnd()
@@ -1074,13 +1082,42 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
             GL11.glDisable(GL11.GL_BLEND)
             GlStateManager.resetColor()
 
-            GL11.glPushMatrix()
-            GL11.glScaled(0.6,0.6,0.6)
-            val y1 = sentPacketsList.last() * 10 * 0.25F
-            val y12 = receivedPacketsList.last() * 10 * 0.03F
-            Kevin.getInstance.fontManager.font35!!.drawString("Sent ${sentPacketsList.last()} Packets",(sentPacketsList.lastIndex + 4F - sentStart)/0.6F,(height.get() + 1 - y1.coerceAtMost(height.get().toFloat()))/0.6F,Color(255, 0, 0, 255).rgb)
-            Kevin.getInstance.fontManager.font35!!.drawString("Received ${receivedPacketsList.last()} Packets",(receivedPacketsList.lastIndex + 4F - receivedStart)/0.6F,(height.get()*2 + 1 - y12.coerceAtMost(height.get().toFloat()))/0.6F,Color(0, 255, 0, 255).rgb)
-            GL11.glPopMatrix()
+
+            if (!messageMode.equals("None",true)) {
+                GL11.glPushMatrix()
+                GL11.glScaled(0.6, 0.6, 0.6)
+                if (messageMode.equals("Right",true)) {
+                    val y1 = sentPacketsList.last() * 10 * 0.25F / tickdelay
+                    val y12 = receivedPacketsList.last() * 10 * 0.03F / tickdelay
+                    Kevin.getInstance.fontManager.font35!!.drawString(
+                        "Sent ${sentPacketsList.last()} packets in the past $delay MS.",
+                        (sentPacketsList.lastIndex + 4F - sentStart) / 0.6F,
+                        (height.get() + 1 - y1.coerceAtMost(height.get().toFloat())) / 0.6F,
+                        Color(255, 0, 0, 255).rgb
+                    )
+                    Kevin.getInstance.fontManager.font35!!.drawString(
+                        "Received ${receivedPacketsList.last()} packets in the past $delay MS.",
+                        (receivedPacketsList.lastIndex + 4F - receivedStart) / 0.6F,
+                        (height.get() * 2 + 1 - y12.coerceAtMost(height.get().toFloat())) / 0.6F,
+                        Color(0, 255, 0, 255).rgb
+                    )
+                }else if (messageMode.equals("Up",true)){
+                    Kevin.getInstance.fontManager.font35!!.drawString(
+                        "Sent ${sentPacketsList.last()} packets in the past $delay MS.",
+                        0F,
+                        (-Kevin.getInstance.fontManager.font35!!.fontHeight/2) / 0.6F,
+                        Color(255, 0, 0, 255).rgb
+                    )
+                    Kevin.getInstance.fontManager.font35!!.drawString(
+                        "Received ${receivedPacketsList.last()} packets in the past $delay MS.",
+                        0F,
+                        (height.get() + Kevin.getInstance.fontManager.font35!!.fontHeight/2) / 0.6F,
+                        Color(0, 255, 0, 255).rgb
+                    )
+                }
+                GL11.glPopMatrix()
+            }
+
             return Border(0F,0F,0F,0F)
         }
     }
