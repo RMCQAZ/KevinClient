@@ -1,8 +1,6 @@
 package kevin.module.modules.render
 
-import kevin.event.EventTarget
-import kevin.event.Render2DEvent
-import kevin.event.UpdateEvent
+import kevin.event.*
 import kevin.main.Kevin
 import kevin.module.*
 import kevin.utils.*
@@ -17,6 +15,7 @@ import org.lwjgl.opengl.GL20
 import java.awt.Color
 import java.io.Closeable
 import java.text.DecimalFormat
+import java.util.ArrayList
 
 class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCategory.RENDER) {
 
@@ -25,6 +24,7 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
     private val armor = BooleanValue("Armor",true)
     private val effects = BooleanValue("Effects",true)
     private val clientName = BooleanValue("ClientName",true)
+    private val packetCounter = BooleanValue("PacketCounter",true)
 
     private val notificationSize = FloatValue("NotificationSize",1F,0.1F,1F)
     private val notificationMode = ListValue("NotificationMode", arrayOf("LiquidBounce-Kevin","Kevin"),"LiquidBounce-Kevin")
@@ -92,6 +92,7 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
     private var clientname:ClientName? = null
     private var aRmor:Armor? = null
     private var eFfects:Effects? = null
+    private var packetcounter:PacketCounter? = null
 
     @EventTarget
     fun onRender2D(event: Render2DEvent?) {
@@ -101,6 +102,7 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
         if (clientname != null) array.add(clientname!!)
         if (aRmor != null) array.add(aRmor!!)
         if (eFfects != null) array.add(eFfects!!)
+        if (packetcounter!=null) array.add(packetcounter!!)
         array.forEach {
                 GL11.glPushMatrix()
 
@@ -117,6 +119,19 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
                 GL11.glColor4f(1F,1F,1F,1F)
                 GL11.glPopMatrix()
             }
+    }
+
+    @EventTarget
+    fun onPacket(event: PacketEvent){
+        if (packetcounter != null){
+            val packet = event.packet
+            if (packet.javaClass.name.contains("net.minecraft.network.play.client.",ignoreCase = true)){
+                packetcounter!!.sentPackets += 1
+            }
+            if (packet.javaClass.name.contains("net.minecraft.network.play.server.",ignoreCase = true)){
+                packetcounter!!.receivedPackets += 1
+            }
+        }
     }
 
     @EventTarget
@@ -166,6 +181,15 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
                 eFfects = null
             }
         }
+        if (packetCounter.get()){
+            if (packetcounter == null){
+                packetcounter = PacketCounter()
+            }
+        }else{
+            if (packetcounter != null){
+                packetcounter = null
+            }
+        }
         if (NOtification != null && NOtification!!.scale != notificationSize.get()) NOtification!!.scale = notificationSize.get()
         if (ArrayList != null && ArrayList!!.scale != arrayListSize.get()) ArrayList!!.scale = arrayListSize.get()
         if (clientname != null && clientname!!.scale != clientNameSize.get()) clientname!!.scale = clientNameSize.get()
@@ -174,6 +198,7 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
         if (NOtification != null) array.add(NOtification!!)
         if (clientname != null) array.add(clientname!!)
         if (aRmor != null) array.add(aRmor!!)
+        if (packetcounter != null) array.add(packetcounter!!)
         array.forEach {
             it.updateElement()
         }
@@ -979,6 +1004,84 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
                 y = -10F
 
             return Border(2F, fontRenderer.FONT_HEIGHT.toFloat(), -width - 2F, y + fontRenderer.FONT_HEIGHT - 2F)
+        }
+    }
+
+    @ElementInfo(name = "PacketCounter")
+    class PacketCounter(x: Double = 100.0, y: Double = 30.0, scale: Float = 1F, side: Side = Side(Side.Horizontal.LEFT, Side.Vertical.UP)) : Element(x, y, scale, side) {
+
+        private val height = IntegerValue("Height", 50, 30, 150)
+        private val width = IntegerValue("Width", 100, 100, 300)
+
+        var sentPackets = 0
+        var receivedPackets = 0
+        private var sentPacketsList = ArrayList<Int>()
+        private var receivedPacketsList = ArrayList<Int>()
+        private var lastTick = -1
+
+        override fun drawElement(): Border {
+            val width = width.get()
+            if (lastTick != mc.thePlayer!!.ticksExisted) {
+                lastTick = mc.thePlayer!!.ticksExisted
+                sentPacketsList.add(sentPackets)
+                receivedPacketsList.add(receivedPackets)
+                sentPackets = 0
+                receivedPackets = 0
+                while (sentPacketsList.size > width) {
+                    sentPacketsList.removeAt(0)
+                }
+                while (receivedPacketsList.size > width) {
+                    receivedPacketsList.removeAt(0)
+                }
+            }
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
+            GL11.glEnable(GL11.GL_BLEND)
+            GL11.glEnable(GL11.GL_LINE_SMOOTH)
+            GL11.glLineWidth(2F)
+            GL11.glDisable(GL11.GL_TEXTURE_2D)
+            GL11.glDisable(GL11.GL_DEPTH_TEST)
+            GL11.glDepthMask(false)
+
+            GL11.glBegin(GL11.GL_LINES)
+
+            val sentSize = sentPacketsList.size
+            val receivedSize = receivedPacketsList.size
+            val sentStart = (if (sentSize > width) sentSize - width else 0)
+            val receivedStart = (if (receivedSize > width) receivedSize - width else 0)
+            for (i in sentStart until sentSize - 1) {
+                val y = sentPacketsList[i] * 10 * 0.25F
+                val y1 = sentPacketsList[i + 1] * 10 * 0.25F
+
+                RenderUtils.glColor(Color(255, 0, 0, 255))
+                GL11.glVertex2d(i.toDouble() - sentStart, height.get() + 1 - y.coerceAtMost(height.get().toFloat()).toDouble())
+                GL11.glVertex2d(i + 1.0 - sentStart, height.get() + 1 - y1.coerceAtMost(height.get().toFloat()).toDouble())
+            }
+            for (i in receivedStart until receivedSize - 1) {
+                val y = receivedPacketsList[i] * 10 * 0.03F
+                val y1 = receivedPacketsList[i + 1] * 10 * 0.03F
+
+                RenderUtils.glColor(Color(0, 255, 0, 255))
+                GL11.glVertex2d(i.toDouble() - receivedStart, height.get()*2 + 1 - y.coerceAtMost(height.get().toFloat()).toDouble())
+                GL11.glVertex2d(i + 1.0 - receivedStart, height.get()*2 + 1 - y1.coerceAtMost(height.get().toFloat()).toDouble())
+            }
+
+            GL11.glEnd()
+
+            GL11.glEnable(GL11.GL_TEXTURE_2D)
+            GL11.glDisable(GL11.GL_LINE_SMOOTH)
+            GL11.glEnable(GL11.GL_DEPTH_TEST)
+            GL11.glDepthMask(true)
+            GL11.glDisable(GL11.GL_BLEND)
+            GlStateManager.resetColor()
+
+            GL11.glPushMatrix()
+            GL11.glScaled(0.6,0.6,0.6)
+            val y1 = sentPacketsList.last() * 10 * 0.25F
+            val y12 = receivedPacketsList.last() * 10 * 0.03F
+            Kevin.getInstance.fontManager.font35!!.drawString("Sent ${sentPacketsList.last()} Packets",(sentPacketsList.lastIndex + 4F - sentStart)/0.6F,(height.get() + 1 - y1.coerceAtMost(height.get().toFloat()))/0.6F,Color(255, 0, 0, 255).rgb)
+            Kevin.getInstance.fontManager.font35!!.drawString("Received ${receivedPacketsList.last()} Packets",(receivedPacketsList.lastIndex + 4F - receivedStart)/0.6F,(height.get()*2 + 1 - y12.coerceAtMost(height.get().toFloat()))/0.6F,Color(0, 255, 0, 255).rgb)
+            GL11.glPopMatrix()
+            return Border(0F,0F,0F,0F)
         }
     }
 }
