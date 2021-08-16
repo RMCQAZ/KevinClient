@@ -1,0 +1,1642 @@
+{
+  "name": "Hanukkah",
+  "version": 1,
+  "baseName": "Dark",
+  "inputQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": -38,
+        "green": -82,
+        "blue": 75,
+        "alpha": -28
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "elementQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 73,
+        "green": 90,
+        "blue": -123,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "containerQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": -55,
+        "green": -101,
+        "blue": 52,
+        "alpha": -96
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "footerQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 86,
+        "green": 108,
+        "blue": -90,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "headerQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 86,
+        "green": 108,
+        "blue": -90,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "backgroundQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": -8,
+        "green": -17,
+        "blue": -17,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "bannerQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 86,
+        "green": 108,
+        "blue": -90,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "bannerDividerQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 120,
+        "green": -100,
+        "blue": -89,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "horizontalDividerQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 33,
+        "green": 48,
+        "blue": 87,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "sectionQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 73,
+        "green": 90,
+        "blue": -123,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "innerHeaderQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 86,
+        "green": 108,
+        "blue": -90,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "borderColorQuad": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "textData": {
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -14,
+        "green": -21,
+        "blue": -37,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textShadow": false,
+    "fontSize": 18,
+    "guiFont": "OPEN_SANS_BOLD"
+  },
+  "fancyFont": {
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textShadow": false,
+    "fontSize": 18,
+    "guiFont": "OPEN_SANS_SEMIBOLD"
+  },
+  "headerTextData": {
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textShadow": false,
+    "fontSize": 18,
+    "guiFont": "FJALLA_ONE"
+  },
+  "oldFont": {
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textShadow": false,
+    "fontSize": 18,
+    "guiFont": "MINECRAFT"
+  },
+  "boldFont": {
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textShadow": false,
+    "fontSize": 18,
+    "guiFont": "OPEN_SANS_BOLD"
+  },
+  "placeholderTextData": {
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -10,
+        "green": -10,
+        "blue": -10,
+        "alpha": 51
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textShadow": false,
+    "fontSize": 18,
+    "guiFont": "OPEN_SANS_SEMIBOLD"
+  },
+  "unselectedTextData": {
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -128
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textShadow": false,
+    "fontSize": 18,
+    "guiFont": "OPEN_SANS_SEMIBOLD"
+  },
+  "successTextData": {
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": 0,
+        "green": -53,
+        "blue": 54,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textShadow": false,
+    "fontSize": 18,
+    "guiFont": "OPEN_SANS_SEMIBOLD"
+  },
+  "buttonRenderer": "DEFAULT",
+  "primaryButtonData": {
+    "color": {
+      "enabled": true,
+      "color": {
+        "red": -38,
+        "green": -82,
+        "blue": 75,
+        "alpha": -50
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "hoverColor": {
+      "enabled": true,
+      "color": {
+        "red": -61,
+        "green": -121,
+        "blue": 0,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "secondaryButtonData": {
+    "color": {
+      "enabled": true,
+      "color": {
+        "red": -90,
+        "green": -83,
+        "blue": -71,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "hoverColor": {
+      "enabled": true,
+      "color": {
+        "red": -72,
+        "green": -61,
+        "blue": -42,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "specialButtonData": {
+    "color": {
+      "enabled": true,
+      "color": {
+        "red": -38,
+        "green": -82,
+        "blue": 75,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "hoverColor": {
+      "enabled": true,
+      "color": {
+        "red": -31,
+        "green": -65,
+        "blue": 115,
+        "alpha": -28
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "deleteButtonData": {
+    "color": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": 59,
+        "blue": 59,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "hoverColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": 79,
+        "blue": 79,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "downloadButtonData": {
+    "color": {
+      "enabled": true,
+      "color": {
+        "red": -2,
+        "green": -59,
+        "blue": 70,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "hoverColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -48,
+        "blue": 105,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "insiderButtonData": {
+    "color": {
+      "enabled": true,
+      "color": {
+        "red": -2,
+        "green": -73,
+        "blue": 48,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "hoverColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -63,
+        "blue": 77,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "selectedPillsData": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 43,
+        "green": 43,
+        "blue": 43,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "hoverPillsData": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 43,
+        "green": 43,
+        "blue": 43,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "incrementData": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": 88,
+        "green": 91,
+        "blue": 97,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "decrementData": {
+    "quadColor": {
+      "enabled": true,
+      "color": {
+        "red": -90,
+        "green": -83,
+        "blue": -71,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadTextureWidth": 0.0,
+    "quadTextureHeight": 0.0
+  },
+  "outlineData": {
+    "border": false,
+    "top": 4.0,
+    "right": 4.0,
+    "bottom": 4.0,
+    "left": 4.0,
+    "topColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "rightColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "bottomColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "leftColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "topLeftRadius": 3.0,
+    "topRightRadius": 3.0,
+    "bottomRightRadius": 3.0,
+    "bottomLeftRadius": 3.0
+  },
+  "roundingData": {
+    "rounding": true,
+    "roundingRadius": 3.0
+  },
+  "shadowData": {
+    "shadow": false,
+    "shadowOffsetX": 15.0,
+    "shadowOffsetY": 15.0,
+    "shadowColor": {
+      "enabled": true,
+      "color": {
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "blurAmount": 10.0
+  },
+  "dropdownShadowData": {
+    "shadow": false,
+    "shadowOffsetX": 15.0,
+    "shadowOffsetY": 15.0,
+    "shadowColor": {
+      "enabled": true,
+      "color": {
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "blurAmount": 10.0
+  },
+  "scrollbarData": {
+    "scrollbarColor": {
+      "enabled": true,
+      "color": {
+        "red": -38,
+        "green": -82,
+        "blue": 75,
+        "alpha": -86
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "scrollSliderColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "renderer": "DEFAULT",
+    "rounding": true
+  },
+  "toggleSwitchData": {
+    "style": "ROUNDED",
+    "switchColor": {
+      "enabled": true,
+      "color": {
+        "red": -14,
+        "green": -21,
+        "blue": -37,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "backgroundColor": {
+      "enabled": true,
+      "color": {
+        "red": 73,
+        "green": 90,
+        "blue": -123,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "activeBackgroundColor": {
+      "enabled": true,
+      "color": {
+        "red": 33,
+        "green": 48,
+        "blue": 87,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "sliderData": {
+    "style": "ROUNDED",
+    "backgroundColor": {
+      "enabled": true,
+      "color": {
+        "red": -38,
+        "green": -82,
+        "blue": 75,
+        "alpha": -50
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "sliderColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "outlineColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "replaySliderData": {
+    "style": "ROUNDED",
+    "backgroundColor": {
+      "enabled": true,
+      "color": {
+        "red": 31,
+        "green": 31,
+        "blue": 31,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "sliderColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "outlineColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "dropdownData": {
+    "buttonColor": {
+      "enabled": true,
+      "color": {
+        "red": 33,
+        "green": 48,
+        "blue": 87,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "backgroundColor": {
+      "enabled": true,
+      "color": {
+        "red": -38,
+        "green": -82,
+        "blue": 75,
+        "alpha": -50
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "highlight": {
+      "value": true
+    },
+    "highlightColor": {
+      "enabled": true,
+      "color": {
+        "red": 73,
+        "green": 90,
+        "blue": -123,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "outlineData": {
+      "border": false,
+      "top": 4.0,
+      "right": 4.0,
+      "bottom": 4.0,
+      "left": 4.0,
+      "topColor": {
+        "enabled": true,
+        "color": {
+          "red": 0,
+          "green": 0,
+          "blue": 0,
+          "alpha": -1
+        },
+        "breathingSpeed": 1,
+        "mode": "STATIC",
+        "up": true
+      },
+      "rightColor": {
+        "enabled": true,
+        "color": {
+          "red": 0,
+          "green": 0,
+          "blue": 0,
+          "alpha": -1
+        },
+        "breathingSpeed": 1,
+        "mode": "STATIC",
+        "up": true
+      },
+      "bottomColor": {
+        "enabled": true,
+        "color": {
+          "red": 0,
+          "green": 0,
+          "blue": 0,
+          "alpha": -1
+        },
+        "breathingSpeed": 1,
+        "mode": "STATIC",
+        "up": true
+      },
+      "leftColor": {
+        "enabled": true,
+        "color": {
+          "red": 0,
+          "green": 0,
+          "blue": 0,
+          "alpha": -1
+        },
+        "breathingSpeed": 1,
+        "mode": "STATIC",
+        "up": true
+      },
+      "topLeftRadius": 3.0,
+      "topRightRadius": 3.0,
+      "bottomRightRadius": 3.0,
+      "bottomLeftRadius": 3.0
+    }
+  },
+  "titleDropDownData": {
+    "buttonColor": {
+      "enabled": true,
+      "color": {
+        "red": 61,
+        "green": 61,
+        "blue": 61,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "backgroundColor": {
+      "enabled": true,
+      "color": {
+        "red": 61,
+        "green": 61,
+        "blue": 61,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "highlight": {
+      "value": true
+    },
+    "highlightColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": 51
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "outlineData": {
+      "border": true,
+      "top": 1.0,
+      "right": 1.0,
+      "bottom": 1.0,
+      "left": 1.0,
+      "topColor": {
+        "enabled": true,
+        "color": {
+          "red": -1,
+          "green": -1,
+          "blue": -1,
+          "alpha": -1
+        },
+        "breathingSpeed": 1,
+        "mode": "STATIC",
+        "up": true
+      },
+      "rightColor": {
+        "enabled": true,
+        "color": {
+          "red": -1,
+          "green": -1,
+          "blue": -1,
+          "alpha": -1
+        },
+        "breathingSpeed": 1,
+        "mode": "STATIC",
+        "up": true
+      },
+      "bottomColor": {
+        "enabled": true,
+        "color": {
+          "red": -1,
+          "green": -1,
+          "blue": -1,
+          "alpha": -1
+        },
+        "breathingSpeed": 1,
+        "mode": "STATIC",
+        "up": true
+      },
+      "leftColor": {
+        "enabled": true,
+        "color": {
+          "red": -1,
+          "green": -1,
+          "blue": -1,
+          "alpha": -1
+        },
+        "breathingSpeed": 1,
+        "mode": "STATIC",
+        "up": true
+      },
+      "topLeftRadius": 0.0,
+      "topRightRadius": 0.0,
+      "bottomRightRadius": 0.0,
+      "bottomLeftRadius": 0.0
+    }
+  },
+  "keybindData": {
+    "backgroundColor": {
+      "enabled": true,
+      "color": {
+        "red": 9,
+        "green": 9,
+        "blue": 9,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": true,
+      "color": {
+        "red": -10,
+        "green": -10,
+        "blue": -10,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "iconData": {
+    "color": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "hoverColor": {
+      "enabled": true,
+      "color": {
+        "red": 44,
+        "green": -83,
+        "blue": -36,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "chatHoverColor": {
+    "enabled": true,
+    "color": {
+      "red": 0,
+      "green": 0,
+      "blue": 0,
+      "alpha": -1
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  },
+  "chatHoverOutline": {
+    "border": true,
+    "top": 1.0,
+    "right": 1.0,
+    "bottom": 1.0,
+    "left": 1.0,
+    "topColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "rightColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "bottomColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "leftColor": {
+      "enabled": true,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "topLeftRadius": 0.0,
+    "topRightRadius": 0.0,
+    "bottomRightRadius": 0.0,
+    "bottomLeftRadius": 0.0
+  },
+  "checkboxData": {
+    "enableColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "disableColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "colorPickerData": {
+    "outlineColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "quadColor": {
+      "enabled": false,
+      "color": {
+        "red": 61,
+        "green": 61,
+        "blue": 61,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "buttonColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "hoverButtonColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "activeButtonColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "inputFieldData": {
+    "backgroundColor": {
+      "enabled": true,
+      "color": {
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": false,
+      "color": {
+        "red": 113,
+        "green": -103,
+        "blue": -90,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "placeHolderColor": {
+      "enabled": true,
+      "color": {
+        "red": -38,
+        "green": -82,
+        "blue": 75,
+        "alpha": 0
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "iconColor": {
+      "enabled": false,
+      "color": {
+        "red": 113,
+        "green": -103,
+        "blue": -90,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "titleInputFieldData": {
+    "backgroundColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "placeHolderColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "iconColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "paginationData": {
+    "outlineColor": {
+      "enabled": true,
+      "color": {
+        "red": -38,
+        "green": -82,
+        "blue": 75,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "textColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "activeTextColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "blockedTextColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "buttonColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "rightClickData": {
+    "quadColor": {
+      "enabled": false,
+      "color": {
+        "red": 61,
+        "green": 61,
+        "blue": 61,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "dividerColor": {
+      "enabled": false,
+      "color": {
+        "red": -10,
+        "green": -10,
+        "blue": -10,
+        "alpha": 26
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "hoverColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": 26
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "tooltipData": {
+    "outlineColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    },
+    "backgroundColor": {
+      "enabled": false,
+      "color": {
+        "red": -1,
+        "green": -1,
+        "blue": -1,
+        "alpha": -1
+      },
+      "breathingSpeed": 1,
+      "mode": "STATIC",
+      "up": true
+    }
+  },
+  "textSelection": {
+    "enabled": true,
+    "color": {
+      "red": 0,
+      "green": 127,
+      "blue": -1,
+      "alpha": -128
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  },
+  "folderColor": {
+    "enabled": true,
+    "color": {
+      "red": -1,
+      "green": -36,
+      "blue": 80,
+      "alpha": -1
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  },
+  "favoriteColor": {
+    "enabled": true,
+    "color": {
+      "red": -2,
+      "green": -59,
+      "blue": 70,
+      "alpha": -1
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  },
+  "enableBackdrop": {
+    "value": false
+  },
+  "backdropColor": {
+    "enabled": true,
+    "color": {
+      "red": 0,
+      "green": 0,
+      "blue": 0,
+      "alpha": 112
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  },
+  "popupBackdropColor": {
+    "enabled": true,
+    "color": {
+      "red": 0,
+      "green": 0,
+      "blue": 0,
+      "alpha": 112
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  },
+  "headerOneColor": {
+    "enabled": true,
+    "color": {
+      "red": 44,
+      "green": -83,
+      "blue": -36,
+      "alpha": -1
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  },
+  "newItemsColor": {
+    "enabled": true,
+    "color": {
+      "red": -107,
+      "green": 53,
+      "blue": -11,
+      "alpha": -1
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  },
+  "mainHeaderColor": {
+    "enabled": true,
+    "color": {
+      "red": -2,
+      "green": -73,
+      "blue": 48,
+      "alpha": -1
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  },
+  "subHeaderColor": {
+    "enabled": true,
+    "color": {
+      "red": 44,
+      "green": -83,
+      "blue": -36,
+      "alpha": -1
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  },
+  "bulletColor": {
+    "enabled": true,
+    "color": {
+      "red": 44,
+      "green": -83,
+      "blue": -36,
+      "alpha": -1
+    },
+    "breathingSpeed": 1,
+    "mode": "STATIC",
+    "up": true
+  }
+}

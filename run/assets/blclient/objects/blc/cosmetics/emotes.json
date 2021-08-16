@@ -1,0 +1,1767 @@
+{
+  "emoteData": [
+    {
+      "cosmeticId": 1,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "best_mates",
+        "title": "Best Mates",
+        "looping": 6
+      }
+    },
+    {
+      "cosmeticId": 2,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "boneless",
+        "title": "Boneless",
+        "looping": 2
+      }
+    },
+    {
+      "cosmeticId": 3,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "bow",
+        "title": "Bow",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 4,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "boy",
+        "title": "Boyyy",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 5,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "calculated",
+        "title": "Calculated",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 6,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "chicken",
+        "title": "Chicken",
+        "looping": 4
+      }
+    },
+    {
+      "cosmeticId": 7,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "clapping",
+        "title": "Clapping",
+        "looping": 3
+      }
+    },
+    {
+      "cosmeticId": 8,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "confused",
+        "title": "Confused",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 9,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.CryingEmote",
+        "id": "crying",
+        "title": "Crying",
+        "looping": 3
+      }
+    },
+    {
+      "cosmeticId": 10,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "dab",
+        "title": "Dab",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 11,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "default",
+        "title": "Dance moves",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 12,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "disco_fever",
+        "title": "Disco Fever",
+        "looping": 2
+      }
+    },
+    {
+      "cosmeticId": 13,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "electro_shuffle",
+        "title": "Electro Shuffle",
+        "looping": 2
+      }
+    },
+    {
+      "cosmeticId": 14,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "facepalm",
+        "title": "Facepalm",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 15,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "fist",
+        "title": "Fist",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 16,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "floss",
+        "title": "Floss",
+        "looping": 3
+      }
+    },
+    {
+      "cosmeticId": 17,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "free_flow",
+        "title": "Free Flow",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 18,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "fresh",
+        "title": "Fresh",
+        "looping": 2
+      }
+    },
+    {
+      "cosmeticId": 19,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "gangnam_style",
+        "title": "Gangnam",
+        "looping": 4
+      }
+    },
+    {
+      "cosmeticId": 20,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "get_funky",
+        "title": "Get Funky",
+        "looping": 2
+      }
+    },
+    {
+      "cosmeticId": 21,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "hype",
+        "title": "Hype",
+        "looping": 3
+      }
+    },
+    {
+      "cosmeticId": 22,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "infinite_dab",
+        "title": "Infinite Dab",
+        "looping": 4
+      }
+    },
+    {
+      "cosmeticId": 23,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "laughing",
+        "title": "Laughing",
+        "looping": 2
+      }
+    },
+    {
+      "cosmeticId": 24,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "no",
+        "title": "No",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 25,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "orange_justice",
+        "title": "Orange Justice",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 26,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "pointing",
+        "title": "Pointing",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 27,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.PopcornEmote",
+        "id": "popcorn",
+        "title": "Popcorn",
+        "looping": 2,
+        "props": [
+          "prop_popcorn"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 28,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.PureSaltEmote",
+        "id": "pure_salt",
+        "title": "Pure Salt",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 29,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.RockPaperScissorsEmote",
+        "id": "rock_paper_scissors",
+        "title": "RPS",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 30,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.RockPaperScissorsEmote",
+        "id": "rock_paper_scissors",
+        "title": "RPS",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 31,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.RockPaperScissorsEmote",
+        "id": "rock_paper_scissors",
+        "title": "RPS",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 32,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "salute",
+        "title": "Salute",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 33,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "shimmer",
+        "title": "Shimmer",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 34,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "shrug",
+        "title": "Shrug",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 35,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "skibidi",
+        "title": "Skibidi",
+        "looping": 4
+      }
+    },
+    {
+      "cosmeticId": 36,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "squat_kick",
+        "title": "Squat Kick",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 37,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.StarPowerEmote",
+        "id": "star_power",
+        "title": "Star Power",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 38,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "t_pose",
+        "title": "T-Pose",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 39,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "take_the_l",
+        "title": "Take The L",
+        "looping": 4
+      }
+    },
+    {
+      "cosmeticId": 40,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "thinking",
+        "title": "Thinking",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 41,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "tidy",
+        "title": "Tidy",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 42,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "wave",
+        "title": "Wave",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 43,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "yes",
+        "title": "Yes",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 44,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.halloween.RisingFromDeadEmote",
+        "id": "rising_from_dead",
+        "title": "Dead Rising",
+        "looping": 1,
+        "props": [
+          "prop_grave",
+          "prop_grave_base"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 45,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "vampire",
+        "title": "Vampire",
+        "looping": 1,
+        "props": [
+          "prop_coffin"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 46,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.thanksgiving.PumpkinEmote",
+        "id": "pumpkin",
+        "title": "Pumpkin",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 47,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.halloween.TrickOrTreatEmote",
+        "id": "trick_or_treat",
+        "title": "Trick or Treat",
+        "looping": 1,
+        "props": [
+          "prop_candy_bag"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 48,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "broom",
+        "title": "Broom",
+        "looping": 1,
+        "props": [
+          "prop_broom"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 49,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "football",
+        "title": "Football",
+        "looping": 1,
+        "props": [
+          "prop_football"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 50,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.thanksgiving.TurkeyEmote",
+        "id": "turkey",
+        "title": "Turkey",
+        "looping": 1,
+        "props": [
+          "prop_turkey"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 51,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.thanksgiving.HuntEmote",
+        "id": "hunt",
+        "title": "Hunt",
+        "looping": 1,
+        "props": [
+          "prop_hunt_gun"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 52,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.SnowingEmote",
+        "id": "snowing",
+        "title": "Snowing",
+        "looping": 1,
+        "props": [
+          "prop_cloud"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 53,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.PresentEmote",
+        "id": "present",
+        "title": "Gift",
+        "looping": 1,
+        "props": [
+          "prop_present"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 54,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.PresentEmote",
+        "id": "present",
+        "title": "Gift",
+        "looping": 1,
+        "props": [
+          "prop_present"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 55,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.PresentEmote",
+        "id": "present",
+        "title": "Gift",
+        "looping": 1,
+        "props": [
+          "prop_present"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 56,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.PresentEmote",
+        "id": "present",
+        "title": "Gift",
+        "looping": 1,
+        "props": [
+          "prop_present"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 57,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.PresentEmote",
+        "id": "present",
+        "title": "Gift",
+        "looping": 1,
+        "props": [
+          "prop_present"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 58,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.PresentEmote",
+        "id": "present",
+        "title": "Gift",
+        "looping": 1,
+        "props": [
+          "prop_present"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 59,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.IcebergEmote",
+        "id": "iceberg",
+        "title": "Iceberg",
+        "looping": 1,
+        "props": [
+          "prop_iceberg"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 60,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.ChimneyEmote",
+        "id": "chimney",
+        "title": "Chimney",
+        "looping": 1,
+        "props": [
+          "prop_chimney"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 61,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "snowman",
+        "title": "Snowman",
+        "looping": 1,
+        "props": [
+          "prop_snowman_head",
+          "prop_snowman_body",
+          "prop_snowman_butt"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 62,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.CoalEmote",
+        "id": "coal",
+        "title": "Digging Coal",
+        "looping": 1,
+        "props": [
+          "prop_grave_base"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 63,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.IceSkatingEmote",
+        "id": "ice_skating",
+        "title": "Ice Skating",
+        "looping": 1,
+        "props": [
+          "prop_skates"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 64,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.christmas.SnowballEmote",
+        "id": "snowball",
+        "title": "Snowball",
+        "looping": 1,
+        "props": [
+          "prop_grave_base"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 65,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.newyear.ChampagneEmote",
+        "id": "champagne",
+        "title": "Champagne",
+        "looping": 1,
+        "props": [
+          "prop_champagne_bottle",
+          "prop_champagne_flying_cork"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 66,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.newyear.FireworksEmote",
+        "id": "fireworks",
+        "title": "Fireworks",
+        "looping": 1,
+        "props": [
+          "prop_rocket",
+          "prop_rocket_base"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 67,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.valentines.BlowKissEmote",
+        "id": "blow_kiss",
+        "title": "Blow Kiss",
+        "looping": 1,
+        "props": [
+          "prop_heart"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 68,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.valentines.RoseEmote",
+        "id": "rose",
+        "title": "Rose",
+        "looping": 1,
+        "props": [
+          "prop_rose"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 69,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.valentines.HeartbrokenEmote",
+        "id": "heartbroken",
+        "title": "Heartbroken",
+        "looping": 1,
+        "props": [
+          "prop_heart_1",
+          "prop_heart_2"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 70,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "twerk",
+        "title": "Twerking",
+        "looping": 8
+      }
+    },
+    {
+      "cosmeticId": 71,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "club",
+        "title": "Clubbing",
+        "looping": 4
+      }
+    },
+    {
+      "cosmeticId": 72,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.SneezeEmote",
+        "id": "sneeze",
+        "title": "Sneeze",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 73,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "punch",
+        "title": "Punch!",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 74,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "bongo_cat",
+        "title": "Bongo Cat",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 75,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "exhausted",
+        "title": "Exhausted",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 76,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.DisgustedEmote",
+        "id": "disgusted",
+        "title": "Disgusted",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 77,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "bitchslap",
+        "title": "Slap",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 78,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "threatening",
+        "title": "Threatening",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 79,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "woah",
+        "title": "Woah!",
+        "looping": 1,
+        "props": []
+      }
+    },
+    {
+      "cosmeticId": 80,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "breathtaking",
+        "title": "Breathtaking",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 81,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "egg_juggle",
+        "title": "Egg Juggle",
+        "looping": 1,
+        "props": [
+          "prop_egg_juggle_bottom_1",
+          "prop_egg_juggle_bottom_2",
+          "prop_egg_juggle_bottom_3",
+          "prop_egg_juggle_top_1",
+          "prop_egg_juggle_top_2",
+          "prop_egg_juggle_top_3"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 82,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "egg_l",
+        "title": "Egg L",
+        "looping": 1,
+        "props": [
+          "prop_egg_l_top",
+          "prop_egg_l_bottom",
+          "prop_l"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 83,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "egg_in_a_basket",
+        "title": "Egg in a Basket",
+        "looping": 1,
+        "props": [
+          "prop_easter_basket",
+          "prop_egg_in_a_basket_bottom",
+          "prop_egg_in_a_basket_top"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 84,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "bunny_hop",
+        "title": "Bunny Hop",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 85,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "chicken_dance",
+        "title": "Chicken Dance",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 86,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.PartyPopperEmote",
+        "id": "party_popper",
+        "title": "Party Popper",
+        "looping": 1,
+        "props": [
+          "prop_party_popper",
+          "prop_party_popper_top"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 87,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "git_up",
+        "title": "Git up",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 88,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "oh_na_na_na",
+        "title": "Oh nanana",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 89,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "funky_town",
+        "title": "Funky Town v2",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 90,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "shuffle",
+        "title": "Shuffle",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 91,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "renegade",
+        "title": "Renegade",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 92,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "say_so",
+        "title": "Say So",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 93,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "savage",
+        "title": "Savage",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 94,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "hit_it_fergie",
+        "title": "Hit It Fergie",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 95,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "blinding_lights",
+        "title": "Blinding Lights",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 96,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "cannibal",
+        "title": "Cannibal",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 97,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "lawn_chair",
+        "title": "Lawn Chair",
+        "looping": 1,
+        "props": [
+          "prop_lawn_chair"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 98,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "sandcastle",
+        "title": "Sand Castle",
+        "looping": 1,
+        "props": [
+          "prop_sandcastle",
+          "prop_bucket_handle",
+          "prop_bucket"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 99,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "rainbow",
+        "title": "Rainbow",
+        "looping": 1,
+        "props": [
+          "prop_rainbow"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 100,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.SmokeBombEmote",
+        "id": "smoke_bomb",
+        "title": "Smoke Bomb",
+        "looping": 1,
+        "props": [
+          "prop_smoke_bomb",
+          "prop_log"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 101,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "kamehameha",
+        "title": "Kamehameha",
+        "looping": 1,
+        "props": [
+          "prop_energy_ball",
+          "prop_energy_beam"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 102,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "ninja_star",
+        "title": "Ninja Stars",
+        "looping": 1,
+        "props": [
+          "prop_ninja_star_1",
+          "prop_ninja_star_2",
+          "prop_ninja_star_3"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 103,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.AvatarEmote",
+        "id": "avatar",
+        "title": "Avatar",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 104,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "knife_naruto",
+        "title": "Ninja Knife",
+        "looping": 1,
+        "props": [
+          "prop_ninja_knife",
+          "prop_ninja_knife_2"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 105,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_us",
+        "title": "Flag Wave America",
+        "looping": 1,
+        "props": [
+          "prop_flag_us",
+          "prop_flag_pole_us"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 106,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_canada",
+        "title": "Flag Wave Canada",
+        "looping": 1,
+        "props": [
+          "prop_flag_canada",
+          "prop_flag_pole_canada"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 107,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "drinking_syrup",
+        "title": "Drinking Syrup",
+        "looping": 1,
+        "props": [
+          "prop_syrup"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 108,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "money_flex",
+        "title": "Money Flex",
+        "looping": 1,
+        "props": [
+          "prop_money_flex_1",
+          "prop_money_flex_2",
+          "prop_money_flex_3"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 109,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "money_bae",
+        "title": "Money Bae",
+        "looping": 1,
+        "props": [
+          "prop_money_bae_1",
+          "prop_money_bae_2",
+          "prop_money_bae_3"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 110,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_france",
+        "title": "Flag Wave France",
+        "looping": 1,
+        "props": [
+          "prop_flag_france",
+          "prop_flag_pole_france"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 111,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_belgium",
+        "title": "Flag Wave Belgium",
+        "looping": 1,
+        "props": [
+          "prop_flag_belgium",
+          "prop_flag_pole_belgium"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 112,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "toosie_slide",
+        "title": "Toosie Slide",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 113,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "arm_pump",
+        "title": "Arm Pump",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 114,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "rockstar",
+        "title": "Rockstar",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 115,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "the_quarantine",
+        "title": "The Quarantine",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 116,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "bananadrop",
+        "title": "Banana Drop",
+        "looping": 1,
+        "props": [
+          "prop_bananadrop_glasses"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 117,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "pearl_juggle",
+        "title": "Pearl Juggle",
+        "looping": 1,
+        "props": [
+          "prop_ender_pearl_1",
+          "prop_ender_pearl_2",
+          "prop_ender_pearl_3"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 118,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.LightningEmote",
+        "id": "struck_by_lightning",
+        "title": "Struck by Lightning",
+        "looping": 1,
+        "props": []
+      }
+    },
+    {
+      "cosmeticId": 119,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "sword_trick",
+        "title": "Sword Spin",
+        "looping": 1,
+        "props": [
+          "prop_diamond_sword"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 120,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.emoticons.SwissHorn",
+        "id": "swisshorn",
+        "title": "Swiss Horn",
+        "looping": 1,
+        "props": [
+          "prop_swiss_horn"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 121,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "vibey",
+        "title": "Vibey",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 122,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "greedy",
+        "title": "Greedy",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 123,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "hold_up",
+        "title": "Hold Up",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 124,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "party_girl",
+        "title": "Party Girl",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 125,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "take_it_off",
+        "title": "Take It Off",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 126,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_sk",
+        "title": "Flag Wave South Korea",
+        "looping": 1,
+        "props": [
+          "prop_flag_sk",
+          "prop_flag_pole_sk"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 127,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "apple_picking",
+        "title": "Apple Picking",
+        "looping": 1,
+        "props": [
+          "prop_apple",
+          "prop_apple_tree"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 128,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "leaf_pile",
+        "title": "Jumping in Leaf",
+        "looping": 1,
+        "props": [
+          "prop_leaf_pile_1",
+          "prop_leaf_pile_2",
+          "prop_leaf_pile_3"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 129,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.autumn.PuddleEmote",
+        "id": "puddle",
+        "title": "Jumping and Umbrella",
+        "looping": 1,
+        "props": [
+          "prop_umbrella"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 130,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.autumn.RainEmote",
+        "id": "rain",
+        "title": "Umbrella",
+        "looping": 1,
+        "props": [
+          "prop_umbrella_2"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 131,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "chicken_dance_2",
+        "title": "Chicken Dance v2 Emote",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 132,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "pretzel",
+        "title": "Eating a Pretzel Emote",
+        "looping": 1,
+        "props": [
+          "prop_pretzel"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 133,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "drinking_beer",
+        "title": "Drinking a Beer emote",
+        "looping": 1,
+        "props": [
+          "prop_beer_pitcher"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 134,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_germany",
+        "title": "Germany Emote",
+        "looping": 1,
+        "props": [
+          "prop_flag_pole_germany",
+          "prop_flag_germany"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 135,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "pumpkin_smash",
+        "title": "Pumpkin Smash Emote",
+        "looping": 1,
+        "props": [
+          "prop_pumpkin",
+          "prop_hammer"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 136,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.halloween.FrankensteinEmote",
+        "id": "frankenstein",
+        "title": "Frankenstein Creation Emote",
+        "looping": 1,
+        "props": [
+          "prop_table",
+          "prop_frankenstein_bolts"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 137,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "ghost_scare",
+        "title": "Scary Ghost Emote",
+        "looping": 1,
+        "props": [
+          "prop_ghost"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 138,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_austria",
+        "title": "Austria Emote",
+        "looping": 1,
+        "props": [
+          "prop_flag_austria",
+          "prop_flag_pole_austria"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 139,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "kamehameha_v2",
+        "title": "Kamehameha v2 emote ",
+        "looping": 1,
+        "props": [
+          "prop_energy_beam_v2",
+          "prop_energy_ball_v2"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 140,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.anime.CaptureEmote",
+        "id": "pokeball_throw",
+        "title": "Capture Emote",
+        "looping": 1,
+        "props": [
+          "prop_pokeball"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 141,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.anime.AvatarV2Emote",
+        "id": "avatar_state",
+        "title": "Avatar State Emote",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 142,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "ice_throne",
+        "title": "Snow Leader Emote",
+        "looping": 1,
+        "props": [
+          "prop_ice_crown",
+          "prop_ice_throne"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 143,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "ice_break",
+        "title": "Ice Break Emote",
+        "looping": 1,
+        "props": [
+          "prop_ice_outer",
+          "prop_ice_inner",
+          "prop_iceberg_2",
+          "prop_water"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 144,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "skate",
+        "title": "Ice Skating Emote v2",
+        "looping": 1,
+        "props": [
+          "prop_skate_1",
+          "prop_skate_2"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 145,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "christmas_tree",
+        "title": "Christmas Tree",
+        "looping": 1,
+        "props": [
+          "prop_christmas_tree"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 146,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.newyear.Fireworks2021Emote",
+        "id": "fireworks_2021",
+        "title": "2021 Firework ",
+        "looping": 1,
+        "props": [
+          "prop_rocket_base_2",
+          "prop_rocket_2"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 147,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "celebration",
+        "title": "Celebration!",
+        "looping": 1,
+        "props": [
+          "prop_party_hat"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 148,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_australia",
+        "title": "Flag Wave Australia",
+        "looping": 1,
+        "props": [
+          "prop_flag_pole_australia",
+          "prop_flag_australia"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 149,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flower_bouquet",
+        "title": "Flower Bouquet",
+        "looping": 1,
+        "props": [
+          "prop_flower_bouquet"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 150,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "chocolate",
+        "title": "Giving Chocolate",
+        "looping": 1,
+        "props": [
+          "prop_chocolate_box"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 151,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_japan",
+        "title": "Flag Wave Japan",
+        "looping": 1,
+        "props": [
+          "prop_flag_japan",
+          "prop_flag_pole_japan"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 152,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "emote_vibey",
+        "title": "Vibey",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 153,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "emote_party_girl",
+        "title": "Party Girl",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 154,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "emote_greedy",
+        "title": "Greedy",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 155,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "emote_take_it_off",
+        "title": "Take it off",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 156,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.Emote",
+        "id": "emote_hold_up",
+        "title": "Hold Up",
+        "looping": 1
+      }
+    },
+    {
+      "cosmeticId": 157,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.spring.WateringCanEmote",
+        "id": "watering_flowers",
+        "title": "Watering Flowers",
+        "looping": 1,
+        "props": [
+          "prop_flower_dirt",
+          "prop_watering_can",
+          "prop_flowers"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 158,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_israel",
+        "title": "Flag Wave Israel",
+        "looping": 1,
+        "props": [
+          "prop_flag_pole_israel",
+          "prop_flag_israel"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 159,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_kings",
+        "title": "Flag Wave Netherlands",
+        "looping": 1,
+        "props": [
+          "prop_flag_pole_kings",
+          "prop_flag_kings"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 160,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "lawn_chair_drink",
+        "title": "Lawnchair Relaxing Emote",
+        "looping": 1,
+        "props": [
+          "prop_coconut_drink",
+          "prop_lawn_chair_2"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 161,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "flag_wave_pride",
+        "title": "Flag Wave Pride",
+        "looping": 1,
+        "props": [
+          "prop_flag_pole_pride",
+          "prop_flag_pride"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 162,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "spyglass",
+        "title": "Spyglass Emote",
+        "looping": 1,
+        "props": [
+          "prop_spyglass"
+        ]
+      }
+    },
+    {
+      "cosmeticId": 163,
+      "emote": {
+        "classImpl": "net.badlion.clientcommon.emotes.emotes.PropEmote",
+        "id": "axolotl",
+        "title": "Catching an Axolotl Emote",
+        "looping": 1,
+        "props": [
+          "prop_bucket_2",
+          "prop_axolotl"
+        ]
+      }
+    }
+  ]
+}

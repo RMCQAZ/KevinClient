@@ -1,0 +1,77 @@
+{
+    "targets": [
+        "swap",
+        "previous",
+        "ping"
+    ],
+    "passes": [
+        {
+            "name": "blc_motionblur",
+            "intarget": "minecraft:main",
+            "outtarget": "swap",
+            "auxtargets": [
+                {
+                    "name": "PrevSampler",
+                    "id": "previous"
+                }
+            ],
+            "uniforms": [
+                {
+                    "name": "Phosphor",
+                    "values": [ 0.95, 0.95, 0.95 ]
+                }
+            ]
+        },
+        {
+            "name": "blc_inventoryblur",
+            "intarget": "swap",
+            "outtarget": "ping",
+            "uniforms": [
+                {
+                    "name": "BlurDir",
+                    "values": [ 1.0, 0.0 ]
+                },
+                {
+                    "name": "Radius",
+                    "values": [ 7.5 ]
+                }
+            ]
+        },
+        {
+            "name": "blc_inventoryblur",
+            "intarget": "ping",
+            "outtarget": "swap",
+            "uniforms": [
+                {
+                    "name": "BlurDir",
+                    "values": [ 0.0, 1.0 ]
+                },
+                {
+                    "name": "Radius",
+                    "values": [ 7.5 ]
+                }
+            ]
+        },
+        {
+            "name": "blc_saturation",
+            "intarget": "swap",
+            "outtarget": "ping",
+            "uniforms": [
+                {
+                    "name": "Saturation",
+                    "values": [ 1.0 ]
+                }
+            ]
+        },
+        {
+            "name": "blit",
+            "intarget": "swap",
+            "outtarget": "previous"
+        },
+        {
+            "name": "blit",
+            "intarget": "ping",
+            "outtarget": "minecraft:main"
+        }
+    ]
+}
