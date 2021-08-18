@@ -11,6 +11,7 @@ import kevin.module.modules.misc.NameProtect
 import kevin.module.modules.movement.*
 import kevin.module.modules.player.*
 import kevin.module.modules.render.*
+import kevin.module.modules.world.Breaker
 import kevin.module.modules.world.ChestStealer
 import kevin.module.modules.world.Scaffold
 import kevin.module.modules.world.Timer
@@ -72,6 +73,7 @@ class ModuleManager : Listenable {
             TrueSight()
         )
         worldList = arrayListOf(
+            Breaker(),
             ChestStealer(),
             Scaffold(),
             Timer()

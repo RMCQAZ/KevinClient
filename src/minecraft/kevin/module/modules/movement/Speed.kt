@@ -1,6 +1,7 @@
 package kevin.module.modules.movement
 
 import kevin.event.*
+import kevin.module.BooleanValue
 import kevin.module.ListValue
 import kevin.module.Module
 import kevin.utils.MovementUtils
@@ -9,6 +10,7 @@ import kotlin.math.sin
 
 class Speed : Module("Speed") {
     private val mode = ListValue("Mode", arrayOf("AAC5Long","AAC5Fast","YPort","AutoJump"),"AAC5Long")
+    private val keepSprint = BooleanValue("KeepSprint",false)
 
     private var jumps = 0
 
@@ -58,10 +60,11 @@ class Speed : Module("Speed") {
             }
         }
     }
+
     @EventTarget
     fun onMotion(event: MotionEvent) {
         if (mc.thePlayer.isSneaking || event.eventState != EventState.PRE) return
-        if (MovementUtils.isMoving) mc.thePlayer.isSprinting = true
+        if (MovementUtils.isMoving && keepSprint.get()) mc.thePlayer.isSprinting = true
         when(mode.get()) {
             "YPort" -> {
                 if (mc.thePlayer!!.isOnLadder

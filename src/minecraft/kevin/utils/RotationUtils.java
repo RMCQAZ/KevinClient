@@ -1,15 +1,10 @@
 package kevin.utils;
 
 import com.sun.istack.internal.NotNull;
-import kevin.event.EventTarget;
 import kevin.event.Listenable;
-import kevin.event.PacketEvent;
-import kevin.event.TickEvent;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.*;
 
 import java.util.Random;

@@ -40,7 +40,7 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
     private var jump = false
 
     override val tag: String
-        get() = modeValue.get()
+        get() = if (modeValue.get() == "Simple") "H:${horizontalValue.get()*100}% V:${verticalValue.get()*100}%" else modeValue.get()
 
     override fun onDisable() {
         mc.thePlayer?.speedInAir = 0.02F

@@ -53,6 +53,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     // Basic stuff
     @JvmField
     val sprintValue = BooleanValue("Sprint", false)
+    private val autoJump = BooleanValue("AutoJump",false)
     private val swingValue = BooleanValue("Swing", true)
     private val searchValue = BooleanValue("Search", true)
     private val downValue = BooleanValue("Down", true)
@@ -327,6 +328,19 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     @EventTarget
     fun onMotion(event: MotionEvent) {
         val eventState: EventState = event.eventState
+        //AutoJump
+        if (mc.thePlayer.onGround
+            && mc.thePlayer.jumpTicks == 0
+            && MovementUtils.isMoving
+            && !mc.thePlayer.isInLava
+            && !mc.thePlayer.isInWater
+            && !mc.thePlayer.inWeb
+            && !mc.thePlayer.isOnLadder
+            && !mc.gameSettings.keyBindJump.isKeyDown
+            && autoJump.get()
+            && eventState == EventState.PRE){
+            mc.thePlayer.jump()
+        }
 
         // Lock Rotation
         if (rotationsValue.get()
