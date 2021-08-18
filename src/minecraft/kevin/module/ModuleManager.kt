@@ -7,6 +7,7 @@ import kevin.main.Kevin
 import kevin.module.modules.*
 import kevin.module.modules.combat.*
 import kevin.module.modules.exploit.*
+import kevin.module.modules.misc.AntiBot
 import kevin.module.modules.misc.NameProtect
 import kevin.module.modules.movement.*
 import kevin.module.modules.player.*
@@ -44,6 +45,7 @@ class ModuleManager : Listenable {
             MultiActions()
         )
         miscList = arrayListOf(
+            AntiBot(),
             NameProtect()
         )
         movementList = arrayListOf(
