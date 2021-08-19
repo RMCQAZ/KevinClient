@@ -42,7 +42,8 @@ class ModuleManager : Listenable {
         )
         exploitList = arrayListOf(
             AbortBreaking(),
-            MultiActions()
+            MultiActions(),
+            TP()
         )
         miscList = arrayListOf(
             AntiBot(),
