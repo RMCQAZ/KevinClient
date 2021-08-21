@@ -70,6 +70,7 @@ class ModuleManager : Listenable {
             BlockOverlay(),
             CameraClip(),
             Chams(),
+            ClickGui(),
             ESP(),
             HUD(),
             Rotations(),
