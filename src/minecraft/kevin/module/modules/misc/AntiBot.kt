@@ -43,7 +43,7 @@ class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bot
     @EventTarget
     fun onText(event: TextEvent){
         val text = event.text
-        if (text != null && text.contains("游戏结束",true) && gameStarted){
+        if (text != null && text.contains("游戏结束",true) && gameStarted && !text.contains("后",true)){
             gameStarted = false
             (Kevin.getInstance.moduleManager.getModule("HUD") as HUD).addNotification(HUD.Notification("GameEnd!"),"Antibot")
         }

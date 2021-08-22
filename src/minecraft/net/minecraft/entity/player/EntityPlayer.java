@@ -217,6 +217,10 @@ public abstract class EntityPlayer extends EntityLivingBase
         return this.itemInUseCount;
     }
 
+    public void setItemInUseCount(int itemInUseCount) {
+        this.itemInUseCount = itemInUseCount;
+    }
+
     /**
      * Checks if the entity is currently using an item (e.g., bow, food, sword) by holding down the useItemButton
      */

@@ -2,6 +2,8 @@ package kevin.utils;
 
 import com.sun.istack.internal.NotNull;
 import kevin.event.Listenable;
+import kevin.main.Kevin;
+import kevin.module.modules.player.FastUse;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -119,7 +121,7 @@ public final class RotationUtils extends MinecraftInstance implements Listenable
         final double posZ = target.posZ + (predict ? (target.posZ - target.prevPosZ) * predictSize : 0) - (player.posZ + (predict ? (player.posZ - player.prevPosZ) : 0));
         final double posSqrt = Math.sqrt(posX * posX + posZ * posZ);
 
-        float velocity = /**LiquidBounce.moduleManager.getModule(FastBow.class).getState() ? 1F :**/ player.getItemInUseDuration() / 20F;
+        float velocity = (Kevin.getInstance.moduleManager.getModule("FastUse").getToggle() && ((FastUse) Kevin.getInstance.moduleManager.getModule("FastUse")).getFastBow().get()) ? 1F : player.getItemInUseDuration() / 20F;
         velocity = (velocity * velocity + velocity * 2) / 3;
 
         if (velocity > 1) velocity = 1;

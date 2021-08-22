@@ -4,6 +4,7 @@ import kevin.event.*;
 import kevin.main.Kevin;
 import kevin.module.modules.combat.KillAura;
 import kevin.module.modules.movement.InvMove;
+import kevin.module.modules.movement.NoSlow;
 import kevin.module.modules.movement.Sprint;
 import kevin.module.modules.world.Scaffold;
 import kevin.utils.Rotation;
@@ -796,6 +797,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         boolean flag2 = this.movementInput.moveForward >= f;
         this.movementInput.updatePlayerMoveState();
 
+        final NoSlow noSlow = (NoSlow) Kevin.getInstance.moduleManager.getModule("NoSlow");
         final KillAura killAura = (KillAura) Kevin.getInstance.moduleManager.getModule("KillAura");
 
         if (getHeldItem() != null && getHeldItem().getItem() != null && (this.isUsingItem() || (getHeldItem().getItem() instanceof ItemSword && killAura.getBlockingStatus())) && !this.isRiding())
@@ -828,7 +830,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             }
         }
 
-        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && this.mc.gameSettings.keyBindSprint.isKeyDown())
+        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && (noSlow.getToggle() || !this.isUsingItem()) && !this.isPotionActive(Potion.blindness) && this.mc.gameSettings.keyBindSprint.isKeyDown())
         {
             this.setSprinting(true);
         }

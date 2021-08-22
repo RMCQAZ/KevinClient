@@ -54,6 +54,7 @@ class ModuleManager : Listenable {
         movementList = arrayListOf(
             Fly(),
             InvMove(),
+            NoSlow(),
             Speed(),
             Sprint(),
             Strafe()
@@ -62,6 +63,7 @@ class ModuleManager : Listenable {
             AntiCactus(),
             AutoSneak(),
             AutoTool(),
+            FastUse(),
             InventoryCleaner(),
             NoFall(),
             Reach()

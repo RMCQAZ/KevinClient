@@ -1,6 +1,9 @@
 package net.minecraft.block;
 
 import java.util.Random;
+
+import kevin.main.Kevin;
+import kevin.module.modules.movement.NoSlow;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
@@ -214,6 +217,11 @@ public abstract class BlockLiquid extends Block
 
     public Vec3 modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3 motion)
     {
+        final NoSlow noSlow = (NoSlow) Kevin.getInstance.moduleManager.getModule("NoSlow");
+
+        if (noSlow.getToggle() && noSlow.getLiquidPushValue().get()) {
+            return (new Vec3(0.0D, 0.0D, 0.0D));
+        }
         return motion.add(this.getFlowVector(worldIn, pos));
     }
 
