@@ -4,14 +4,18 @@ import kevin.event.EventTarget
 import kevin.event.Render3DEvent
 import kevin.module.*
 import kevin.utils.ColorUtils
+import kevin.utils.ColorUtils.rainbow
 import kevin.utils.EntityUtils
+import kevin.utils.FontManager.GameFontRenderer.Companion.getColorIndex
 import kevin.utils.RenderUtils.glColor
 import kevin.utils.WorldToScreen
+import kevin.utils.isClientFriend
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.RenderGlobal.drawSelectionBoundingBox
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.AxisAlignedBB
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.util.vector.Vector3f
@@ -27,6 +31,7 @@ class ESP : Module("ESP", "Allows you to see targets through walls.", category =
     private val colorGreenValue = IntegerValue("G", 255, 0, 255)
     private val colorBlueValue = IntegerValue("B", 255, 0, 255)
     private val colorRainbow = BooleanValue("Rainbow", false)
+    private val colorTeam = BooleanValue("Team", false)
     override val tag: String
         get() = modeValue.get()
     @JvmField
@@ -203,6 +208,26 @@ class ESP : Module("ESP", "Allows you to see targets through walls.", category =
         glDisable(GL_LINE_SMOOTH)
     }
     fun getColor(entity: EntityLivingBase): Color{
-        return if (entity.hurtTime > 0) Color.RED else if (colorRainbow.get()) ColorUtils.rainbow() else Color(colorRedValue.get(),colorGreenValue.get(),colorBlueValue.get())
+        run {
+            if (entity.hurtTime > 0)
+                    return Color.RED
+                if (entity is EntityPlayer && entity.isClientFriend())
+                    return Color.BLUE
+
+                if (colorTeam.get()) {
+                    val chars: CharArray = (entity.displayName ?: return@run).formattedText.toCharArray()
+                    var color = Int.MAX_VALUE
+                    for (i in chars.indices) {
+                        if (chars[i] != '§' || i + 1 >= chars.size) continue
+                        val index = getColorIndex(chars[i + 1])
+                        if (index < 0 || index > 15) continue
+                        color = ColorUtils.hexColors[index]
+                        break
+                    }
+                    return Color(color)
+                }
+        }
+        return if (colorRainbow.get()) rainbow() else Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get())
+        //return if (entity.hurtTime > 0) Color.RED else if (colorRainbow.get()) rainbow() else Color(colorRedValue.get(),colorGreenValue.get(),colorBlueValue.get())
     }
 }

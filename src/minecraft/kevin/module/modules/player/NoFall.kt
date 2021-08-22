@@ -15,7 +15,7 @@ import net.minecraft.util.*
 
 class NoFall : Module("NoFall","Prevents you from taking fall damage.", category = ModuleCategory.PLAYER) {
     @JvmField
-    val modeValue = ListValue("Mode", arrayOf("SpoofGround", "NoGround", "Packet", "AAC", "LAAC", "AAC3.3.11", "AAC3.3.15", "Spartan", "CubeCraft", "Hypixel", "Test1"), "SpoofGround")
+    val modeValue = ListValue("Mode", arrayOf("SpoofGround", "NoGround", "Packet", "AAC", "LAAC", "AAC3.3.11", "AAC3.3.15", "Spartan", "CubeCraft", "Hypixel", "Test1", "Test2"), "SpoofGround")
     private val spartanTimer = TickTimer()
     private var currentState = 0
     private var jumped = false
@@ -37,6 +37,14 @@ class NoFall : Module("NoFall","Prevents you from taking fall damage.", category
             return
 
         when (modeValue.get().toLowerCase()) {
+            "test2" -> {
+                if(mc.thePlayer.fallDistance > 2.9 ) {
+                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true))
+                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false))
+                    mc.timer.timerSpeed = 0.59647625F
+                    mc.thePlayer.motionY *=0.62515425
+                }
+            }
             "packet" -> {
                 if (mc.thePlayer!!.fallDistance > 2f) {
                     mc.netHandler.addToSendQueue(C03PacketPlayer(true))
@@ -133,6 +141,7 @@ class NoFall : Module("NoFall","Prevents you from taking fall damage.", category
 
     override fun onDisable() {
         testPackets.clear()
+        if (modeValue.get().equals("Test2",true)) mc.timer.timerSpeed = 1F
     }
 
     @EventTarget

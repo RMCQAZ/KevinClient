@@ -9,6 +9,7 @@ import kevin.module.modules.combat.*
 import kevin.module.modules.exploit.*
 import kevin.module.modules.misc.AntiBot
 import kevin.module.modules.misc.NameProtect
+import kevin.module.modules.misc.Teams
 import kevin.module.modules.movement.*
 import kevin.module.modules.player.*
 import kevin.module.modules.render.*
@@ -47,7 +48,8 @@ class ModuleManager : Listenable {
         )
         miscList = arrayListOf(
             AntiBot(),
-            NameProtect()
+            NameProtect(),
+            Teams()
         )
         movementList = arrayListOf(
             Fly(),

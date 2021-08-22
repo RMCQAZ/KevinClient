@@ -3,6 +3,7 @@ package kevin.module.modules.combat
 import kevin.event.*
 import kevin.main.Kevin
 import kevin.module.*
+import kevin.module.modules.misc.Teams
 import kevin.utils.*
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.enchantment.EnchantmentHelper
@@ -489,17 +490,15 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
                 return false
 
             if (EntityUtils.targetPlayer && (entity) is EntityPlayer) {
-                val player = entity
 
-                if (player.isSpectator /**|| AntiBot.isBot(player)**/)
-                    return false
+                if (entity.isSpectator /**|| AntiBot.isBot(player)**/ ) return false
 /**
                 if (player.isClientFriend() && !LiquidBounce.moduleManager[NoFriends::class.java].state)
                     return false
+ **/
+                val teams = Kevin.getInstance.moduleManager.getModule("Teams") as Teams
 
-                val teams = LiquidBounce.moduleManager[Teams::class.java] as Teams
-
- **/            return true /**!teams.state || !teams.isInYourTeam(entity.asEntityLivingBase())**/
+                return !teams.getToggle() || !teams.isInYourTeam(entity)
             }
 
             return EntityUtils.targetMobs && entity.isMob() || EntityUtils.targetAnimals && entity.isAnimal()

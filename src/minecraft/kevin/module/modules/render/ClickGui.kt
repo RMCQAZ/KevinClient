@@ -11,6 +11,7 @@ import kevin.utils.RenderUtils
 import kevin.utils.RenderUtils.glColor
 import net.minecraft.client.audio.PositionedSoundRecord
 import net.minecraft.client.gui.GuiScreen
+import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.network.play.server.S2EPacketCloseWindow
 import net.minecraft.util.MathHelper
 import net.minecraft.util.ResourceLocation
@@ -18,6 +19,7 @@ import org.lwjgl.input.Keyboard
 import org.lwjgl.input.Mouse
 import org.lwjgl.opengl.GL11.*
 import java.awt.Color
+import java.util.*
 
 class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCategory.RENDER, keyBind = Keyboard.KEY_RSHIFT) {
     @EventTarget(ignoreCondition = true)
@@ -323,6 +325,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 }
                 if (fontRainbow) drawSettings(m,settingStart!![moduleCategoryString]!!,mouseX,mouseY)
                 drawButton1(mc.currentScreen.width / 16F * 9 -13,y+moduleHigh/2-2.5F,m.getToggle(),isClick(mc.currentScreen.width / 16F * 9 -13,y+moduleHigh/2-2.5F,mc.currentScreen.width / 16F * 9 - 4,y+moduleHigh/2-2.5F + 5,mouseX.toFloat(),mouseY.toFloat()),1F)
+                if (rainbow){glPushMatrix();drawHoveringText(listOf(m.getDescription()),mouseX,mouseY);RenderHelper.disableStandardItemLighting();glPopMatrix()}
                 y += moduleHigh
             }
         }
@@ -507,7 +510,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                         if (isClick(mc.currentScreen.width / 16F * 9 + 5,y - 3,mc.currentScreen.width / 4F * 3 - 5,y + 3,mouseX.toFloat(),mouseY.toFloat())){
                             if (Mouse.isButtonDown(0)){
                                 val i = MathHelper.clamp_double((mouseX - (mc.currentScreen.width / 16F * 9 + 5)) / ((mc.currentScreen.width / 4F * 3 - 5) - (mc.currentScreen.width / 16F * 9 + 5)).toDouble(),0.0,1.0)
-                                v.set(v.minimum + (v.maximum - v.minimum) * i)
+                                v.set(Formatter().format("%.2f",v.minimum + (v.maximum - v.minimum) * i).toString().toFloat())
                             }
                         }
                         y += 8

@@ -4,11 +4,12 @@ import kevin.event.*
 import kevin.module.BooleanValue
 import kevin.module.ListValue
 import kevin.module.Module
+import kevin.module.ModuleCategory
 import kevin.utils.MovementUtils
 import kotlin.math.cos
 import kotlin.math.sin
 
-class Speed : Module("Speed") {
+class Speed : Module("Speed","Allows you to move faster.", category = ModuleCategory.MOVEMENT) {
     private val mode = ListValue("Mode", arrayOf("AAC5Long","AAC5Fast","YPort","AutoJump"),"AAC5Long")
     private val keepSprint = BooleanValue("KeepSprint",false)
 
