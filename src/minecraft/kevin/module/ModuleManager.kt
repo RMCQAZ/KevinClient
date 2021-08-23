@@ -39,12 +39,27 @@ class ModuleManager : Listenable {
             Criticals(),
             HitBox(),
             KillAura(),
+            SuperKnockback(),
             TeleportAttack()
         )
         exploitList = arrayListOf(
             AbortBreaking(),
+            AntiHunger(),
+            Clip(),
+            ForceUnicodeChat(),
+            Ghost(),
+            GhostHand(),
+            KeepContainer(),
+            Kick(),
             MultiActions(),
-            TP()
+            NoPitchLimit(),
+            Phase(),
+            PingSpoof(),
+            Plugins(),
+            PortalMenu(),
+            ServerCrasher(),
+            TP(),
+            VehicleOneHit()
         )
         miscList = arrayListOf(
             AntiBot(),

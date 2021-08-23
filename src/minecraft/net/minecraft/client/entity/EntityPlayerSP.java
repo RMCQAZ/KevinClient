@@ -74,7 +74,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     private boolean serverSneakState;
 
     /** the last sprinting state sent to the server */
-    private boolean serverSprintState;
+    public boolean serverSprintState;
 
     /**
      * Reset to 0 every time position is sent to the server, used to send periodic updates every 20 ticks even when the
@@ -177,7 +177,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         try {
             Kevin.getInstance.eventManager.callEvent(new MotionEvent(EventState.PRE));
             final InvMove invMove = (InvMove) Kevin.getInstance.moduleManager.getModule("InvMove");
-            final boolean fakeSprint = invMove.getToggle() && invMove.getFakeSprint().get();
+            final boolean fakeSprint = (invMove.getToggle() && invMove.getFakeSprint().get()) || Kevin.getInstance.moduleManager.getModule("AntiHunger").getToggle();
 
             boolean sprinting = this.isSprinting() && !fakeSprint;
 
@@ -745,9 +745,10 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
         if (this.inPortal)
         {
-            if (this.mc.currentScreen != null && !this.mc.currentScreen.doesGuiPauseGame())
+            if (this.mc.currentScreen != null && !this.mc.currentScreen.doesGuiPauseGame()
+                    && !Kevin.getInstance.moduleManager.getModule("PortalMenu").getToggle())
             {
-                this.mc.displayGuiScreen((GuiScreen)null);
+                this.mc.displayGuiScreen(null);
             }
 
             if (this.timeInPortal == 0.0F)

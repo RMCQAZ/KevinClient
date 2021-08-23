@@ -404,6 +404,8 @@ public abstract class Entity implements ICommandSender
      */
     public void setAngles(float yaw, float pitch)
     {
+        if (Objects.requireNonNull(Kevin.getInstance.moduleManager.getModule("NoPitchLimit")).getToggle()) return;
+
         float f = this.rotationPitch;
         float f1 = this.rotationYaw;
         this.rotationYaw = (float)((double)this.rotationYaw + (double)yaw * 0.15D);

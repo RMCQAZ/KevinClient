@@ -1,10 +1,12 @@
 package net.minecraft.block;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import kevin.event.BlockBBEvent;
 import kevin.main.Kevin;
+import kevin.module.modules.exploit.GhostHand;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;
@@ -547,7 +549,9 @@ public class Block
      */
     public boolean isCollidable()
     {
-        return true;
+        final GhostHand ghostHand = (GhostHand) Kevin.getInstance.moduleManager.getModule("GhostHand");
+
+        return !Objects.requireNonNull(ghostHand).getToggle() || ghostHand.getBlockValue().get() == Block.getIdFromBlock(this);
     }
 
     /**
