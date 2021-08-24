@@ -12,9 +12,7 @@ import net.minecraft.network.play.client.C0BPacketEntityAction
 
 class SuperKnockback : Module("SuperKnockback", "Increases knockback dealt to other entities.", category = ModuleCategory.COMBAT) {
 
-    private val modeValue = ListValue("PacketMode", arrayOf("PlayerPacket","Sprint"),"Sprint")
     private val hurtTimeValue = IntegerValue("HurtTime", 10, 0, 10)
-    private val playerPackets = IntegerValue("PlayerPackets",50,10,100)
 
     @EventTarget
     fun onAttack(event: AttackEvent) {
@@ -22,21 +20,14 @@ class SuperKnockback : Module("SuperKnockback", "Increases knockback dealt to ot
             if (event.targetEntity.hurtTime > hurtTimeValue.get()) return
 
             val player = mc.thePlayer ?: return
-            val mode = modeValue.get()
-            if (mode.equals("Sprint",true)) {
-                if (player.isSprinting) mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.STOP_SPRINTING))
 
-                mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.START_SPRINTING))
-                mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.STOP_SPRINTING))
-                mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.START_SPRINTING))
-                player.isSprinting = true
-                player.serverSprintState = true
-            }
-            if (mode.equals("PlayerPacket",true)){
-                repeat(playerPackets.get()){
-                    mc.netHandler.addToSendQueue(C03PacketPlayer(player.onGround))
-                }
-            }
+            if (player.isSprinting) mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.STOP_SPRINTING))
+
+            mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.START_SPRINTING))
+            mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.STOP_SPRINTING))
+            mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.START_SPRINTING))
+            player.isSprinting = true
+            player.serverSprintState = true
         }
     }
 }

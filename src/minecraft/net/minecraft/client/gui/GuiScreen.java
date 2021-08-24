@@ -13,8 +13,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import kevin.main.Kevin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.stream.GuiTwitchUserMode;
 import net.minecraft.client.renderer.GlStateManager;
@@ -35,6 +38,7 @@ import net.minecraft.stats.Achievement;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.StringUtils;
@@ -271,6 +275,13 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
      */
     protected void handleComponentHover(IChatComponent component, int x, int y)
     {
+        if (!(component == null || component.getChatStyle().getChatClickEvent() == null || !Kevin.getInstance.moduleManager.getModule("ComponentOnHover").getToggle())) {
+            final ChatStyle chatStyle = component.getChatStyle();
+            final ClickEvent clickEvent = chatStyle.getChatClickEvent();
+            final HoverEvent hoverEvent = chatStyle.getChatHoverEvent();
+            drawHoveringText(Collections.singletonList("§c§l" + clickEvent.getAction().getCanonicalName().toUpperCase() + ": §a" + clickEvent.getValue()), x, y - (hoverEvent != null ? 17 : 0));
+        }
+
         if (component != null && component.getChatStyle().getChatHoverEvent() != null)
         {
             HoverEvent hoverevent = component.getChatStyle().getChatHoverEvent();

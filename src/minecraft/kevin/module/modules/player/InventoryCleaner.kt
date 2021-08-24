@@ -1,8 +1,6 @@
 package kevin.module.modules.player
 
-import kevin.event.EventTarget
-import kevin.event.UpdateEvent
-import kevin.event.UpdateState
+import kevin.event.*
 import kevin.main.Kevin
 import kevin.module.*
 import kevin.module.modules.combat.AutoArmor
@@ -12,6 +10,8 @@ import net.minecraft.client.gui.inventory.GuiInventory
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.init.Blocks
 import net.minecraft.item.*
+import net.minecraft.network.Packet
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
 import net.minecraft.network.play.client.C0DPacketCloseWindow
 import net.minecraft.network.play.client.C16PacketClientStatus
 
@@ -352,5 +352,16 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
         7 -> sortSlot8Value.get()
         8 -> sortSlot9Value.get()
         else -> ""
+    }
+
+    @EventTarget(ignoreCondition = true)
+    fun onClick(event: ClickWindowEvent?) {
+        InventoryUtils.CLICK_TIMER.reset()
+    }
+
+    @EventTarget(ignoreCondition = true)
+    fun onPacket(event: PacketEvent) {
+        val packet = event.packet
+        if (packet is C08PacketPlayerBlockPlacement) InventoryUtils.CLICK_TIMER.reset()
     }
 }
