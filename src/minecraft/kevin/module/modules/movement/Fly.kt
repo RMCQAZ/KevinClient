@@ -11,7 +11,7 @@ import org.lwjgl.input.Keyboard
 
 class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT) {
     private val speed = FloatValue("Speed",2F,0.5F,5F)
-    private val mode = ListValue("Mode", arrayOf("Vanilla"),"Vanilla")
+    val mode = ListValue("Mode", arrayOf("Vanilla"),"Vanilla")
     @EventTarget
     fun onUpdate(event: UpdateEvent){
         when(mode.get()){

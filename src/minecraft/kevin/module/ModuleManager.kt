@@ -69,21 +69,39 @@ class ModuleManager : Listenable {
             Teams()
         )
         movementList = arrayListOf(
+            AirJump(),
+            AirLadder(),
+            AntiVoid(),
             Fly(),
+            Freeze(),
+            HighJump(),
             InvMove(),
+            LongJump(),
+            NoClip(),
             NoSlow(),
+            NoWeb(),
+            Parkour(),
+            SafeWalk(),
             Speed(),
             Sprint(),
-            Strafe()
+            Step(),
+            Strafe(),
+            WallClimb(),
+            WaterSpeed()
         )
         playerList = arrayListOf(
+            AntiAFK(),
             AntiCactus(),
+            AutoFish(),
+            AutoRespawn(),
             AutoSneak(),
             AutoTool(),
+            Blink(),
             FastUse(),
             InventoryCleaner(),
             NoFall(),
-            Reach()
+            Reach(),
+            Regen()
         )
         renderList = arrayListOf(
             Animations(),

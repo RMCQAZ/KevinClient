@@ -2050,6 +2050,11 @@ public abstract class EntityLivingBase extends Entity
             this.jumpTicks = 0;
         }
 
+        if (Objects.requireNonNull(Kevin.getInstance.moduleManager.getModule("AirJump")).getToggle() && isJumping && this.jumpTicks == 0) {
+            this.jump();
+            this.jumpTicks = 10;
+        }
+
         this.worldObj.theProfiler.endSection();
         this.worldObj.theProfiler.startSection("travel");
         this.moveStrafing *= 0.98F;

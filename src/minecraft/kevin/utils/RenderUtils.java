@@ -1,5 +1,6 @@
 package kevin.utils;
 
+import kevin.main.Kevin;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -18,6 +19,34 @@ import java.awt.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public final class RenderUtils extends MinecraftInstance{
+    public static void renderNameTag(final String string, final double x, final double y, final double z) {
+        final RenderManager renderManager = mc.getRenderManager();
+
+        glPushMatrix();
+        glTranslated(x - renderManager.getRenderPosX(), y - renderManager.getRenderPosY(), z - renderManager.getRenderPosZ());
+        glNormal3f(0F, 1F, 0F);
+        glRotatef(-mc.getRenderManager().playerViewY, 0F, 1F, 0F);
+        glRotatef(mc.getRenderManager().playerViewX, 1F, 0F, 0F);
+        glScalef(-0.05F, -0.05F, 0.05F);
+
+        glDisable(GL_LIGHTING);
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        final int width = Kevin.getInstance.fontManager.getFont35().getStringWidth(string) / 2;
+
+        drawRect(-width - 1, -1, width + 1, Kevin.getInstance.fontManager.getFont35().getFontHeight(), Integer.MIN_VALUE);
+        Kevin.getInstance.fontManager.getFont35().drawString(string, -width, 1.5F, Color.WHITE.getRGB(), true);
+
+        glEnable(GL_LIGHTING);
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
+
+        glColor4f(1F, 1F, 1F, 1F);
+        glPopMatrix();
+    }
 
     public static int deltaTime;
 
