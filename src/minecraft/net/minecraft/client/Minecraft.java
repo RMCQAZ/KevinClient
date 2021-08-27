@@ -12,6 +12,7 @@ import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import kevin.event.*;
 import kevin.main.Kevin;
 import kevin.module.modules.exploit.AbortBreaking;
+import kevin.module.modules.world.FastPlace;
 import kevin.utils.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -1001,7 +1002,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 //    	Thread.dumpStack();
         try
         {
-            this.stream.shutdownStream();
+            //this.stream.shutdownStream();
             logger.info("Stopping!");
 
             Kevin.getInstance.stop();
@@ -1533,6 +1534,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         if (!this.playerController.getIsHittingBlock())
         {
             this.rightClickDelayTimer = 4;
+            final FastPlace fastPlace = (FastPlace) Kevin.getInstance.moduleManager.getModule("FastPlace");
+
+            if (fastPlace.getToggle()) rightClickDelayTimer = fastPlace.getSpeedValue().get();
+
             boolean flag = true;
             ItemStack itemstack = this.thePlayer.inventory.getCurrentItem();
 

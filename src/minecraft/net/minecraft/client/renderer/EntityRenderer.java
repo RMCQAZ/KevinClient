@@ -686,6 +686,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
     private void hurtCameraEffect(float partialTicks)
     {
+        if (Kevin.getInstance.moduleManager.getModule("NoHurtCam").getToggle()) return;
+
         if (this.mc.getRenderViewEntity() instanceof EntityLivingBase)
         {
             EntityLivingBase entitylivingbase = (EntityLivingBase)this.mc.getRenderViewEntity();
@@ -1003,7 +1005,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         if (this.mc.gameSettings.viewBobbing)
         {
+            if (Kevin.getInstance.moduleManager.getModule("Tracers").getToggle()) GL11.glPushMatrix();
             this.setupViewBobbing(partialTicks);
+            if (Kevin.getInstance.moduleManager.getModule("Tracers").getToggle()) GL11.glPopMatrix();
         }
 
         float f1 = this.mc.thePlayer.prevTimeInPortal + (this.mc.thePlayer.timeInPortal - this.mc.thePlayer.prevTimeInPortal) * partialTicks;

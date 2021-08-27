@@ -676,7 +676,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
      */
     private val cancelRun: Boolean
         inline get() = mc.thePlayer!!.isSpectator || !isAlive(mc.thePlayer!!)
-                || Kevin.getInstance.moduleManager.getModule("Blink")!!.getToggle() /**|| LiquidBounce.moduleManager[FreeCam::class.java].state**/
+                || Kevin.getInstance.moduleManager.getModule("Blink")!!.getToggle() || Kevin.getInstance.moduleManager.getModule("FreeCam")!!.getToggle()
 
     /**
      * Check if [entity] is alive

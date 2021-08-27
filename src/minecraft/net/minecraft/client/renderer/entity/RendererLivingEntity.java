@@ -834,6 +834,8 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
     protected boolean canRenderName(T entity)
     {
+        if (!ESP.renderNameTags || (Kevin.getInstance.moduleManager.getModule("NameTags").getToggle() && EntityUtils.isSelected(entity, false))) return false;
+
         EntityPlayerSP entityplayersp = Minecraft.getMinecraft().thePlayer;
 
         if (entity instanceof EntityPlayer && entity != entityplayersp)

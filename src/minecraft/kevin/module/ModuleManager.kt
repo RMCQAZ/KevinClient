@@ -11,10 +11,7 @@ import kevin.module.modules.misc.*
 import kevin.module.modules.movement.*
 import kevin.module.modules.player.*
 import kevin.module.modules.render.*
-import kevin.module.modules.world.Breaker
-import kevin.module.modules.world.ChestStealer
-import kevin.module.modules.world.Scaffold
-import kevin.module.modules.world.Timer
+import kevin.module.modules.world.*
 
 class ModuleManager : Listenable {
 
@@ -106,18 +103,35 @@ class ModuleManager : Listenable {
         renderList = arrayListOf(
             Animations(),
             AntiBlind(),
+            BlockESP(),
             BlockOverlay(),
             CameraClip(),
             Chams(),
             ClickGui(),
             ESP(),
+            FreeCam(),
+            FullBright(),
             HUD(),
+            ItemESP(),
+            NameTags(),
+            NoBob(),
+            NoFOV(),
+            NoHurtCam(),
+            NoSwing(),
+            Projectiles(),
             Rotations(),
+            StorageESP(),
+            TNTESP(),
+            Tracers(),
             TrueSight()
         )
         worldList = arrayListOf(
             Breaker(),
             ChestStealer(),
+            FastBreak(),
+            FastPlace(),
+            NoSlowBreak(),
+            Nuker(),
             Scaffold(),
             Timer()
         )

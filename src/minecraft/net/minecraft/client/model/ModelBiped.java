@@ -3,6 +3,7 @@ package net.minecraft.client.model;
 import kevin.main.Kevin;
 import kevin.module.modules.combat.KillAura;
 import kevin.module.modules.world.Breaker;
+import kevin.module.modules.world.Nuker;
 import kevin.module.modules.world.Scaffold;
 import kevin.utils.RotationUtils;
 import net.minecraft.client.Minecraft;
@@ -185,7 +186,8 @@ public class ModelBiped extends ModelBase
         final KillAura killAura = (KillAura) Kevin.getInstance.moduleManager.getModule("KillAura");
         final Scaffold scaffold = (Scaffold) Kevin.getInstance.moduleManager.getModule("Scaffold");
         final Breaker breaker = (Breaker) Kevin.getInstance.moduleManager.getModule("Breaker");
-        final boolean needRotate = (killAura.getToggle() && killAura.getTarget() != null) || scaffold.getToggle() || (breaker.getToggle() && breaker.getCurrentDamage() > 0);
+        final Nuker nuker = (Nuker) Kevin.getInstance.moduleManager.getModule("Nuker");
+        final boolean needRotate = (killAura.getToggle() && killAura.getTarget() != null) || scaffold.getToggle() || (breaker.getToggle() && breaker.getCurrentDamage() > 0) || (nuker.getToggle() && nuker.getCurrentDamage() > 0);
 
         if (Kevin.getInstance.moduleManager.getModule("Rotations").getToggle() && RotationUtils.serverRotation != null && entityIn instanceof EntityPlayer
                 && entityIn.equals(Minecraft.getMinecraft().thePlayer) && needRotate) {

@@ -30,8 +30,13 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
     // AAc v4
     private val aacv4MotionReducerValue = FloatValue("AACv4MotionReducer", 0.62F,0F,1F)
 
+    private val cancelExplosionPacket = BooleanValue("CancelExplosionPacket",false)
+    private val explosionCheck = BooleanValue("ExplosionCheck",true)
+
     private var velocityTimer = MSTimer()
     private var velocityInput = false
+
+    private var explosion = false
 
     // SmoothReverse
     private var reverseHurt = false
@@ -168,6 +173,8 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
 
             when (modeValue.get().toLowerCase()) {
                 "simple" -> {
+                    if (explosion && explosionCheck.get()) {explosion=false;return}
+
                     val horizontal = horizontalValue.get()
                     val vertical = verticalValue.get()
 
@@ -190,7 +197,10 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
                 }
             }
         } else if (packet is S27PacketExplosion) {
-            event.cancelEvent()
+            if (packet.func_149149_c() != 0F ||
+                packet.func_149144_d() != 0F ||
+                packet.func_149147_e() != 0F) explosion = true
+            if (cancelExplosionPacket.get()) event.cancelEvent()
         }
     }
 

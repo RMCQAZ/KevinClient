@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 
+
 object EntityUtils : MinecraftInstance() {
 
     @JvmField
@@ -47,5 +48,10 @@ object EntityUtils : MinecraftInstance() {
             }
         }
         return false
+    }
+    fun getPing(entityPlayer: EntityPlayer?): Int {
+        if (entityPlayer == null) return 0
+        val networkPlayerInfo = mc.netHandler.getPlayerInfo(entityPlayer.uniqueID)
+        return networkPlayerInfo?.responseTime ?: 0
     }
 }

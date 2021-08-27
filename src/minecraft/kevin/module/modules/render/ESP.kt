@@ -230,4 +230,8 @@ class ESP : Module("ESP", "Allows you to see targets through walls.", category =
         return if (colorRainbow.get()) rainbow() else Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get())
         //return if (entity.hurtTime > 0) Color.RED else if (colorRainbow.get()) rainbow() else Color(colorRedValue.get(),colorGreenValue.get(),colorBlueValue.get())
     }
+    companion object {
+        @JvmField
+        var renderNameTags = true
+    }
 }

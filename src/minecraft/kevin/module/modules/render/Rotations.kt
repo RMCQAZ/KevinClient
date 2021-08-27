@@ -51,9 +51,9 @@ class Rotations : Module("Rotations", description = "Allows you to see server-si
     private fun shouldRotate(): Boolean {
         val killAura = Kevin.getInstance.moduleManager.getModule("KillAura") as KillAura
         return (getState("KillAura") && killAura.target != null)
-                || getState("Scaffold") || getState("Breaker") /**getState(Tower::class.java) ||
+                || getState("Scaffold") || getState("Breaker") || getState("Nuker")/**getState(Tower::class.java) ||
                 getState(BowAimbot::class.java) ||
-                 || getState(CivBreak::class.java) || getState(Nuker::class.java) ||
+                 || getState(CivBreak::class.java)  ||
                 getState(ChestAura::class.java)**/
     }
 }

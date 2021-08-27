@@ -1,6 +1,7 @@
 package kevin.module.modules.player
 
 import kevin.event.*
+import kevin.main.Kevin
 import kevin.module.ListValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
@@ -29,7 +30,7 @@ class NoFall : Module("NoFall","Prevents you from taking fall damage.", category
         if (mc.thePlayer!!.motionY > 0)
             jumped = true
 
-        if (!this.getToggle() /**|| Kevin.getInstance.moduleManager.getModule("FreeCam")!!.getToggle()**/)
+        if (!this.getToggle() || Kevin.getInstance.moduleManager.getModule("FreeCam")!!.getToggle())
             return
 
         if (collideBlock(mc.thePlayer!!.entityBoundingBox, fun(block: Any?) = block is BlockLiquid) ||

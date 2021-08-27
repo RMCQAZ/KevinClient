@@ -19,6 +19,155 @@ import java.awt.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public final class RenderUtils extends MinecraftInstance{
+    private static final int[] DISPLAY_LISTS_2D = new int[4];
+
+    static {
+        for (int i = 0; i < DISPLAY_LISTS_2D.length; i++) {
+            DISPLAY_LISTS_2D[i] = glGenLists(1);
+        }
+
+        glNewList(DISPLAY_LISTS_2D[0], GL_COMPILE);
+
+        quickDrawRect(-7F, 2F, -4F, 3F);
+        quickDrawRect(4F, 2F, 7F, 3F);
+        quickDrawRect(-7F, 0.5F, -6F, 3F);
+        quickDrawRect(6F, 0.5F, 7F, 3F);
+
+        glEndList();
+
+        glNewList(DISPLAY_LISTS_2D[1], GL_COMPILE);
+
+        quickDrawRect(-7F, 3F, -4F, 3.3F);
+        quickDrawRect(4F, 3F, 7F, 3.3F);
+        quickDrawRect(-7.3F, 0.5F, -7F, 3.3F);
+        quickDrawRect(7F, 0.5F, 7.3F, 3.3F);
+
+        glEndList();
+
+        glNewList(DISPLAY_LISTS_2D[2], GL_COMPILE);
+
+        quickDrawRect(4F, -20F, 7F, -19F);
+        quickDrawRect(-7F, -20F, -4F, -19F);
+        quickDrawRect(6F, -20F, 7F, -17.5F);
+        quickDrawRect(-7F, -20F, -6F, -17.5F);
+
+        glEndList();
+
+        glNewList(DISPLAY_LISTS_2D[3], GL_COMPILE);
+
+        quickDrawRect(7F, -20F, 7.3F, -17.5F);
+        quickDrawRect(-7.3F, -20F, -7F, -17.5F);
+        quickDrawRect(4F, -20.3F, 7.3F, -20F);
+        quickDrawRect(-7.3F, -20.3F, -4F, -20F);
+
+        glEndList();
+    }
+
+    public static void quickDrawRect(final float x, final float y, final float x2, final float y2) {
+        glBegin(GL_QUADS);
+
+        glVertex2d(x2, y);
+        glVertex2d(x, y);
+        glVertex2d(x, y2);
+        glVertex2d(x2, y2);
+
+        glEnd();
+    }
+
+    public static void drawEntityBox(final Entity entity, final Color color, final boolean outline) {
+        final RenderManager renderManager = mc.getRenderManager();
+        final Timer timer = mc.getTimer();
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_DEPTH_TEST);
+
+        glDepthMask(false);
+
+        final double x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * timer.renderPartialTicks
+                - renderManager.getRenderPosX();
+        final double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * timer.renderPartialTicks
+                - renderManager.getRenderPosY();
+        final double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * timer.renderPartialTicks
+                - renderManager.getRenderPosZ();
+
+        final AxisAlignedBB entityBox = entity.getEntityBoundingBox();
+        final AxisAlignedBB axisAlignedBB = new  AxisAlignedBB(
+                entityBox.minX - entity.posX + x - 0.05D,
+                entityBox.minY - entity.posY + y,
+                entityBox.minZ - entity.posZ + z - 0.05D,
+                entityBox.maxX - entity.posX + x + 0.05D,
+                entityBox.maxY - entity.posY + y + 0.15D,
+                entityBox.maxZ - entity.posZ + z + 0.05D
+        );
+
+        if (outline) {
+            glLineWidth(1F);
+            glEnable(GL_LINE_SMOOTH);
+            glColor(color.getRed(), color.getGreen(), color.getBlue(), 95);
+            drawSelectionBoundingBox(axisAlignedBB);
+        }
+
+        glColor(color.getRed(), color.getGreen(), color.getBlue(), outline ? 26 : 35);
+        drawFilledBox(axisAlignedBB);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        glDepthMask(true);
+        if (outline){
+            glDisable(GL_LINE_SMOOTH);
+        }
+        glDisable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    public static void draw2D(final BlockPos blockPos, final int color, final int backgroundColor) {
+        final RenderManager renderManager = mc.getRenderManager();
+
+        final double posX = (blockPos.getX() + 0.5) - renderManager.getRenderPosX();
+        final double posY = blockPos.getY() - renderManager.getRenderPosY();
+        final double posZ = (blockPos.getZ() + 0.5) - renderManager.getRenderPosZ();
+
+        GL11.glPushMatrix();
+        GL11.glTranslated(posX, posY, posZ);
+        GL11.glRotated(-mc.getRenderManager().playerViewY, 0F, 1F, 0F);
+        GL11.glScaled(-0.1D, -0.1D, 0.1D);
+
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        GL11.glDepthMask(true);
+
+        glColor(color);
+
+        glCallList(DISPLAY_LISTS_2D[0]);
+
+        glColor(backgroundColor);
+
+        glCallList(DISPLAY_LISTS_2D[1]);
+
+        GL11.glTranslated(0, 9, 0);
+
+        glColor(color);
+
+        glCallList(DISPLAY_LISTS_2D[2]);
+
+        glColor(backgroundColor);
+
+        glCallList(DISPLAY_LISTS_2D[3]);
+
+        // Stop render
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+
+        GL11.glPopMatrix();
+    }
+
+
     public static void renderNameTag(final String string, final double x, final double y, final double z) {
         final RenderManager renderManager = mc.getRenderManager();
 

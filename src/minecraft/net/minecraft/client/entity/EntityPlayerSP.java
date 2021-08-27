@@ -6,6 +6,7 @@ import kevin.module.modules.combat.KillAura;
 import kevin.module.modules.movement.InvMove;
 import kevin.module.modules.movement.NoSlow;
 import kevin.module.modules.movement.Sprint;
+import kevin.module.modules.render.NoSwing;
 import kevin.module.modules.world.Scaffold;
 import kevin.utils.Rotation;
 import kevin.utils.RotationUtils;
@@ -306,6 +307,12 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void swingItem()
     {
+        final NoSwing noSwing = (NoSwing) Kevin.getInstance.moduleManager.getModule("NoSwing");
+
+        if (noSwing.getToggle()) {
+            if (!noSwing.getServerSideValue().get()) this.sendQueue.addToSendQueue(new C0APacketAnimation());
+            return;
+        }
         super.swingItem();
         this.sendQueue.addToSendQueue(new C0APacketAnimation());
     }

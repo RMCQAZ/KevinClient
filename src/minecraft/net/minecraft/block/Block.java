@@ -6,7 +6,10 @@ import java.util.Random;
 
 import kevin.event.BlockBBEvent;
 import kevin.main.Kevin;
+import kevin.module.modules.combat.Criticals;
 import kevin.module.modules.exploit.GhostHand;
+import kevin.module.modules.player.NoFall;
+import kevin.module.modules.world.NoSlowBreak;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;
@@ -622,15 +625,33 @@ public class Block
     public float getPlayerRelativeBlockHardness(EntityPlayer playerIn, World worldIn, BlockPos pos)
     {
         float f = this.getBlockHardness(worldIn, pos);
+        float ret;
 
-        if (f < 0.0F)
-        {
-            return 0.0F;
+        if (f < 0.0F) {ret = 0.0F;} else {
+            ret = !playerIn.canHarvestBlock(this) ? playerIn.getToolDigEfficiency(this) / f / 100.0F : playerIn.getToolDigEfficiency(this) / f / 30.0F;
         }
-        else
-        {
-            return !playerIn.canHarvestBlock(this) ? playerIn.getToolDigEfficiency(this) / f / 100.0F : playerIn.getToolDigEfficiency(this) / f / 30.0F;
+        // NoSlowBreak
+        final NoSlowBreak noSlowBreak = (NoSlowBreak) Kevin.getInstance.moduleManager.getModule("NoSlowBreak");
+
+        if (Objects.requireNonNull(noSlowBreak).getToggle()) {
+            if (noSlowBreak.getWaterValue().get() && playerIn.isInsideOfMaterial(Material.water) &&
+                    !EnchantmentHelper.getAquaAffinityModifier(playerIn)) {
+                ret *= 5.0F;
+            }
+
+            if (noSlowBreak.getAirValue().get() && !playerIn.onGround) {
+                ret *= 5.0F;
+            }
+        } else if (playerIn.onGround) { // NoGround
+            final NoFall noFall = (NoFall) Kevin.getInstance.moduleManager.getModule("NoFall");
+            final Criticals criticals = (Criticals) Kevin.getInstance.moduleManager.getModule("Criticals");
+
+            if (Objects.requireNonNull(noFall).getToggle() && noFall.modeValue.get().equalsIgnoreCase("NoGround") ||
+                    Objects.requireNonNull(criticals).getToggle() && criticals.getModeValue().get().equalsIgnoreCase("NoGround")) {
+                ret /= 5F;
+            }
         }
+        return ret;
     }
 
     /**

@@ -53,7 +53,7 @@ public class PlayerControllerMP
     /**
      * Delays the first damage on the block after the first click on the block
      */
-    private int blockHitDelay;
+    public int blockHitDelay;
 
     /** Tells if the player is hitting a block */
     private boolean isHittingBlock;
@@ -72,6 +72,10 @@ public class PlayerControllerMP
 
     public float getCurBlockDamageMP() {
         return curBlockDamageMP;
+    }
+
+    public void setCurBlockDamageMP(float curBlockDamageMP) {
+        this.curBlockDamageMP = curBlockDamageMP;
     }
 
     public static void clickBlockCreative(Minecraft mcIn, PlayerControllerMP playerController, BlockPos pos, EnumFacing facing)

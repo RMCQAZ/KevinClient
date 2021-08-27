@@ -2,6 +2,10 @@ package net.minecraft.client.entity;
 
 import com.mojang.authlib.GameProfile;
 import java.io.File;
+import java.util.Objects;
+
+import kevin.main.Kevin;
+import kevin.module.modules.render.NoFOV;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.ImageBufferDownload;
@@ -147,6 +151,26 @@ public abstract class AbstractClientPlayer extends EntityPlayer
 
     public float getFovModifier()
     {
+        final NoFOV fovModule = (NoFOV) Kevin.getInstance.moduleManager.getModule("NoFOV");
+
+        if (Objects.requireNonNull(fovModule).getToggle()) {
+            float newFOV = fovModule.getFovValue().get();
+
+            if (!this.isUsingItem()) {
+                return (newFOV);
+            }
+
+            if (this.getItemInUse().getItem() != Items.bow) {
+                return (newFOV);
+            }
+
+            int i = this.getItemInUseDuration();
+            float f1 = (float) i / 20.0f;
+            f1 = f1 > 1.0f ? 1.0f : f1 * f1;
+            newFOV *= 1.0f - f1 * 0.15f;
+            return (newFOV);
+        }
+
         float f = 1.0F;
 
         if (this.capabilities.isFlying)
