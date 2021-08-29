@@ -16,13 +16,14 @@ public class FileManager extends MinecraftInstance {
     public final FileConfig modulesConfig = new ModulesConfig(new File(dir, "modules.json"));
     public final File fontsDir = new File(dir, "Fonts");
     public final File spammerDir = new File(dir,"SpammerMessages");
+    public final FileConfig hudConfig = new HudConfig(new File(dir, "hud.json"));
 
     public void load(){
         if (!dir.exists()) dir.mkdir();
         if (!fontsDir.exists()) fontsDir.mkdir();
         if (!spammerDir.exists()) spammerDir.mkdir();
-        loadConfigs(modulesConfig);
     }
+
     public void saveConfig(final FileConfig config) {
         saveConfig(config, false);
     }
@@ -51,6 +52,7 @@ public class FileManager extends MinecraftInstance {
         try {
             config.loadConfig();
         }catch(final Throwable t) {
+            t.printStackTrace();
         }
     }
     public void saveAllConfigs() {
@@ -63,7 +65,7 @@ public class FileManager extends MinecraftInstance {
                     final FileConfig fileConfig = (FileConfig) field.get(this);
                     saveConfig(fileConfig);
                 }catch(final IllegalAccessException e) {
-
+                    e.printStackTrace();
                 }
             }
         }

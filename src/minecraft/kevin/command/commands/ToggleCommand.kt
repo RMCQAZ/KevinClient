@@ -1,6 +1,7 @@
 package kevin.command.commands
 
 import kevin.command.ICommand
+import kevin.hud.element.elements.Notification
 import kevin.main.Kevin
 import kevin.module.modules.render.HUD
 import kevin.utils.ChatUtils
@@ -17,10 +18,10 @@ class ToggleCommand : ICommand {
         for (module in Kevin.getInstance.moduleManager.getModules()){
             if (module.getName().equals(args[0],ignoreCase = true)){
                 if (args.size > 1){
-                    val hud = Kevin.getInstance.moduleManager.getModule("HUD") as HUD
+                    val hud = Kevin.getInstance.hud
                     if (args[1].equals("on",ignoreCase = true)){
                         module.toggle(true)
-                        hud.addNotification(HUD.Notification("Enabled ${module.getName()}"))
+                        hud.addNotification(Notification("Enabled ${module.getName()}"))
                         Minecraft.getMinecraft().soundHandler.playSound(
                             PositionedSoundRecord.create(
                                 ResourceLocation("gui.button.press"),
@@ -31,7 +32,7 @@ class ToggleCommand : ICommand {
                         return
                     }else if (args[1].equals("off",ignoreCase = true)){
                         module.toggle(false)
-                        hud.addNotification(HUD.Notification("Disabled ${module.getName()}"))
+                        hud.addNotification(Notification("Disabled ${module.getName()}"))
                         Minecraft.getMinecraft().soundHandler.playSound(
                             PositionedSoundRecord.create(
                                 ResourceLocation("gui.button.press"),

@@ -6,7 +6,7 @@ import kevin.event.EventManager;
 import kevin.file.FileManager;
 import kevin.module.ModuleManager;
 import kevin.module.modules.render.ClickGui;
-import kevin.module.modules.render.HUD;
+import kevin.hud.HUD;
 import kevin.utils.FontManager;
 import org.lwjgl.opengl.Display;
 
@@ -23,6 +23,7 @@ public enum Kevin {
     public CommandManager commandManager;
     public FontManager fontManager;
     public ClickGui.ClickGUI clickGUI;
+    public HUD hud;
 
     public String cStart = "§l§7[§l§9Kevin§l§7]";
 
@@ -35,6 +36,9 @@ public enum Kevin {
         fontManager.loadFonts();
         Display.setTitle(name + " " +version +" | Minecraft 1.8.9");
         moduleManager.load();
+        fileManager.loadConfig(fileManager.modulesConfig);
+        hud = HUD.createDefault();
+        fileManager.loadConfig(fileManager.hudConfig);
         fileManager.load();
         commandManager.load();
         clickGUI = new ClickGui.ClickGUI();

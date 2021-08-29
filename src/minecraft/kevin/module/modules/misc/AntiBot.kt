@@ -4,6 +4,7 @@ import kevin.event.EventTarget
 import kevin.event.PacketEvent
 import kevin.event.TextEvent
 import kevin.event.UpdateEvent
+import kevin.hud.element.elements.Notification
 import kevin.main.Kevin
 import kevin.module.ListValue
 import kevin.module.Module
@@ -30,12 +31,12 @@ class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bot
         if (packet is S02PacketChat){
             if (packet.chatComponent.formattedText.contains("获得胜利",true)){
                 gameStarted = false
-                (Kevin.getInstance.moduleManager.getModule("HUD") as HUD).addNotification(HUD.Notification("GameEnd!"),"Antibot")
+                Kevin.getInstance.hud.addNotification(Notification("GameEnd!"),"Antibot")
             }
 
             if (packet.chatComponent.formattedText.contains("游戏开始",true)){
                 gameStarted = true
-                (Kevin.getInstance.moduleManager.getModule("HUD") as HUD).addNotification(HUD.Notification("GameStart!"),"Antibot")
+                Kevin.getInstance.hud.addNotification(Notification("GameStart!"),"Antibot")
             }
         }
     }
@@ -45,7 +46,7 @@ class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bot
         val text = event.text
         if (text != null && text.contains("游戏结束",true) && gameStarted && !text.contains("后",true)){
             gameStarted = false
-            (Kevin.getInstance.moduleManager.getModule("HUD") as HUD).addNotification(HUD.Notification("GameEnd!"),"Antibot")
+            Kevin.getInstance.hud.addNotification(Notification("GameEnd!"),"Antibot")
         }
     }
 
@@ -90,8 +91,8 @@ class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bot
 
                 if (isBot) {
                     mc.theWorld.removeEntityFromWorld(entity.entityId)
-                    val hud = Kevin.getInstance.moduleManager.getModule("HUD") as HUD
-                    hud.addNotification(HUD.Notification("Removed Bot"),"AntiBot")
+                    val hud = Kevin.getInstance.hud
+                    hud.addNotification(Notification("Removed Bot"),"AntiBot")
                 }
             }
         }

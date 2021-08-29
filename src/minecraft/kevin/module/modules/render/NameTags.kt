@@ -159,7 +159,7 @@ class NameTags : Module("NameTags", "Changes the scale of the nametags so you ca
             }
         }
         // Reset caps
-        //glEnable(GL_LIGHTING)
+
         glEnable(GL_DEPTH_TEST)
         glDisable(GL_BLEND)
 

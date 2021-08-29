@@ -7,6 +7,7 @@ import kevin.module.*
 import kevin.module.modules.Targets
 import kevin.utils.BlockUtils
 import kevin.utils.FontManager
+import kevin.utils.RainbowShader
 import kevin.utils.RenderUtils
 import kevin.utils.RenderUtils.glColor
 import net.minecraft.client.audio.PositionedSoundRecord
@@ -126,11 +127,11 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 val borderRainbow = isClick(mc.currentScreen.width/4F,y,mc.currentScreen.width/8F*3,y+high,mouseX.toFloat(),mouseY.toFloat())
                 val noHead = isClick(mc.currentScreen.width/4F,y-high,mc.currentScreen.width/8F*3,y,mouseX.toFloat(),mouseY.toFloat())
                 RenderUtils.drawRect(mc.currentScreen.width/4F,y,mc.currentScreen.width/8F*3,y+high,Color(60,60,60).rgb)
-                HUD.RainbowShader.begin(borderRainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
+                RainbowShader.begin(borderRainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
                     if (c != category.first() && noHead) drawNoHeadBorder(mc.currentScreen.width/4F,y,mc.currentScreen.width/8F*3,y+high,2F,Color(255,255,255,150))
                     else RenderUtils.drawBorder(mc.currentScreen.width/4F,y,mc.currentScreen.width/8F*3,y+high,2F,Color(255,255,255,150).rgb)
                 }
-                if (c != category.first() && noHead) HUD.RainbowShader.begin(true,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
+                if (c != category.first() && noHead) RainbowShader.begin(true,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
                     glEnable(GL_BLEND)
                     glDisable(GL_TEXTURE_2D)
                     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -278,7 +279,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             glPushMatrix()
             glScalef(scale,scale,scale)
             RenderUtils.drawRect(x1,y1,x1+3/scale,y1+3/scale,if (enable) Color.green.rgb else Color.red.rgb)
-            HUD.RainbowShader.begin(rainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
+            RainbowShader.begin(rainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
                 RenderUtils.drawBorder(x/scale,y/scale,x+9/scale,y1+4/scale,1F,Color(255,255,255).rgb)
             }
             glPopMatrix()
@@ -293,7 +294,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 if (jumpOver != start){jumpOver+=1;continue}
                 val rainbow = isClick(mc.currentScreen.width/8F*3,y,mc.currentScreen.width / 16F * 9,y+moduleHigh,mouseX.toFloat(),mouseY.toFloat())
                 val noHead = y != mc.currentScreen.height / 4F && isClick(mc.currentScreen.width/8F*3,y-moduleHigh,mc.currentScreen.width / 16F * 9,y,mouseX.toFloat(),mouseY.toFloat())
-                HUD.RainbowShader.begin(rainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
+                RainbowShader.begin(rainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
                     if (noHead) drawNoHeadBorder(mc.currentScreen.width/8F*3,y,mc.currentScreen.width / 16F * 9,y+moduleHigh,2F,Color(255,255,255,150))
                     else RenderUtils.drawBorder(mc.currentScreen.width/8F*3,y,mc.currentScreen.width / 16F * 9,y+moduleHigh,2F,Color(255,255,255,150).rgb)
                 }

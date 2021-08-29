@@ -20,6 +20,7 @@ class Animations : Module("Animations","Changes animations.", category = ModuleC
     val itemPosZ = FloatValue("ItemPosZ", -0.71999997F, -1.0F, 1.0F)
     var itemScale = FloatValue("ItemScale", 0.4f, 0.0f, 2.0f)
     val onlyOnBlock = BooleanValue("OnlyBlock",false)
+    val animationSpeed = IntegerValue("AnimationSpeed",6,1,30)
 
     override val tag: String
         get() = animations.get()

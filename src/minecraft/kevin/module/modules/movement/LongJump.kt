@@ -1,21 +1,22 @@
 package kevin.module.modules.movement
 
-import kevin.event.EventTarget
-import kevin.event.JumpEvent
-import kevin.event.MoveEvent
-import kevin.event.UpdateEvent
+import kevin.event.*
 import kevin.module.*
 import kevin.utils.MovementUtils
+import net.minecraft.network.play.server.S27PacketExplosion
 import net.minecraft.util.EnumFacing
 
 class LongJump : Module("LongJump", "Allows you to jump further.", category = ModuleCategory.MOVEMENT) {
-    private val modeValue = ListValue("Mode", arrayOf("NCP", "AACv1", "AACv2", "AACv3", "Mineplex", "Mineplex2", "Mineplex3", "Redesky"), "NCP")
+    private val modeValue = ListValue("Mode", arrayOf("NCP", "AACv1", "AACv2", "AACv3", "Mineplex", "Mineplex2", "Mineplex3", "Redesky", "ExplosionBoost"), "NCP")
     private val ncpBoostValue = FloatValue("NCPBoost", 4.25f, 1f, 10f)
     private val autoJumpValue = BooleanValue("AutoJump", false)
+    private val explosionBoostHigh = FloatValue("ExplosionBoostHigh",0.00F,0.01F,1F)
+    private val explosionBoostLong = FloatValue("ExplosionBoostLong",0.25F,0.01F,1F)
     private var jumped = false
     private var canBoost = false
     private var teleported = false
     private var canMineplexBoost = false
+    private var explosion = false
 
     @EventTarget
     fun onUpdate(event: UpdateEvent?) {
@@ -98,6 +99,14 @@ class LongJump : Module("LongJump", "Allows you to jump further.", category = Mo
             jumped = true
             thePlayer.jump()
         }
+        if (modeValue.get().equals("ExplosionBoost",true)){
+            if (explosion){
+                mc.thePlayer.motionX *= 1F + explosionBoostLong.get()
+                mc.thePlayer.motionY *= 1F + explosionBoostHigh.get()
+                mc.thePlayer.motionZ *= 1F + explosionBoostLong.get()
+                explosion = false
+            }
+        }
     }
 
     @EventTarget
@@ -133,6 +142,14 @@ class LongJump : Module("LongJump", "Allows you to jump further.", category = Mo
                 }
             }
         }
+    }
+
+    @EventTarget
+    fun onPacket(event: PacketEvent){
+        if (event.packet is S27PacketExplosion)
+            if (event.packet.func_149149_c() != 0F ||
+                event.packet.func_149144_d() != 0F ||
+                event.packet.func_149147_e() != 0F) explosion = true
     }
 
     override val tag: String

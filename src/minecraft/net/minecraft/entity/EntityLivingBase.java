@@ -8,10 +8,12 @@ import java.util.*;
 
 import kevin.event.JumpEvent;
 import kevin.main.Kevin;
+import kevin.module.modules.render.Animations;
 import kevin.module.modules.render.AntiBlind;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.BaseAttributeMap;
@@ -1346,7 +1348,10 @@ public abstract class EntityLivingBase extends Entity
      */
     private int getArmSwingAnimationEnd()
     {
-        if (this.isPotionActive(Potion.digSpeed))
+        Animations animations = (Animations) Kevin.getInstance.moduleManager.getModule("Animations");
+        if (animations.getToggle() && this == Minecraft.getMinecraft().thePlayer){
+            return animations.getAnimationSpeed().get();
+        } else if (this.isPotionActive(Potion.digSpeed))
         {
             return 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) * 1;
         }

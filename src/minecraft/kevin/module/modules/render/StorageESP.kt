@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11
 import java.awt.Color
 
 class StorageESP : Module("StorageESP", "Allows you to see chests, dispensers, etc. through walls.", category = ModuleCategory.RENDER) {
-    private val modeValue = ListValue("Mode", arrayOf("Box", "OtherBox", "Outline", "ShaderOutline", "ShaderGlow", "2D", "WireFrame"), "Outline")
+    val modeValue = ListValue("Mode", arrayOf("Box", "OtherBox", "Outline", "ShaderOutline", "ShaderGlow", "2D", "WireFrame"), "Outline")
     private val chestValue = BooleanValue("Chest", true)
     private val enderChestValue = BooleanValue("EnderChest", true)
     private val furnaceValue = BooleanValue("Furnace", true)

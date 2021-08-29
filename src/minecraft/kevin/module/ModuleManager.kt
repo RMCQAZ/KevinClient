@@ -58,6 +58,7 @@ class ModuleManager : Listenable {
         )
         miscList = arrayListOf(
             AntiBot(),
+            AutoCommand(),
             ComponentOnHover(),
             NameProtect(),
             NoRotateSet(),
@@ -112,6 +113,7 @@ class ModuleManager : Listenable {
             FreeCam(),
             FullBright(),
             HUD(),
+            HudDesigner(),
             ItemESP(),
             NameTags(),
             NoBob(),

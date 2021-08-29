@@ -2,6 +2,9 @@ package net.minecraft.client.renderer.tileentity;
 
 import com.google.common.collect.Maps;
 import java.util.Map;
+
+import kevin.main.Kevin;
+import kevin.module.modules.render.StorageESP;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -124,7 +127,8 @@ public class TileEntityRendererDispatcher
 
             if (flag)
             {
-                RenderHelper.enableStandardItemLighting();
+                StorageESP storageESP = (StorageESP) Kevin.getInstance.moduleManager.getModule("StorageESP");
+                if (!storageESP.getToggle()) RenderHelper.enableStandardItemLighting();
                 int i = this.worldObj.getCombinedLight(tileentityIn.getPos(), 0);
                 int j = i % 65536;
                 int k = i / 65536;

@@ -1,17 +1,18 @@
 package kevin.module.modules.movement
 
 import kevin.event.*
-import kevin.module.BooleanValue
-import kevin.module.ListValue
-import kevin.module.Module
-import kevin.module.ModuleCategory
+import kevin.module.*
 import kevin.utils.MovementUtils
+import net.minecraft.network.play.server.S12PacketEntityVelocity
 import kotlin.math.cos
 import kotlin.math.sin
 
 class Speed : Module("Speed","Allows you to move faster.", category = ModuleCategory.MOVEMENT) {
     private val mode = ListValue("Mode", arrayOf("AAC5Long","AAC5Fast","YPort","AutoJump"),"AAC5Long")
     private val keepSprint = BooleanValue("KeepSprint",false)
+    private val antiKnockback = BooleanValue("AntiKnockBack",false)
+    private val antiKnockbackLong = FloatValue("AntiKnockBackLong",0F,0.00F,1.00F)
+    private val antiKnockbackHigh = FloatValue("AntiKnockBackHigh",1F,0.00F,1.00F)
 
     private var jumps = 0
 
@@ -96,6 +97,22 @@ class Speed : Module("Speed","Allows you to move faster.", category = ModuleCate
                     mc.thePlayer.jump()
                 }
             }
+        }
+    }
+
+    @EventTarget
+    fun onPacket(event: PacketEvent){
+        if (event.packet is S12PacketEntityVelocity && antiKnockback.get()){
+            val thePlayer = mc.thePlayer ?: return
+            val packet = event.packet
+            val packetEntityVelocity = packet as S12PacketEntityVelocity
+            if ((mc.theWorld?.getEntityByID(packetEntityVelocity.entityID) ?: return) != thePlayer) return
+            val horizontal = antiKnockbackLong.get()
+            val vertical = antiKnockbackHigh.get()
+            if (horizontal == 0F && vertical == 0F) event.cancelEvent()
+            packetEntityVelocity.motionX = (packetEntityVelocity.motionX * horizontal).toInt()
+            packetEntityVelocity.motionY = (packetEntityVelocity.motionY * vertical).toInt()
+            packetEntityVelocity.motionZ = (packetEntityVelocity.motionZ * horizontal).toInt()
         }
     }
 }

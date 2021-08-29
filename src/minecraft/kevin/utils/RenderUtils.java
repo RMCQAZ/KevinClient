@@ -2,6 +2,7 @@ package kevin.utils;
 
 import kevin.main.Kevin;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -251,6 +252,52 @@ public final class RenderUtils extends MinecraftInstance{
     }
 
     public static void drawRect(final float x, final float y, final float x2, final float y2, final int color) {
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_LINE_SMOOTH);
+
+        glColor(color);
+        glBegin(GL_QUADS);
+
+        glVertex2f(x2, y);
+        glVertex2f(x, y);
+        glVertex2f(x, y2);
+        glVertex2f(x2, y2);
+        glEnd();
+
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+        glDisable(GL_LINE_SMOOTH);
+    }
+
+    public static void drawRect(final int x, final int y, final int x2, final int y2, final int color) {
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_LINE_SMOOTH);
+
+        glColor(color);
+        glBegin(GL_QUADS);
+
+        glVertex2i(x2, y);
+        glVertex2i(x, y);
+        glVertex2i(x, y2);
+        glVertex2i(x2, y2);
+        glEnd();
+
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+        glDisable(GL_LINE_SMOOTH);
+    }
+
+    public static void makeScissorBox(final float x, final float y, final float x2, final float y2) {
+        final ScaledResolution scaledResolution = new ScaledResolution(mc);
+        final int factor = scaledResolution.getScaleFactor();
+        glScissor((int) (x * factor), (int) ((scaledResolution.getScaledHeight() - y2) * factor), (int) ((x2 - x) * factor), (int) ((y2 - y) * factor));
+    }
+
+    public static void drawRect(final float x, final float y, final float x2, final float y2, final Color color) {
         glEnable(GL_BLEND);
         glDisable(GL_TEXTURE_2D);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -1,6 +1,7 @@
 package kevin.module
 
 import kevin.event.Listenable
+import kevin.hud.element.elements.Notification
 import kevin.main.Kevin
 import kevin.module.modules.render.HUD
 import kevin.utils.ColorUtils.stripColor
@@ -63,7 +64,7 @@ open class Module(name: String, description: String = "", keyBind: Int = Keyboar
 
     open fun toggle() {
         enable = !enable!!
-        val hud = Kevin.getInstance.moduleManager.getModule("HUD") as HUD
+        val hud = Kevin.getInstance.hud
         if (enable!!) {
             Minecraft.getMinecraft().soundHandler.playSound(
                 PositionedSoundRecord.create(
@@ -71,7 +72,7 @@ open class Module(name: String, description: String = "", keyBind: Int = Keyboar
                     1f
                 )
             )
-            hud.addNotification(HUD.Notification("Enabled $name"))
+            hud.addNotification(Notification("Enabled $name"))
             Kevin.getInstance.fileManager.saveConfig(Kevin.getInstance.fileManager.modulesConfig)
             onEnable()
         } else {
@@ -81,7 +82,7 @@ open class Module(name: String, description: String = "", keyBind: Int = Keyboar
                     0.6114514191981f
                 )
             )
-            hud.addNotification(HUD.Notification("Disabled $name"))
+            hud.addNotification(Notification("Disabled $name"))
             Kevin.getInstance.fileManager.saveConfig(Kevin.getInstance.fileManager.modulesConfig)
             onDisable()
         }

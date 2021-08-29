@@ -13,6 +13,7 @@ import kevin.event.*;
 import kevin.main.Kevin;
 import kevin.module.modules.exploit.AbortBreaking;
 import kevin.module.modules.world.FastPlace;
+import kevin.utils.CPSCounter;
 import kevin.utils.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -1484,6 +1485,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
     private void clickMouse()
     {
+        CPSCounter.registerClick(CPSCounter.MouseButton.LEFT);
+
         if (Kevin.getInstance.moduleManager.getModule("AutoClicker").getToggle()) leftClickCounter = 0;
         if (this.leftClickCounter <= 0)
         {
@@ -1534,6 +1537,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         if (!this.playerController.getIsHittingBlock())
         {
             this.rightClickDelayTimer = 4;
+            CPSCounter.registerClick(CPSCounter.MouseButton.RIGHT);
+
             final FastPlace fastPlace = (FastPlace) Kevin.getInstance.moduleManager.getModule("FastPlace");
 
             if (fastPlace.getToggle()) rightClickDelayTimer = fastPlace.getSpeedValue().get();
@@ -2470,6 +2475,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     private void middleClickMouse()
     {
+        CPSCounter.registerClick(CPSCounter.MouseButton.MIDDLE);
         if (this.objectMouseOver != null)
         {
             boolean flag = this.thePlayer.capabilities.isCreativeMode;
