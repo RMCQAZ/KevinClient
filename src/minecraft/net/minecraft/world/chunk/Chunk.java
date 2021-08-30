@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import kevin.utils.MiniMapRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -652,6 +654,8 @@ public class Chunk
 
     public IBlockState setBlockState(BlockPos pos, IBlockState state)
     {
+        MiniMapRegister.INSTANCE.updateChunk(this);
+
         int i = pos.getX() & 15;
         int j = pos.getY();
         int k = pos.getZ() & 15;
@@ -1009,6 +1013,8 @@ public class Chunk
      */
     public void onChunkUnload()
     {
+        MiniMapRegister.INSTANCE.unloadChunk(this.xPosition, this.zPosition);
+
         this.isChunkLoaded = false;
 
         for (TileEntity tileentity : this.chunkTileEntityMap.values())
@@ -1382,6 +1388,8 @@ public class Chunk
         {
             tileentity.updateContainingBlockInfo();
         }
+
+        MiniMapRegister.INSTANCE.updateChunk(this);
     }
 
     public BiomeGenBase getBiome(BlockPos pos, WorldChunkManager chunkManager)

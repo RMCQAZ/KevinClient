@@ -14,6 +14,7 @@ import kevin.main.Kevin;
 import kevin.module.modules.exploit.AbortBreaking;
 import kevin.module.modules.world.FastPlace;
 import kevin.utils.CPSCounter;
+import kevin.utils.MiniMapRegister;
 import kevin.utils.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -2329,6 +2330,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     public void loadWorld(WorldClient worldClientIn, String loadingMessage)
     {
+        if (theWorld != null) {
+            MiniMapRegister.INSTANCE.unloadAllChunks();
+        }
         Kevin.getInstance.eventManager.callEvent(new WorldEvent(worldClientIn));
         if (worldClientIn == null)
         {
