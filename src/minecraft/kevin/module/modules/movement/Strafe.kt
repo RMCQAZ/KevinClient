@@ -20,7 +20,7 @@ class Strafe : Module("Strafe","Allows you to freely move in mid air.", Keyboard
     private var strengthValue= FloatValue("Strength", 0.5F, 0F, 1F)
     private var noMoveStopValue = BooleanValue("NoMoveStop", false)
     private var onGroundStrafeValue = BooleanValue("OnGroundStrafe", false)
-    private var allDirectionsJumpValue = BooleanValue("AllDirectionsJump", false)
+    var allDirectionsJumpValue = BooleanValue("AllDirectionsJump", false)
 
     private var wasDown: Boolean = false
     private var jump: Boolean = false
@@ -78,7 +78,7 @@ class Strafe : Module("Strafe","Allows you to freely move in mid air.", Keyboard
     }
 
 
-    private fun getMoveYaw(): Float {
+    fun getMoveYaw(): Float {
         var moveYaw = mc.thePlayer!!.rotationYaw
         if (mc.thePlayer!!.moveForward != 0F && mc.thePlayer!!.moveStrafing == 0F) {
             moveYaw += if(mc.thePlayer!!.moveForward > 0) 0 else 180

@@ -107,6 +107,7 @@ class ModuleManager : Listenable {
             BlockESP(),
             BlockOverlay(),
             CameraClip(),
+            CapeManager(),
             Chams(),
             ClickGui(),
             ESP(),

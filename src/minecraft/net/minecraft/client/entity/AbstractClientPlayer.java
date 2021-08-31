@@ -97,6 +97,9 @@ public abstract class AbstractClientPlayer extends EntityPlayer
 
     public ResourceLocation getLocationCape()
     {
+        if(Kevin.getInstance.capeManager.getNowCape() != null && getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()))
+            return Kevin.getInstance.capeManager.getNowCape().getResource();
+
         if (!Config.isShowCapes())
         {
             return null;

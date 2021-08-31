@@ -1,6 +1,7 @@
 package kevin.module.modules.movement
 
 import kevin.event.*
+import kevin.main.Kevin
 import kevin.module.*
 import kevin.utils.MovementUtils
 import net.minecraft.network.play.server.S12PacketEntityVelocity
@@ -31,6 +32,8 @@ class Speed : Module("Speed","Allows you to move faster.", category = ModuleCate
         when(mode.get()){
             "AAC5Long" -> {
                 if (!MovementUtils.isMoving) return
+                if (mc.thePlayer.isInWater || mc.thePlayer.isInLava || mc.thePlayer.isOnLadder || mc.thePlayer.isInWeb) return
+
                 if (mc.thePlayer.onGround) {
                     mc.gameSettings.keyBindJump.pressed = false
                     mc.thePlayer.jump()
@@ -48,10 +51,18 @@ class Speed : Module("Speed","Allows you to move faster.", category = ModuleCate
                 }
             }
             "AAC5Fast" -> {
-                if (!MovementUtils.isMoving)
-                    return
+                if (!MovementUtils.isMoving) return
+                if (mc.thePlayer.isInWater || mc.thePlayer.isInLava || mc.thePlayer.isOnLadder || mc.thePlayer.isInWeb) return
                 if (mc.thePlayer.onGround) {
-                    mc.thePlayer.jump()
+                    val strafe = Kevin.getInstance.moduleManager.getModule("Strafe") as Strafe
+                    if (strafe.getToggle() && strafe.allDirectionsJumpValue.get()) {
+                        val yaw = mc.thePlayer.rotationYaw
+                        mc.thePlayer.rotationYaw = strafe.getMoveYaw()
+                        mc.thePlayer.jump()
+                        mc.thePlayer.rotationYaw = yaw
+                    } else {
+                        mc.thePlayer.jump()
+                    }
                     mc.thePlayer.speedInAir = 0.0201F
                     mc.timer.timerSpeed = 0.94F
                 }

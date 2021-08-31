@@ -1,5 +1,6 @@
 package kevin.main;
 
+import kevin.cape.CapeManager;
 import kevin.command.CommandManager;
 import kevin.event.ClientShutdownEvent;
 import kevin.event.EventManager;
@@ -24,6 +25,7 @@ public enum Kevin {
     public FontManager fontManager;
     public ClickGui.ClickGUI clickGUI;
     public HUD hud;
+    public CapeManager capeManager;
 
     public String cStart = "§l§7[§l§9Kevin§l§7]";
 
@@ -42,10 +44,13 @@ public enum Kevin {
         fileManager.load();
         commandManager.load();
         clickGUI = new ClickGui.ClickGUI();
+        capeManager = new CapeManager();
+        capeManager.load();
     }
 
     public void stop() {
         this.eventManager.callEvent(new ClientShutdownEvent());
         fileManager.saveAllConfigs();
+        capeManager.save();
     }
 }
