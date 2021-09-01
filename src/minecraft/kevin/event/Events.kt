@@ -49,7 +49,7 @@ class MoveEvent(var x: Double, var y: Double, var z: Double) : CancellableEvent(
     }
 }
 
-class PacketEvent(val packet: Packet<INetHandler>,val eventState: PacketMode) : CancellableEvent()
+class PacketEvent(val packet: Packet<*>,val eventState: PacketMode) : CancellableEvent()
 
 class PushOutEvent : CancellableEvent()
 

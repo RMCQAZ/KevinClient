@@ -8,6 +8,8 @@ import kevin.main.Kevin
 import kevin.module.*
 import kevin.utils.MSTimer
 import kevin.utils.MovementUtils
+import kevin.utils.PacketUtils
+import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.server.S12PacketEntityVelocity
 import net.minecraft.network.play.server.S27PacketExplosion
 import kotlin.math.cos
@@ -17,7 +19,7 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
     private val horizontalValue = FloatValue("Horizontal", 0F, 0F, 1F)
     private val verticalValue = FloatValue("Vertical", 0F, 0F, 1F)
     private val modeValue = ListValue("Mode", arrayOf("Simple", "AAC", "AACPush", "AACZero", "AACv4",
-        "Reverse", "SmoothReverse", "Jump", "Glitch"), "Simple")
+        "Reverse", "SmoothReverse", "Jump", "Glitch", "AAC5"), "Simple")
 
     // Reverse
     private val reverseStrengthValue = FloatValue("ReverseStrength", 1F, 0.1F, 1F)
@@ -187,6 +189,10 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
                 }
 
                 "aac", "reverse", "smoothreverse", "aaczero" -> velocityInput = true
+
+                "aac5" -> {
+                    PacketUtils.sendPacketNoEvent(C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, Double.MAX_VALUE, mc.thePlayer.posZ, mc.thePlayer.onGround))
+                }
 
                 "glitch" -> {
                     if (!thePlayer.onGround)

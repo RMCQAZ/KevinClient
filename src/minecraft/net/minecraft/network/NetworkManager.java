@@ -35,6 +35,7 @@ import javax.crypto.SecretKey;
 import kevin.event.PacketEvent;
 import kevin.event.PacketMode;
 import kevin.main.Kevin;
+import kevin.utils.PacketUtils;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.CryptManager;
@@ -156,7 +157,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             try
             {
                 final PacketEvent packetEvent = new PacketEvent(p_channelRead0_2_, PacketMode.RECEIVE);
-                Kevin.getInstance.eventManager.callEvent(packetEvent);
+                if (!PacketUtils.INSTANCE.getPacketList().contains(p_channelRead0_2_)) Kevin.getInstance.eventManager.callEvent(packetEvent);
                 if (packetEvent.isCancelled()) return;
                 p_channelRead0_2_.processPacket(this.packetListener);
             }
@@ -181,7 +182,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
     public void sendPacket(Packet packetIn)
     {
         final PacketEvent event = new PacketEvent(packetIn,PacketMode.SEND);
-        Kevin.getInstance.eventManager.callEvent(event);
+        if (!PacketUtils.INSTANCE.getPacketList().contains(packetIn)) Kevin.getInstance.eventManager.callEvent(event);
         if(event.isCancelled()) return;
         if (this.isChannelOpen())
         {
