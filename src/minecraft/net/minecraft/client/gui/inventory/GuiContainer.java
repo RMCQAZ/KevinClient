@@ -3,6 +3,9 @@ package net.minecraft.client.gui.inventory;
 import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.util.Set;
+
+import kevin.main.Kevin;
+import kevin.module.modules.world.ChestStealer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -98,6 +101,27 @@ public abstract class GuiContainer extends GuiScreen
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        ChestStealer chestStealer=(ChestStealer) Kevin.getInstance.moduleManager.getModule("ChestStealer");
+        try {
+            Minecraft mc=Minecraft.getMinecraft();
+            GuiScreen guiScreen=mc.currentScreen;
+            if(chestStealer.getToggle()&&chestStealer.getSilentValue().get()&&guiScreen instanceof GuiChest){
+                //mouse focus
+                mc.setIngameFocus();
+                mc.currentScreen=guiScreen;
+                //hide GUI
+                if(chestStealer.getSilentValue().get()) {
+                    String tipString = "Stealing Chest...";
+                    mc.fontRendererObj.drawString(tipString,
+                            (width / 2) - (mc.fontRendererObj.getStringWidth(tipString) / 2),
+                            (height / 2) + 30, 0xffffffff);
+                }
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         this.drawDefaultBackground();
         int i = this.guiLeft;
         int j = this.guiTop;

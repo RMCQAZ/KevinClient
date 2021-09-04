@@ -168,6 +168,27 @@ public final class RenderUtils extends MinecraftInstance{
         GL11.glPopMatrix();
     }
 
+    public static void drawLineStart(final Color color,final float width){
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_LINE_SMOOTH);
+        glColor(color);
+        glLineWidth(width);
+        glBegin(GL_LINES);
+    }
+
+    public static void drawLine(final double x1,final double y1,final double x2,final double y2){
+        glVertex2d(x1,y1);
+        glVertex2d(x2,y2);
+    }
+
+    public static void drawLineEnd(){
+        glEnd();
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+        glDisable(GL_LINE_SMOOTH);
+    }
 
     public static void renderNameTag(final String string, final double x, final double y, final double z) {
         final RenderManager renderManager = mc.getRenderManager();
@@ -251,6 +272,46 @@ public final class RenderUtils extends MinecraftInstance{
         glDisable(GL_LINE_SMOOTH);
     }
 
+    public static void drawRectRoundedCorners(final double x,final double y,final double x2,final double y2,final double radius,final Color color){
+        final double X1 = Math.min(x,x2);
+        final double X2 = Math.max(x,x2);
+        final double Y1 = Math.min(y,y2);
+        final double Y2 = Math.max(y,y2);
+
+        if (radius*2>X2-X1 || radius*2>Y2-Y1) return;
+        drawRect(X1,Y1+radius,X2,Y2-radius,color.getRGB());
+        drawRect(X1+radius,Y1,X2-radius,Y1+radius,color.getRGB());
+        drawRect(X1+radius,Y2-radius,X2-radius,Y2,color.getRGB());
+
+        drawSector(X2-radius,Y2-radius,0,90,radius,color);
+        drawSector(X1+radius,Y2-radius,90,180,radius,color);
+        drawSector(X1+radius,Y1+radius,180,270,radius,color);
+        drawSector(X2-radius,Y1+radius,270,360,radius,color);
+    }
+
+    public static void drawSector(final double x,final double y,int angle1,int angle2,final double radius,final Color color){
+        if (angle1 > angle2) {
+            int temp = angle2;
+            angle2 = angle1;
+            angle1 = temp;
+        }
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        glColor(color);
+        glBegin(GL11.GL_TRIANGLE_FAN);
+        glVertex2d(x, y);
+        for(double i = angle2; i >= angle1; i-=4) {
+            double ldx = Math.cos(i * Math.PI / 180.0) * radius;
+            double ldy = Math.sin(i * Math.PI / 180.0) * radius;
+            glVertex2d(x + ldx, y + ldy);
+        }
+        glVertex2d(x, y);
+        glEnd();
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+    }
+
     public static void drawRect(final float x, final float y, final float x2, final float y2, final int color) {
         glEnable(GL_BLEND);
         glDisable(GL_TEXTURE_2D);
@@ -264,6 +325,26 @@ public final class RenderUtils extends MinecraftInstance{
         glVertex2f(x, y);
         glVertex2f(x, y2);
         glVertex2f(x2, y2);
+        glEnd();
+
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+        glDisable(GL_LINE_SMOOTH);
+    }
+
+    public static void drawRect(final double x, final double y, final double x2, final double y2, final int color) {
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_LINE_SMOOTH);
+
+        glColor(color);
+        glBegin(GL_QUADS);
+
+        glVertex2d(x2, y);
+        glVertex2d(x, y);
+        glVertex2d(x, y2);
+        glVertex2d(x2, y2);
         glEnd();
 
         glEnable(GL_TEXTURE_2D);

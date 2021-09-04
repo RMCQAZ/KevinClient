@@ -19,7 +19,7 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
     private val horizontalValue = FloatValue("Horizontal", 0F, 0F, 1F)
     private val verticalValue = FloatValue("Vertical", 0F, 0F, 1F)
     private val modeValue = ListValue("Mode", arrayOf("Simple", "AAC", "AACPush", "AACZero", "AACv4",
-        "Reverse", "SmoothReverse", "Jump", "Glitch", "AAC5"), "Simple")
+        "Reverse", "SmoothReverse", "Jump", "Glitch", "AAC5Packet"), "Simple")
 
     // Reverse
     private val reverseStrengthValue = FloatValue("ReverseStrength", 1F, 0.1F, 1F)
@@ -165,7 +165,7 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
         val packet = event.packet
 
         if (packet is S12PacketEntityVelocity) {
-            val packetEntityVelocity = packet as S12PacketEntityVelocity
+            val packetEntityVelocity = packet
 
 
             if ((mc.theWorld?.getEntityByID(packetEntityVelocity.entityID) ?: return) != thePlayer)
@@ -190,8 +190,9 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
 
                 "aac", "reverse", "smoothreverse", "aaczero" -> velocityInput = true
 
-                "aac5" -> {
+                "aac5packet" -> {
                     PacketUtils.sendPacketNoEvent(C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, Double.MAX_VALUE, mc.thePlayer.posZ, mc.thePlayer.onGround))
+                    event.cancelEvent()
                 }
 
                 "glitch" -> {

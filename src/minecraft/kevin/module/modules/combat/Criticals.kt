@@ -13,7 +13,7 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.network.play.client.C03PacketPlayer
 
 class Criticals : Module(name = "Criticals", description = "Automatically deals critical hits.", category = ModuleCategory.COMBAT) {
-    val modeValue = ListValue("Mode", arrayOf("Packet", "NcpPacket", "NoGround", "Hop", "Jump", "LowJump", "Visual", "MineMora"), "Packet")
+    val modeValue = ListValue("Mode", arrayOf("Packet", "NcpPacket", "AACPacket", "NoGround", "Hop", "Jump", "LowJump", "Visual", "MineMora"), "Packet")
     val delayValue = IntegerValue("Delay", 0, 0, 500)
     private val hurtTimeValue = IntegerValue("HurtTime", 10, 0, 10)
 
@@ -40,6 +40,13 @@ class Criticals : Module(name = "Criticals", description = "Automatically deals 
             val z = thePlayer.posZ
 
             when (modeValue.get().toLowerCase()) {
+                "aacpacket" -> {
+                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.05250000001304, z, false))
+                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.00150000001304, z, false))
+                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.01400000001304, z, false))
+                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.00150000001304, z, false))
+                }
+
                 "packet" -> {
                     mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.0625, z, true))
                     mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(x, y, z, false))

@@ -84,6 +84,7 @@ class ChestStealer : Module("ChestStealer", description = "Automatically steals 
     private var contentReceived = 0
 
     val silentValue = BooleanValue("Silent", true)
+    val overrideShowInvValue = BooleanValue("OverrideShowInv", true)
 
     @EventTarget
     fun onRender3D(event: Render3DEvent?) {

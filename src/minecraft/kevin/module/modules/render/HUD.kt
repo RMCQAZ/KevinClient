@@ -1,9 +1,6 @@
 package kevin.module.modules.render
 
-import kevin.event.EventTarget
-import kevin.event.KeyEvent
-import kevin.event.Render2DEvent
-import kevin.event.UpdateEvent
+import kevin.event.*
 import kevin.hud.designer.GuiHudDesigner
 import kevin.main.Kevin
 import kevin.module.Module
@@ -20,6 +17,7 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
 
     @EventTarget
     fun onUpdate(event: UpdateEvent?) {
+        if (event!!.eventState == UpdateState.OnUpdate) return
         Kevin.getInstance.hud.update()
     }
 

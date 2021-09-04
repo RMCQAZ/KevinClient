@@ -20,15 +20,15 @@ open class HUD : MinecraftInstance()  {
             Arraylist::class.java,
             Effects::class.java,
             //Image::class.java,
-            //Model::class.java,
             Notifications::class.java,
             PacketCounter::class.java,
+            Information::class.java,
             //TabGUI::class.java,
             Text::class.java,
             //ScoreboardElement::class.java,
             TargetHUD::class.java,
             Radar::class.java,
-            //InvItem::class.java,
+            InvItem::class.java
         )
 
         /**

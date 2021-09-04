@@ -56,7 +56,7 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
             "AAC5" -> {
                 if (mc.isSingleplayer) {
                     Kevin.getInstance.hud.addNotification(
-                        Notification("Use AAC5.2.0 Flys will crash single player"),"Fly")
+                        Notification("Use AAC5 Flys will crash single player"),"Fly")
                     toggle(false)
                     return
                 }
