@@ -24,6 +24,7 @@ public enum Kevin {
     public CommandManager commandManager;
     public FontManager fontManager;
     public ClickGui.ClickGUI clickGUI;
+    public ClickGui.NewClickGui newClickGui;
     public HUD hud;
     public CapeManager capeManager;
 
@@ -44,6 +45,7 @@ public enum Kevin {
         fileManager.load();
         commandManager.load();
         clickGUI = new ClickGui.ClickGUI();
+        newClickGui = new ClickGui.NewClickGui();
         capeManager = new CapeManager();
         capeManager.load();
     }

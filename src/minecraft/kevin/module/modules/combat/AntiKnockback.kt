@@ -35,6 +35,8 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
     private val cancelExplosionPacket = BooleanValue("CancelExplosionPacket",false)
     private val explosionCheck = BooleanValue("ExplosionCheck",true)
 
+    private val fireCheck = BooleanValue("FireCheck",true)
+
     private var velocityTimer = MSTimer()
     private var velocityInput = false
 
@@ -191,6 +193,8 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
                 "aac", "reverse", "smoothreverse", "aaczero" -> velocityInput = true
 
                 "aac5packet" -> {
+                    if(mc.isIntegratedServerRunning) return
+                    if (thePlayer.isBurning&&fireCheck.get()) return
                     PacketUtils.sendPacketNoEvent(C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, Double.MAX_VALUE, mc.thePlayer.posZ, mc.thePlayer.onGround))
                     event.cancelEvent()
                 }

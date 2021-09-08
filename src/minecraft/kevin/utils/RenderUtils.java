@@ -301,7 +301,7 @@ public final class RenderUtils extends MinecraftInstance{
         glColor(color);
         glBegin(GL11.GL_TRIANGLE_FAN);
         glVertex2d(x, y);
-        for(double i = angle2; i >= angle1; i-=4) {
+        for(double i = angle2; i >= angle1; i-=1) {
             double ldx = Math.cos(i * Math.PI / 180.0) * radius;
             double ldy = Math.sin(i * Math.PI / 180.0) * radius;
             glVertex2d(x + ldx, y + ldy);

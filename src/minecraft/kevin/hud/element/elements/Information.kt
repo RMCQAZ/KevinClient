@@ -6,8 +6,10 @@ import kevin.hud.element.Element
 import kevin.hud.element.ElementInfo
 import kevin.hud.element.Side
 import kevin.main.Kevin
+import kevin.utils.MSTimer
 import kevin.utils.RenderUtils
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.network.play.server.S02PacketChat
 import net.minecraft.network.play.server.S03PacketTimeUpdate
 import org.lwjgl.opengl.GL11
 import java.awt.Color
@@ -19,7 +21,9 @@ class Information(x: Double = 0.0, y: Double = 30.0, scale: Float = 1F,side: Sid
 
     //TPS
     private var tps = 20.0
-    private val packetHistoryTime = arrayListOf<Long>()
+    private val packetHistoryTime = CopyOnWriteArrayList<Long>()
+    private val timeTimer = MSTimer()
+    private val timeTimer2 = MSTimer()
     //Kills
     private var kills = 0
     private val attackEntities = CopyOnWriteArrayList<EntityLivingBase>()
@@ -76,12 +80,14 @@ class Information(x: Double = 0.0, y: Double = 30.0, scale: Float = 1F,side: Sid
         if (packet is S03PacketTimeUpdate){
             packetHistoryTime.add(System.currentTimeMillis())
         }
+        if (packet !is S02PacketChat && packet.javaClass.name.contains("net.minecraft.network.play.server.",true)) timeTimer.reset()
     }
     @EventTarget
     fun onWorld(event: WorldEvent){
         tps = 20.0
         kills = 0
         attackEntities.clear()
+        packetHistoryTime.clear()
     }
     override fun updateElement() {
         //TPS
@@ -93,11 +99,36 @@ class Information(x: Double = 0.0, y: Double = 30.0, scale: Float = 1F,side: Sid
     }
 
     private fun updateTPS(){
+        /**
         var count = 0.0
         packetHistoryTime.forEach {if(System.currentTimeMillis()<1000L+it)count++}
         if (count == packetHistoryTime.size.toDouble()) return else if (count + 10 < packetHistoryTime.size) packetHistoryTime.removeFirst()
         if (mc.currentServerData == null || mc.isIntegratedServerRunning) count /= 2.0
         tps = count * 20.0
+        **/
+        val d = 4
+        if (packetHistoryTime.size<2) return
+        while(packetHistoryTime.size>d) packetHistoryTime.removeFirst()
+        if (System.currentTimeMillis() - packetHistoryTime.last() > 5000L && timeTimer.hasTimePassed(5000L)){
+            if (!timeTimer2.hasTimePassed(1000L)) return
+            if (tps<1) {tps = 0.0;return}
+            tps /= 2
+            tps = String.format("%.1f",tps).toDouble()
+            timeTimer2.reset()
+            return
+        } else {
+            val p = arrayListOf<Long>()
+            if (mc.isIntegratedServerRunning) if (packetHistoryTime.size<3) return
+            else p.add(packetHistoryTime[2]-packetHistoryTime[1])
+            else packetHistoryTime.forEach {
+                if (packetHistoryTime.indexOf(it) + 1 <= packetHistoryTime.size - 1){
+                    p.add(packetHistoryTime[packetHistoryTime.indexOf(it) + 1] - it)
+                }
+            }
+            var t = 0L
+            p.forEach { t += it }
+            tps = String.format("%.1f", 20.0 / ((t / p.size) / 1000.0)).toDouble()
+        }
     }
 
     private fun updateBPS(){

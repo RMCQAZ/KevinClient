@@ -15,6 +15,7 @@ import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook
 import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.minecraft.util.AxisAlignedBB
 import org.lwjgl.input.Keyboard
+import java.util.concurrent.CopyOnWriteArrayList
 
 
 class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT) {
@@ -138,7 +139,7 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
         }
     }
 
-    private val aac5C03List = arrayListOf<C03PacketPlayer>()
+    private val aac5C03List = CopyOnWriteArrayList<C03PacketPlayer>()
 
     @EventTarget
     fun onPacket(event: PacketEvent){

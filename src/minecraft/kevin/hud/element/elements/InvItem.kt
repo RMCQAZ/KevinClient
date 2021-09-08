@@ -75,25 +75,39 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
         val chestStealer = Kevin.getInstance.moduleManager.getModule("ChestStealer") as ChestStealer
         val chest = (mc.currentScreen) is GuiChest && chestStealer.getToggle() && chestStealer.overrideShowInvValue.get()
 
+        if (chestStealer.chestItems.isEmpty()&&chest) {
+            RenderHelper.disableStandardItemLighting()
+            GlStateManager.enableAlpha()
+            GlStateManager.disableBlend()
+            GlStateManager.disableLighting()
+            GlStateManager.disableCull()
+            GL11.glPopMatrix()
+            return
+        }
+
         val mode = if (chest) {
             if (chestStealer.chestItems.size > 27) "BigChest" else "Chest"
         }else "Inv"
 
-        if (mode == "Inv") {
-            drawItems(9, 17, 6)
-            drawItems(18, 26, 24)
-            drawItems(27, 35, 42)
-        }else if (mode == "Chest"){
-            drawChestItems(0,8,6,chestStealer.chestItems)
-            drawChestItems(9,17,24,chestStealer.chestItems)
-            drawChestItems(18,26,42,chestStealer.chestItems)
-        }else {
-            drawChestItems(0,8,6,chestStealer.chestItems)
-            drawChestItems(9,17,24,chestStealer.chestItems)
-            drawChestItems(18,26,42,chestStealer.chestItems)
-            drawChestItems(27,35,60,chestStealer.chestItems)
-            drawChestItems(36,44,78,chestStealer.chestItems)
-            drawChestItems(45,53,96,chestStealer.chestItems)
+        when(mode){
+            "Inv" -> {
+                drawItems(9, 17, 6)
+                drawItems(18, 26, 24)
+                drawItems(27, 35, 42)
+            }
+            "Chest" -> {
+                drawChestItems(0,8,6,chestStealer.chestItems)
+                drawChestItems(9,17,24,chestStealer.chestItems)
+                drawChestItems(18,26,42,chestStealer.chestItems)
+            }
+            else -> {
+                drawChestItems(0,8,6,chestStealer.chestItems)
+                drawChestItems(9,17,24,chestStealer.chestItems)
+                drawChestItems(18,26,42,chestStealer.chestItems)
+                drawChestItems(27,35,60,chestStealer.chestItems)
+                drawChestItems(36,44,78,chestStealer.chestItems)
+                drawChestItems(45,53,96,chestStealer.chestItems)
+            }
         }
 
         RenderHelper.disableStandardItemLighting()
