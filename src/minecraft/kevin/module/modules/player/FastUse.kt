@@ -3,7 +3,9 @@ package kevin.module.modules.player
 import kevin.event.EventTarget
 import kevin.event.MoveEvent
 import kevin.event.UpdateEvent
-import kevin.event.UpdateState
+
+//import kevin.event.UpdateState
+
 import kevin.module.*
 import kevin.utils.MSTimer
 import kevin.utils.RotationUtils
@@ -34,7 +36,9 @@ class FastUse : Module("FastUse", "Allows you to use items faster.", category = 
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        if (event.eventState == UpdateState.OnUpdate) return
+
+        //if (event.eventState == UpdateState.OnUpdate) return
+
         val thePlayer = mc.thePlayer ?: return
 
         if (usedTimer) {

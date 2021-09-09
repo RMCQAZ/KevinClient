@@ -98,7 +98,9 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
 
     @EventTarget
     fun onUpdate(event: UpdateEvent){
-        if (event.eventState == UpdateState.OnUpdate) return
+
+        //if (event.eventState == UpdateState.OnUpdate) return
+
         when(mode.get()){
             "Vanilla" -> {
                 if (keepAlive.get()) mc.netHandler.addToSendQueue(C00PacketKeepAlive())

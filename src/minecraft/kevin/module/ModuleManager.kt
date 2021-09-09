@@ -136,6 +136,7 @@ class ModuleManager : Listenable {
             NoSlowBreak(),
             Nuker(),
             Scaffold(),
+            TeleportUse(),
             Timer()
         )
 

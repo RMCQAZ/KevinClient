@@ -182,8 +182,10 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     /** @param */
 
     @EventTarget
-    private fun onUpdate(event: UpdateEvent) {
-        if (event.eventState == UpdateState.OnUpdate) return
+    fun onUpdate(event: UpdateEvent) {
+
+        //if (event.eventState == UpdateState.OnUpdate) return
+
         mc.timer.timerSpeed = timerValue.get()
         shouldGoDown =
             downValue.get() && !sameYValue.get() && GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) && blocksAmount > 1

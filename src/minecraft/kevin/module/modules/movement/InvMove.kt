@@ -35,12 +35,16 @@ class InvMove : Module("InvMove","Allows you to walk while an inventory is opene
 
     @EventTarget
     fun onUpdate(event: UpdateEvent){
-        if (event.eventState == UpdateState.OnLivingUpdate){
-            if (mc.currentScreen !is GuiChat && mc.currentScreen !is GuiIngameMenu)
+
+        //if (event.eventState == UpdateState.OnLivingUpdate){
+
+        if (mc.currentScreen !is GuiChat && mc.currentScreen !is GuiIngameMenu)
             for (affectedBinding in affectedBindings) {
                 affectedBinding.pressed = GameSettings.isKeyDown(affectedBinding)
             }
-        }
+
+        //}
+
     }
 
     @EventTarget

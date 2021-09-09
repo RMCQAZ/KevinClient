@@ -152,7 +152,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void onUpdate()
     {
 
-        Kevin.getInstance.eventManager.callEvent(new UpdateEvent(UpdateState.OnUpdate));
+        //Kevin.getInstance.eventManager.callEvent(new UpdateEvent(UpdateState.OnUpdate));
 
         if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ)))
         {
@@ -731,7 +731,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void onLivingUpdate()
     {
 
-        Kevin.getInstance.eventManager.callEvent(new UpdateEvent(UpdateState.OnLivingUpdate));
+        Kevin.getInstance.eventManager.callEvent(new UpdateEvent(/*UpdateState.OnLivingUpdate**/));
 
         if (this.sprintingTicksLeft > 0)
         {

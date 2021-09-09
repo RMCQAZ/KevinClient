@@ -3,7 +3,9 @@ package kevin.module.modules.world
 import kevin.event.EventTarget
 import kevin.event.Render3DEvent
 import kevin.event.UpdateEvent
-import kevin.event.UpdateState
+
+//import kevin.event.UpdateState
+
 import kevin.main.Kevin
 import kevin.module.*
 import kevin.module.modules.combat.KillAura
@@ -53,7 +55,9 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        if (event.eventState == UpdateState.OnUpdate) return
+
+        //if (event.eventState == UpdateState.OnUpdate) return
+
         val thePlayer = mc.thePlayer ?: return
 
         if (noHitValue.get()) {

@@ -2,7 +2,9 @@ package kevin.module.modules.misc
 
 import kevin.event.EventTarget
 import kevin.event.UpdateEvent
-import kevin.event.UpdateState
+
+//import kevin.event.UpdateState
+
 import kevin.main.Kevin
 import kevin.module.*
 import kevin.utils.MSTimer
@@ -112,7 +114,9 @@ class SuperSpammer : Module("SuperSpammer","Spams the chat with given messages."
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        if (event.eventState == UpdateState.OnUpdate) return
+
+        //if (event.eventState == UpdateState.OnUpdate) return
+
         val mode = modeValue.get()
         val start = when(startMode.get()){
             "/shout" -> "/shout "

@@ -17,7 +17,9 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
 
     @EventTarget
     fun onUpdate(event: UpdateEvent?) {
-        if (event!!.eventState == UpdateState.OnUpdate) return
+
+        //if (event!!.eventState == UpdateState.OnUpdate) return
+
         Kevin.getInstance.hud.update()
     }
 

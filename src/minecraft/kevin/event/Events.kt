@@ -49,7 +49,7 @@ class MoveEvent(var x: Double, var y: Double, var z: Double) : CancellableEvent(
     }
 }
 
-class PacketEvent(val packet: Packet<*>,val eventState: PacketMode) : CancellableEvent()
+class PacketEvent(val packet: Packet<*>/**,val eventState: PacketMode**/) : CancellableEvent()
 
 class PushOutEvent : CancellableEvent()
 
@@ -70,7 +70,7 @@ class TextEvent(var text: String?) : Event()
 
 class TickEvent : Event()
 
-class UpdateEvent(val eventState: UpdateState) : Event()
+class UpdateEvent(/**val eventState: UpdateState**/) : Event()
 
 class WorldEvent(val worldClient: WorldClient?) : Event()
 

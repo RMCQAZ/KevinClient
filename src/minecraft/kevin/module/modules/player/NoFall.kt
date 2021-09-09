@@ -23,7 +23,9 @@ class NoFall : Module("NoFall","Prevents you from taking fall damage.", category
 
     @EventTarget(ignoreCondition = true)
     fun onUpdate(event: UpdateEvent?) {
-        if (event!!.eventState == UpdateState.OnUpdate) return
+
+        //if (event!!.eventState == UpdateState.OnUpdate) return
+
         if (mc.thePlayer!!.onGround)
             jumped = false
 

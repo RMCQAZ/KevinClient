@@ -55,7 +55,9 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        if (event.eventState == UpdateState.OnUpdate) return
+
+        //if (event.eventState == UpdateState.OnUpdate) return
+
         val thePlayer = mc.thePlayer ?: return
 
         if (!InventoryUtils.CLICK_TIMER.hasTimePassed(delay) ||

@@ -3,7 +3,9 @@ package kevin.module.modules.misc
 import kevin.event.EventTarget
 import kevin.event.PacketEvent
 import kevin.event.UpdateEvent
-import kevin.event.UpdateState
+
+//import kevin.event.UpdateState
+
 import kevin.module.*
 import kevin.utils.MSTimer
 import net.minecraft.network.play.server.S02PacketChat
@@ -48,7 +50,9 @@ class AutoCommand : Module("AutoCommand","Send commands automatically.",category
 
     @EventTarget
     fun onUpdate(event: UpdateEvent){
-        if (event.eventState == UpdateState.OnUpdate) return
+
+        //if (event.eventState == UpdateState.OnUpdate) return
+
         if (!timer.hasTimePassed(autoLoginAndRegisterDelay.get().toLong())) return
         if (register){
             mc.thePlayer.sendChatMessage("${autoRegisterCommand.get()} ${registerAndLoginPassword.get()} ${registerAndLoginPassword.get()}")

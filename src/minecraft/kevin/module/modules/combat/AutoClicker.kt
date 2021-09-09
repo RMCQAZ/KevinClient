@@ -3,7 +3,9 @@ package kevin.module.modules.combat
 import kevin.event.EventTarget
 import kevin.event.Render3DEvent
 import kevin.event.UpdateEvent
-import kevin.event.UpdateState
+
+//import kevin.event.UpdateState
+
 import kevin.module.BooleanValue
 import kevin.module.IntegerValue
 import kevin.module.Module
@@ -66,7 +68,9 @@ class AutoClicker : Module("AutoClicker", "Constantly clicks when holding down a
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        if (event.eventState == UpdateState.OnUpdate) return
+
+        //if (event.eventState == UpdateState.OnUpdate) return
+
         val thePlayer = mc.thePlayer ?: return
 
         if (jitterValue.get() && (leftValue.get() && mc.gameSettings.keyBindAttack.isKeyDown && mc.playerController.curBlockDamageMP == 0F

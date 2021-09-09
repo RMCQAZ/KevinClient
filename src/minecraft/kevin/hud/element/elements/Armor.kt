@@ -11,6 +11,7 @@ import kevin.module.ListValue
 import kevin.utils.FontManager
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.client.renderer.RenderHelper
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import java.text.DecimalFormat
@@ -36,6 +37,7 @@ class Armor(x: Double = -8.0, y: Double = 57.0, scale: Float = 1F,
         val rainbowY = armorDamageRainbowY
 
         GL11.glPushMatrix()
+        RenderHelper.enableGUIStandardItemLighting()
 
         val isCreative = !mc.playerController.isNotCreative
         val renderItem = mc.renderItem
@@ -56,6 +58,7 @@ class Armor(x: Double = -8.0, y: Double = 57.0, scale: Float = 1F,
                 y -= 18
         }
 
+        RenderHelper.disableStandardItemLighting()
         GlStateManager.enableAlpha()
         GlStateManager.disableBlend()
         GlStateManager.disableLighting()
@@ -77,7 +80,8 @@ class Armor(x: Double = -8.0, y: Double = 57.0, scale: Float = 1F,
             val maxDamage = stack.maxDamage
             val itemDamage = stack.itemDamage
             val df = DecimalFormat("###0.00")
-            val damagePercentage = df.format((maxDamage-itemDamage).toFloat()/maxDamage.toFloat()*100F)
+            var damagePercentage = df.format((maxDamage-itemDamage).toFloat()/maxDamage.toFloat()*100F)
+            if (damagePercentage.contains("∞")) damagePercentage = "-1"
 
             val damageText = if (showDamageMode.get().equals("value",true)) "${maxDamage-itemDamage}/$maxDamage"
             else if (showDamageMode.get().equals("percentage",true)) "$damagePercentage%"

@@ -28,7 +28,9 @@ class Speed : Module("Speed","Allows you to move faster.", category = ModuleCate
 
     @EventTarget
     fun onUpdate(event: UpdateEvent){
-        if (event.eventState == UpdateState.OnUpdate) return
+
+        //if (event.eventState == UpdateState.OnUpdate) return
+
         when(mode.get()){
             "AAC5Long" -> {
                 if (!MovementUtils.isMoving) return
