@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import kevin.main.Kevin;
 import kevin.module.modules.render.NoFOV;
+import kevin.skin.SkinManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.ImageBufferDownload;
@@ -92,6 +93,9 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     public ResourceLocation getLocationSkin()
     {
         NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
+        if (SkinManager.INSTANCE.getNowSkin() != null && getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID())){
+            return SkinManager.INSTANCE.getNowSkin().getResource();
+        }
         return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultSkin(this.getUniqueID()) : networkplayerinfo.getLocationSkin();
     }
 
@@ -149,6 +153,9 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     public String getSkinType()
     {
         NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
+        if (SkinManager.INSTANCE.getNowSkin() != null && getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID())){
+            return SkinManager.INSTANCE.getSkinMode().name().toLowerCase();
+        }
         return networkplayerinfo == null ? DefaultPlayerSkin.getSkinType(this.getUniqueID()) : networkplayerinfo.getSkinType();
     }
 

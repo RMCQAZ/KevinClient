@@ -27,6 +27,8 @@ class CommandManager {
         commands[arrayOf("login")] = LoginCommand()
 
         commands[arrayOf("modulestate")] = StateCommand()
+
+        commands[arrayOf("skin")] = SkinCommand()
     }
 
     fun execCommand(message: String): Boolean{

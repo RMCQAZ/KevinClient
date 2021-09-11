@@ -9,6 +9,7 @@ import kevin.event.UpdateEvent
 import kevin.main.Kevin
 import kevin.module.*
 import kevin.module.modules.combat.KillAura
+import kevin.module.modules.misc.Teams
 import kevin.module.modules.player.AutoTool
 import kevin.utils.BlockUtils.getBlock
 import kevin.utils.BlockUtils.getBlockName
@@ -19,6 +20,7 @@ import kevin.utils.RenderUtils
 import kevin.utils.RotationUtils
 import net.minecraft.block.Block
 import net.minecraft.block.BlockAir
+import net.minecraft.init.Blocks
 import net.minecraft.network.play.client.C07PacketPlayerDigging
 import net.minecraft.util.BlockPos
 import net.minecraft.util.EnumFacing
@@ -75,6 +77,14 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
 
         // Reset current breaking when there is no target block
         if (pos == null) {
+            currentDamage = 0F
+            return
+        }
+
+        // BedCheck
+        val teams = Kevin.getInstance.moduleManager.getModule("Teams") as Teams
+        if (Block.getBlockById(targetId)==Blocks.bed&&teams.bedCheckValue.get()&&pos in teams.teamBed){
+            pos = null
             currentDamage = 0F
             return
         }

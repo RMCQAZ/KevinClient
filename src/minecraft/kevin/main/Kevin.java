@@ -5,9 +5,11 @@ import kevin.command.CommandManager;
 import kevin.event.ClientShutdownEvent;
 import kevin.event.EventManager;
 import kevin.file.FileManager;
+import kevin.file.ImageManager;
 import kevin.module.ModuleManager;
 import kevin.module.modules.render.ClickGui;
 import kevin.hud.HUD;
+import kevin.skin.SkinManager;
 import kevin.utils.FontManager;
 import org.lwjgl.opengl.Display;
 
@@ -16,7 +18,7 @@ public enum Kevin {
     getInstance();
 
     public String name = "Kevin";
-    public String version = "b1.0";
+    public String version = "b1.1";
 
     public ModuleManager moduleManager;
     public FileManager fileManager;
@@ -48,11 +50,15 @@ public enum Kevin {
         newClickGui = new ClickGui.NewClickGui();
         capeManager = new CapeManager();
         capeManager.load();
+        SkinManager.INSTANCE.load();
+        ImageManager.INSTANCE.load();
     }
 
     public void stop() {
         this.eventManager.callEvent(new ClientShutdownEvent());
         fileManager.saveAllConfigs();
         capeManager.save();
+        SkinManager.INSTANCE.save();
+        ImageManager.INSTANCE.save();
     }
 }

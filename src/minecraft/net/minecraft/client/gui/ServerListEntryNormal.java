@@ -11,6 +11,8 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import kevin.file.ImageManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
@@ -260,6 +262,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
                     bufferedimage = TextureUtil.readBufferedImage(new ByteBufInputStream(bytebuf1));
                     Validate.validState(bufferedimage.getWidth() == 64, "Must be 64 pixels wide");
                     Validate.validState(bufferedimage.getHeight() == 64, "Must be 64 pixels high");
+                    if (ImageManager.INSTANCE.getSaveServerIcon()) ImageManager.INSTANCE.saveIcon(bufferedimage,this.server.serverIP);
                     break label79;
                 }
                 catch (Throwable throwable)

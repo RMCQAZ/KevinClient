@@ -4,6 +4,8 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
+
+import kevin.file.ImageManager;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
@@ -28,6 +30,8 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
     private boolean addingServer;
     private boolean editingServer;
     private boolean directConnect;
+
+    private GuiButton saveServerIcon;
 
     /**
      * The text to be displayed when the player's cursor hovers over a server listing.
@@ -98,6 +102,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
         this.buttonList.add(new GuiButton(3, this.width / 2 + 4 + 50, this.height - 52, 100, 20, I18n.format("selectServer.add")));
         this.buttonList.add(new GuiButton(8, this.width / 2 + 4, this.height - 28, 70, 20, I18n.format("selectServer.refresh")));
         this.buttonList.add(new GuiButton(0, this.width / 2 + 4 + 76, this.height - 28, 75, 20, I18n.format("gui.cancel")));
+        this.buttonList.add(this.saveServerIcon = new GuiButton(32,5,5,90,20,"SaveServerIcon: " + (ImageManager.INSTANCE.getSaveServerIcon() ? "On" : "Off")));
         this.selectServer(this.serverListSelector.func_148193_k());
     }
 
@@ -107,6 +112,8 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
     public void updateScreen()
     {
         super.updateScreen();
+
+        this.saveServerIcon.displayString = "SaveServerIcon: " + (ImageManager.INSTANCE.getSaveServerIcon() ? "On" : "Off");
 
         if (this.lanServerList.getWasUpdated())
         {
@@ -187,6 +194,11 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
             else if (button.id == 8)
             {
                 this.refreshServerList();
+            }
+            else if (button.id == 32)
+            {
+                ImageManager.INSTANCE.setSaveServerIcon(!ImageManager.INSTANCE.getSaveServerIcon());
+                ImageManager.INSTANCE.save();
             }
         }
     }

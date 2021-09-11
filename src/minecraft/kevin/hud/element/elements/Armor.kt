@@ -81,7 +81,13 @@ class Armor(x: Double = -8.0, y: Double = 57.0, scale: Float = 1F,
             val itemDamage = stack.itemDamage
             val df = DecimalFormat("###0.00")
             var damagePercentage = df.format((maxDamage-itemDamage).toFloat()/maxDamage.toFloat()*100F)
-            if (damagePercentage.contains("∞")) damagePercentage = "-1"
+
+            try {
+                damagePercentage.toFloat()
+            }catch (e:NumberFormatException){
+                damagePercentage = "-1"
+            }
+            //if (damagePercentage.contains("∞")) damagePercentage = "-1"
 
             val damageText = if (showDamageMode.get().equals("value",true)) "${maxDamage-itemDamage}/$maxDamage"
             else if (showDamageMode.get().equals("percentage",true)) "$damagePercentage%"

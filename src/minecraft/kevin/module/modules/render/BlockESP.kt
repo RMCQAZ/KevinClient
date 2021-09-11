@@ -3,7 +3,9 @@ package kevin.module.modules.render
 import kevin.event.EventTarget
 import kevin.event.Render3DEvent
 import kevin.event.UpdateEvent
+import kevin.main.Kevin
 import kevin.module.*
+import kevin.module.modules.misc.Teams
 import kevin.utils.BlockUtils.getBlock
 import kevin.utils.BlockUtils.getBlockName
 import kevin.utils.ColorUtils.rainbow
@@ -71,8 +73,10 @@ class BlockESP : Module("BlockESP", "Allows you to see a selected block through 
     @EventTarget
     fun onRender3D(event: Render3DEvent?) {
         synchronized(posList) {
-            val color = if (colorRainbow.get()) rainbow() else Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get())
+            val teams = Kevin.getInstance.moduleManager.getModule("Teams") as Teams
+            var color = if (colorRainbow.get()) rainbow() else Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get())
             for (blockPos in posList) {
+                if (teams.bedCheckValue.get()&&blockPos in teams.teamBed) color = Color.green
                 when (modeValue.get().toLowerCase()) {
                     "box" -> RenderUtils.drawBlockBox(blockPos, color, true)
                     "2d" -> RenderUtils.draw2D(blockPos, color.rgb, Color.BLACK.rgb)

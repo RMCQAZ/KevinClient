@@ -121,6 +121,10 @@ open class ListValue(name: String, val values: Array<String>, value: String) : V
         this.value = value
     }
 
+    infix fun equal(other: String):Boolean{
+        return this.get().equals(other,true)
+    }
+
     operator fun contains(string: String?): Boolean {
         return Arrays.stream(values).anyMatch { s: String -> s.equals(string, ignoreCase = true) }
     }
