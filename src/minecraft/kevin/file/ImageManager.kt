@@ -39,12 +39,18 @@ object ImageManager {
                 if (!f.name.endsWith(".png")) continue
                 val image = ImageIO.read(f)
                 var same = true
-                for (x in 0..63){
+                lx@ for (x in 0..63){
                     for (y in 0..63){
-                        if (image.getRGB(x,y)!=icon.getRGB(x,y)) same = false
+                        if (image.getRGB(x,y)!=icon.getRGB(x,y)) {
+                            same = false
+                            break@lx
+                        }
                     }
                 }
-                if (same) save = false
+                if (same) {
+                    save = false
+                    break
+                }
             }
             if (!file.exists()&&save){
                 Minecraft.logger.info("Got the server icon.")

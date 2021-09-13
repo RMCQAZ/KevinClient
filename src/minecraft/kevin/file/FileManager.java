@@ -18,6 +18,7 @@ public class FileManager extends MinecraftInstance {
     public final File capesDir = new File(dir,"Capes");
     public final File skinsDir = new File(dir,"Skins");
     public final File serverIconsDir = new File(dir,"ServerIcons");
+    public final File configsDir = new File(dir,"Configs");
     public final FileConfig modulesConfig = new ModulesConfig(new File(dir, "modules.json"));
     public final FileConfig hudConfig = new HudConfig(new File(dir, "hud.json"));
 
@@ -28,6 +29,7 @@ public class FileManager extends MinecraftInstance {
         if (!capesDir.exists()) capesDir.mkdir();
         if (!skinsDir.exists()) skinsDir.mkdir();
         if (!serverIconsDir.exists()) serverIconsDir.mkdir();
+        if (!configsDir.exists()) configsDir.mkdir();
     }
 
     public void saveConfig(final FileConfig config) {

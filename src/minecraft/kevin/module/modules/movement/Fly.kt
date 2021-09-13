@@ -16,17 +16,21 @@ import org.lwjgl.input.Keyboard
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT) {
     private val speed = FloatValue("Speed",2F,0.5F,5F)
-    val mode = ListValue("Mode", arrayOf("Vanilla","Creative","AAC5"),"Vanilla")
+    val mode = ListValue("Mode", arrayOf("Vanilla","Creative","AAC5","NCP"),"Vanilla")
     private val resetMotion = BooleanValue("ResetMotion",false)
     private val keepAlive = BooleanValue("KeepAlive",false)
 
     private val aac5PacketMode = ListValue("AAC5PacketMode", arrayOf("Old", "Rise"), "Old")
     private val aac5UseC04 = BooleanValue("AAC5UseC04", false)
     private val aac5Purse = IntegerValue("AAC5.2.0Purse", 7, 3, 20)
+
+    private val ncpDelay = IntegerValue("NCPDelay",500,100,1000)
 
     private val renderPath = BooleanValue("RenderPath",true)
     private val glLineWidthValue = FloatValue("RenderPathLineWidth",2F,0.5F,4F)
@@ -43,6 +47,8 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
     private var aac5FlyClip = false
     private var aac5FlyStart = false
     private var aac5nextFlag = false
+
+    private val ncpTimer = MSTimer()
 
     //private val packetList = arrayListOf<Packet<*>>()
 
@@ -75,6 +81,10 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
                 aac5nextFlag=false
                 mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.42, mc.thePlayer.posZ)
             }
+            "NCP" -> {
+                if (mc.thePlayer.onGround) mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.2, mc.thePlayer.posZ)
+                ncpTimer.reset()
+            }
         }
     }
 
@@ -94,6 +104,9 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
                 sendAAC5Packets()
                 mc.thePlayer.noClip = false
                 mc.timer.timerSpeed = 1F
+            }
+            "NCP" -> {
+                mc.thePlayer.speedInAir = 0.02F
             }
         }
     }
@@ -209,6 +222,20 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
                 if (mc.gameSettings.keyBindJump.isKeyDown) mc.thePlayer.motionY += speed.get()
                 if (mc.gameSettings.keyBindSneak.isKeyDown) mc.thePlayer.motionY -= speed.get()
                 MovementUtils.strafe(speed.get())
+            }
+            "NCP" -> {
+                mc.thePlayer.motionX = .0
+                mc.thePlayer.motionY = .0
+                mc.thePlayer.motionZ = .0
+                mc.thePlayer.speedInAir = 0F
+                if (ncpTimer.hasTimePassed(ncpDelay.get().toLong())){
+                    val speed = 0.99
+                    val radiansYaw = mc.thePlayer.rotationYaw * Math.PI / 180
+                    PacketUtils.sendPacketNoEvent(C04PacketPlayerPosition(mc.thePlayer.posX + speed * -sin(radiansYaw),mc.thePlayer.posY, mc.thePlayer.posZ + speed * cos(radiansYaw),mc.thePlayer.onGround))
+                    PacketUtils.sendPacketNoEvent(C04PacketPlayerPosition(mc.thePlayer.posX + speed * -sin(radiansYaw),-RandomUtils.nextDouble(160.00000001,370.00000001), mc.thePlayer.posZ + speed * cos(radiansYaw),false))
+                    mc.thePlayer.setPosition(mc.thePlayer.posX + speed * -sin(radiansYaw),mc.thePlayer.posY, mc.thePlayer.posZ + speed * cos(radiansYaw))
+                    ncpTimer.reset()
+                }
             }
         }
     }

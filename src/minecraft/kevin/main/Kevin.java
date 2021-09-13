@@ -4,6 +4,7 @@ import kevin.cape.CapeManager;
 import kevin.command.CommandManager;
 import kevin.event.ClientShutdownEvent;
 import kevin.event.EventManager;
+import kevin.file.ConfigManager;
 import kevin.file.FileManager;
 import kevin.file.ImageManager;
 import kevin.module.ModuleManager;
@@ -52,6 +53,7 @@ public enum Kevin {
         capeManager.load();
         SkinManager.INSTANCE.load();
         ImageManager.INSTANCE.load();
+        ConfigManager.INSTANCE.load();
     }
 
     public void stop() {
