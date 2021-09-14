@@ -11,6 +11,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import kevin.altmanager.AltManager;
+import kevin.main.Kevin;
+import kevin.utils.FontManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -92,6 +96,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     private GuiScreen field_183503_M;
     private GuiButton modButton;
     private GuiScreen modUpdateNotification;
+
+    private GuiButton altManagerButton;
 
     public GuiMainMenu()
     {
@@ -270,13 +276,14 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
         if (Reflector.GuiModList_Constructor.exists())
         {
-            this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 + 2, p_73969_1_ + p_73969_2_ * 2, 98, 20, I18n.format("menu.online").replace("Minecraft", "").trim()));
+            //this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 + 2, p_73969_1_ + p_73969_2_ * 2, 98, 20, I18n.format("menu.online").replace("Minecraft", "").trim()));
             this.buttonList.add(this.modButton = new GuiButton(6, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, 98, 20, I18n.format("fml.menu.mods")));
         }
         else
         {
-            this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online")));
+            //this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online")));
         }
+        this.buttonList.add(this.altManagerButton = new GuiButton(114514, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, "AltManager"));
     }
 
     /**
@@ -350,6 +357,10 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
                 GuiYesNo guiyesno = GuiSelectWorld.makeDeleteWorldYesNo(this, worldinfo.getWorldName(), 12);
                 this.mc.displayGuiScreen(guiyesno);
             }
+        }
+
+        if (button.id == 114514) {
+            this.mc.displayGuiScreen(AltManager.INSTANCE.altManager(this));
         }
     }
 
@@ -689,6 +700,9 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         {
             this.modUpdateNotification.drawScreen(mouseX, mouseY, partialTicks);
         }
+        FontManager.RainbowFontShader rainbowFontShader = FontManager.RainbowFontShader.begin(true,-0.00314514F,0.00314514F,System.currentTimeMillis() % 10000 / 10000F);
+        Kevin.getInstance.fontManager.getFont40().drawString(Kevin.getInstance.name+" "+Kevin.getInstance.version,this.width/2F-Kevin.getInstance.fontManager.getFont40().getStringWidth(Kevin.getInstance.name+" "+Kevin.getInstance.version)/2F,this.height/3F,0);
+        rainbowFontShader.close();
     }
 
     /**
