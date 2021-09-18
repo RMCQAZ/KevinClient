@@ -22,7 +22,9 @@ import kotlin.math.sin
 
 class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT) {
     private val speed = FloatValue("Speed",2F,0.5F,5F)
-    val mode = ListValue("Mode", arrayOf("Vanilla","Creative","AAC5","NCP"),"Vanilla")
+
+    val mode = ListValue("Mode", arrayOf("Vanilla","Creative","AAC5","NCP","Teleport"),"Vanilla")
+
     private val resetMotion = BooleanValue("ResetMotion",false)
     private val keepAlive = BooleanValue("KeepAlive",false)
 
@@ -38,6 +40,15 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
     private val colorR = IntegerValue("R",255,0,255)
     private val colorG = IntegerValue("G",255,0,255)
     private val colorB = IntegerValue("B",255,0,255)
+
+    //Teleport
+    private val teleportLongValue = FloatValue("TeleportLong",10F,0.1F,20F)
+    private val teleportTimer = FloatValue("TeleportTimer",0.1F,0.1F,1F)
+    private val teleportHighPacket = BooleanValue("TeleportHPacket",true)
+    private val teleportHigh = FloatValue("TeleportHigh",-1F,-4F,4F)
+    private val teleportYMotion = FloatValue("TeleportYMotion",-0.05F,-1F,1F)
+    private val teleportMotion = FloatValue("TeleportMotion",2F,0F,5F)
+    private val teleportResetMotion = BooleanValue("TeleportResetMotion",true)
 
     private val fakeDamageValue = BooleanValue("FakeDamage", true)
 
@@ -58,6 +69,42 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
         mc.netHandler.addToSendQueue(packet)
         **/
         PacketUtils.sendPacketNoEvent(packet)
+    }
+
+    @EventTarget fun onMotion(event: MotionEvent){
+        when(mode.get()){
+            "Teleport" -> {
+                mc.thePlayer!!.jumpMovementFactor = 0F
+                mc.thePlayer!!.motionY = teleportYMotion.get().toDouble()
+                mc.timer.timerSpeed = teleportTimer.get()
+                if (mc.thePlayer!!.ticksExisted % 2 == 0){
+                    val playerYaw = mc.thePlayer!!.rotationYaw * Math.PI / 180
+                    mc.netHandler.addToSendQueue(
+                        C04PacketPlayerPosition(
+                            mc.thePlayer!!.posX + teleportLongValue.get() * -sin(
+                                playerYaw
+                            ), mc.thePlayer!!.posY, mc.thePlayer!!.posZ + teleportLongValue.get() * cos(playerYaw), false
+                        )
+                    )
+                    if(teleportHighPacket.get()) {
+                        mc.netHandler.addToSendQueue(
+                            C04PacketPlayerPosition(
+                                mc.thePlayer!!.posX,
+                                mc.thePlayer!!.posY + teleportHigh.get(),
+                                mc.thePlayer!!.posZ,
+                                false
+                            )
+                        )
+                    }
+                    mc.thePlayer!!.motionX = teleportMotion.get() * -sin(playerYaw)
+                    mc.thePlayer!!.motionZ = teleportMotion.get() * cos(playerYaw)
+                }else{
+                    if (teleportResetMotion.get()) mc.thePlayer!!.motionY = .0
+                    mc.thePlayer!!.motionX = .0
+                    mc.thePlayer!!.motionZ = .0
+                }
+            }
+        }
     }
 
     override fun onEnable() {
@@ -107,6 +154,9 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
             }
             "NCP" -> {
                 mc.thePlayer.speedInAir = 0.02F
+            }
+            "Teleport" -> {
+                mc.timer.timerSpeed = 1F
             }
         }
     }

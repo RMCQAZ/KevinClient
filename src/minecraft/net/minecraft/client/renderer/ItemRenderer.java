@@ -4,6 +4,7 @@ import kevin.main.Kevin;
 import kevin.module.modules.combat.KillAura;
 import kevin.module.modules.render.Animations;
 import kevin.module.modules.render.AntiBlind;
+import kevin.module.modules.render.Renderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -180,6 +181,7 @@ public class ItemRenderer
     {
         this.mc.getTextureManager().bindTexture(clientPlayer.getLocationSkin());
         Render<AbstractClientPlayer> render = this.renderManager.getEntityRenderObject(this.mc.thePlayer);
+        if (Renderer.INSTANCE.getFox()&&Renderer.INSTANCE.getToggle()) return;
         RenderPlayer renderplayer = (RenderPlayer)render;
 
         if (!clientPlayer.isInvisible())
@@ -261,10 +263,12 @@ public class ItemRenderer
         GlStateManager.scale(1.0F, 1.0F, 1.0F);
         GlStateManager.translate(5.6F, 0.0F, 0.0F);
         Render<AbstractClientPlayer> render = this.renderManager.getEntityRenderObject(this.mc.thePlayer);
-        GlStateManager.disableCull();
-        RenderPlayer renderplayer = (RenderPlayer)render;
-        renderplayer.renderRightArm(this.mc.thePlayer);
-        GlStateManager.enableCull();
+        if (!Renderer.INSTANCE.getFox()){
+            GlStateManager.disableCull();
+            RenderPlayer renderplayer = (RenderPlayer)render;
+            renderplayer.renderRightArm(this.mc.thePlayer);
+            GlStateManager.enableCull();
+        }
     }
 
     /**

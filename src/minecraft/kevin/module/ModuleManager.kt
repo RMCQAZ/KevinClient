@@ -40,6 +40,7 @@ class ModuleManager : Listenable {
         exploitList = arrayListOf(
             AbortBreaking(),
             AntiHunger(),
+            BoatJump(),
             Clip(),
             ForceUnicodeChat(),
             Ghost(),
@@ -124,6 +125,7 @@ class ModuleManager : Listenable {
             NoHurtCam(),
             NoSwing(),
             Projectiles(),
+            Renderer,
             Rotations(),
             StorageESP(),
             TNTESP(),

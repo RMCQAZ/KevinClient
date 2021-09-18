@@ -19,7 +19,7 @@ public enum Kevin {
     getInstance();
 
     public String name = "Kevin";
-    public String version = "b1.1";
+    public String version = "b1.2";
 
     public ModuleManager moduleManager;
     public FileManager fileManager;

@@ -2,25 +2,71 @@ package kevin.module.modules.movement
 
 import kevin.event.*
 import kevin.module.*
+import kevin.utils.MSTimer
 import kevin.utils.MovementUtils
 import net.minecraft.network.play.server.S27PacketExplosion
 import net.minecraft.util.EnumFacing
+import kotlin.math.cos
+import kotlin.math.sin
 
 class LongJump : Module("LongJump", "Allows you to jump further.", category = ModuleCategory.MOVEMENT) {
-    private val modeValue = ListValue("Mode", arrayOf("NCP", "AACv1", "AACv2", "AACv3", "Mineplex", "Mineplex2", "Mineplex3", "Redesky", "ExplosionBoost"), "NCP")
+    private val modeValue = ListValue("Mode", arrayOf("NCP", "AACv1", "AACv2", "AACv3", "Mineplex", "Mineplex2", "Mineplex3", "Redesky", "ExplosionBoost", "Timer"), "NCP")
     private val ncpBoostValue = FloatValue("NCPBoost", 4.25f, 1f, 10f)
     private val autoJumpValue = BooleanValue("AutoJump", false)
     private val explosionBoostHigh = FloatValue("ExplosionBoostHigh",0.00F,0.01F,1F)
     private val explosionBoostLong = FloatValue("ExplosionBoostLong",0.25F,0.01F,1F)
+    private val timer = FloatValue("Timer",0.1F,0.1F,1F)
+    private val speed = FloatValue("Speed",3F,0.5F,5F)
+    private val delay = IntegerValue("Delay",0,0,500)
     private var jumped = false
     private var canBoost = false
     private var teleported = false
     private var canMineplexBoost = false
     private var explosion = false
+    private val msTimer = MSTimer()
+    private var timerState = 0
+
+    override fun onEnable() {
+        if (modeValue equal "Timer"){
+            mc.timer.timerSpeed = timer.get()
+            msTimer.reset()
+        }
+    }
+    override fun onDisable() {
+        if (modeValue equal "Timer") {
+            timerState = 0
+        }
+    }
 
     @EventTarget
     fun onUpdate(event: UpdateEvent?) {
         val thePlayer = mc.thePlayer ?: return
+
+        if ((modeValue equal "Timer")&&msTimer.hasTimePassed(delay.get().toLong())){
+            when(timerState){
+                0 -> {
+                    val radiansYaw = mc.thePlayer!!.rotationYaw * Math.PI / 180
+                    mc.thePlayer!!.motionX = speed.get() * -sin(radiansYaw)
+                    mc.thePlayer!!.motionZ = speed.get() * cos(radiansYaw)
+                    if (mc.thePlayer.onGround) mc.thePlayer.jump()
+                    timerState = 1
+                    return
+                }
+                1 -> {
+                    mc.timer.timerSpeed = 1F
+                    timerState = 2
+                    msTimer.reset()
+                    return
+                }
+                2 -> {
+                    if (msTimer.hasTimePassed(300)){
+                        mc.thePlayer!!.motionX = .0
+                        mc.thePlayer!!.motionZ = .0
+                        toggle(false)
+                    }
+                }
+            }
+        }
 
         if (jumped) {
             val mode = modeValue.get()

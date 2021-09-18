@@ -3,9 +3,12 @@ package net.minecraft.client.renderer.entity;
 import com.google.common.collect.Maps;
 import java.util.Collections;
 import java.util.Map;
+
+import kevin.module.modules.render.Renderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelChicken;
@@ -110,6 +113,7 @@ public class RenderManager
     private Map<Class, Render> entityRenderMap = Maps.newHashMap();
     private Map<String, RenderPlayer> skinMap = Maps.newHashMap();
     private RenderPlayer playerRenderer;
+    private Renderer.RenderFox renderFox;
 
     /** Renders fonts */
     private FontRenderer textRenderer;
@@ -205,6 +209,7 @@ public class RenderManager
         this.skinMap.put("default", this.playerRenderer);
         this.skinMap.put("slim", new RenderPlayer(this, true));
         PlayerItemsLayer.register(this.skinMap);
+        this.renderFox = new Renderer.RenderFox(this);
 
         if (Reflector.RenderingRegistry_loadEntityRenderers.exists())
         {
@@ -247,6 +252,9 @@ public class RenderManager
     {
         if (entityIn instanceof AbstractClientPlayer)
         {
+            if (Renderer.INSTANCE.getFox()&&entityIn== Minecraft.getMinecraft().thePlayer){
+                return (Render<T>)renderFox;
+            }
             String s = ((AbstractClientPlayer)entityIn).getSkinType();
             RenderPlayer renderplayer = this.skinMap.get(s);
             return renderplayer != null ? (Render<T>)renderplayer : (Render<T>)this.playerRenderer;

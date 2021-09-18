@@ -2,6 +2,9 @@ package net.minecraft.client.renderer.entity.layers;
 
 import com.google.common.collect.Maps;
 import java.util.Map;
+
+import kevin.main.Kevin;
+import kevin.module.modules.render.Renderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
@@ -107,6 +110,9 @@ public abstract class LayerArmorBase<T extends ModelBase> implements LayerRender
 
                 return;
             }
+
+            Renderer renderer =(Renderer) Kevin.getInstance.moduleManager.getModule("Renderer");
+            if (renderer.getToggle()) this.alpha = renderer.getNoArmor().get() ? 0F : 1F;
 
             switch (itemarmor.getArmorMaterial())
             {
