@@ -3,7 +3,7 @@ package kevin.module.modules.combat
 import kevin.event.AttackEvent
 import kevin.event.EventTarget
 import kevin.event.PacketEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.IntegerValue
 import kevin.module.ListValue
 import kevin.module.Module
@@ -32,7 +32,7 @@ class Criticals : Module(name = "Criticals", description = "Automatically deals 
 
             if (!thePlayer.onGround || thePlayer.isOnLadder || thePlayer.inWeb || thePlayer.isInWater ||
                 thePlayer.isInLava || thePlayer.ridingEntity != null || entity.hurtTime > hurtTimeValue.get() ||
-                Kevin.getInstance.moduleManager.getModule("Fly")!!.getToggle() || !msTimer.hasTimePassed(delayValue.get().toLong()))
+                KevinClient.moduleManager.getModule("Fly")!!.getToggle() || !msTimer.hasTimePassed(delayValue.get().toLong()))
                 return
 
             val x = thePlayer.posX

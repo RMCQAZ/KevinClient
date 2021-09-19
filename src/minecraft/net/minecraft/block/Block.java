@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import kevin.event.BlockBBEvent;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.combat.Criticals;
 import kevin.module.modules.exploit.GhostHand;
 import kevin.module.modules.player.NoFall;
@@ -520,7 +520,7 @@ public class Block
     {
         AxisAlignedBB axisalignedbb = this.getCollisionBoundingBox(worldIn, pos, state);
         BlockBBEvent blockBBEvent = new BlockBBEvent(pos, blockState.getBlock(), axisalignedbb);
-        Kevin.getInstance.eventManager.callEvent(blockBBEvent);
+        KevinClient.eventManager.callEvent(blockBBEvent);
 
         axisalignedbb = blockBBEvent.getBoundingBox() == null ? null : blockBBEvent.getBoundingBox();
 
@@ -552,7 +552,7 @@ public class Block
      */
     public boolean isCollidable()
     {
-        final GhostHand ghostHand = (GhostHand) Kevin.getInstance.moduleManager.getModule("GhostHand");
+        final GhostHand ghostHand = (GhostHand) KevinClient.moduleManager.getModule("GhostHand");
 
         return !Objects.requireNonNull(ghostHand).getToggle() || ghostHand.getBlockValue().get() == Block.getIdFromBlock(this);
     }
@@ -631,7 +631,7 @@ public class Block
             ret = !playerIn.canHarvestBlock(this) ? playerIn.getToolDigEfficiency(this) / f / 100.0F : playerIn.getToolDigEfficiency(this) / f / 30.0F;
         }
         // NoSlowBreak
-        final NoSlowBreak noSlowBreak = (NoSlowBreak) Kevin.getInstance.moduleManager.getModule("NoSlowBreak");
+        final NoSlowBreak noSlowBreak = (NoSlowBreak) KevinClient.moduleManager.getModule("NoSlowBreak");
 
         if (Objects.requireNonNull(noSlowBreak).getToggle()) {
             if (noSlowBreak.getWaterValue().get() && playerIn.isInsideOfMaterial(Material.water) &&
@@ -643,8 +643,8 @@ public class Block
                 ret *= 5.0F;
             }
         } else if (playerIn.onGround) { // NoGround
-            final NoFall noFall = (NoFall) Kevin.getInstance.moduleManager.getModule("NoFall");
-            final Criticals criticals = (Criticals) Kevin.getInstance.moduleManager.getModule("Criticals");
+            final NoFall noFall = (NoFall) KevinClient.moduleManager.getModule("NoFall");
+            final Criticals criticals = (Criticals) KevinClient.moduleManager.getModule("Criticals");
 
             if (Objects.requireNonNull(noFall).getToggle() && noFall.modeValue.get().equalsIgnoreCase("NoGround") ||
                     Objects.requireNonNull(criticals).getToggle() && criticals.getModeValue().get().equalsIgnoreCase("NoGround")) {

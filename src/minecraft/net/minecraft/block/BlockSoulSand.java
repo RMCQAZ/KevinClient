@@ -1,6 +1,6 @@
 package net.minecraft.block;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.movement.NoSlow;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -32,7 +32,7 @@ public class BlockSoulSand extends Block
      */
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
-        final NoSlow noSlow = (NoSlow) Kevin.getInstance.moduleManager.getModule("NoSlow");
+        final NoSlow noSlow = (NoSlow) KevinClient.moduleManager.getModule("NoSlow");
 
         if (Objects.requireNonNull(noSlow).getToggle() && noSlow.getSoulsandValue().get()) return;
         entityIn.motionX *= 0.4D;

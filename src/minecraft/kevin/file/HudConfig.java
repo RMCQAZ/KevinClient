@@ -1,6 +1,6 @@
 package kevin.file;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -16,14 +16,14 @@ public class HudConfig extends FileConfig {
 
     @Override
     protected void loadConfig() throws IOException {
-        Kevin.getInstance.hud.clearElements();
-        Kevin.getInstance.hud = new Config(FileUtils.readFileToString(getFile())).toHUD();
+        KevinClient.hud.clearElements();
+        KevinClient.hud = new Config(FileUtils.readFileToString(getFile())).toHUD();
     }
 
     @Override
     protected void saveConfig() throws IOException {
         final PrintWriter printWriter = new PrintWriter(new FileWriter(getFile()));
-        printWriter.println(new Config(Kevin.getInstance.hud).toJson());
+        printWriter.println(new Config(KevinClient.hud).toJson());
         printWriter.close();
     }
 }

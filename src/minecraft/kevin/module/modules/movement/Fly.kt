@@ -2,7 +2,7 @@ package kevin.module.modules.movement
 
 import kevin.event.*
 import kevin.hud.element.elements.Notification
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.utils.*
 import net.minecraft.network.Packet
@@ -49,6 +49,7 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
     private val teleportYMotion = FloatValue("TeleportYMotion",-0.05F,-1F,1F)
     private val teleportMotion = FloatValue("TeleportMotion",2F,0F,5F)
     private val teleportResetMotion = BooleanValue("TeleportResetMotion",true)
+    private val teleportSetPos = BooleanValue("TeleportSetPos",false)
 
     private val fakeDamageValue = BooleanValue("FakeDamage", true)
 
@@ -81,9 +82,10 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
                     val playerYaw = mc.thePlayer!!.rotationYaw * Math.PI / 180
                     mc.netHandler.addToSendQueue(
                         C04PacketPlayerPosition(
-                            mc.thePlayer!!.posX + teleportLongValue.get() * -sin(
-                                playerYaw
-                            ), mc.thePlayer!!.posY, mc.thePlayer!!.posZ + teleportLongValue.get() * cos(playerYaw), false
+                            mc.thePlayer!!.posX + teleportLongValue.get() * -sin(playerYaw),
+                            mc.thePlayer!!.posY,
+                            mc.thePlayer!!.posZ + teleportLongValue.get() * cos(playerYaw),
+                            false
                         )
                     )
                     if(teleportHighPacket.get()) {
@@ -98,6 +100,12 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
                     }
                     mc.thePlayer!!.motionX = teleportMotion.get() * -sin(playerYaw)
                     mc.thePlayer!!.motionZ = teleportMotion.get() * cos(playerYaw)
+                    if (teleportSetPos.get())
+                        mc.thePlayer.setPosition(
+                            mc.thePlayer!!.posX + teleportLongValue.get() * -sin(playerYaw),
+                            mc.thePlayer!!.posY,
+                            mc.thePlayer!!.posZ + teleportLongValue.get() * cos(playerYaw)
+                        )
                 }else{
                     if (teleportResetMotion.get()) mc.thePlayer!!.motionY = .0
                     mc.thePlayer!!.motionX = .0
@@ -116,7 +124,7 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
             "Creative" -> mc.thePlayer.capabilities.allowFlying = true
             "AAC5" -> {
                 if (mc.isSingleplayer) {
-                    Kevin.getInstance.hud.addNotification(
+                    KevinClient.hud.addNotification(
                         Notification("Use AAC5 Flys will crash single player"),"Fly")
                     toggle(false)
                     return

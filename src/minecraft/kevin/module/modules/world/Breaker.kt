@@ -6,7 +6,7 @@ import kevin.event.UpdateEvent
 
 //import kevin.event.UpdateState
 
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.combat.KillAura
 import kevin.module.modules.misc.Teams
@@ -63,7 +63,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
         val thePlayer = mc.thePlayer ?: return
 
         if (noHitValue.get()) {
-            val killAura = Kevin.getInstance.moduleManager.getModule("KillAura") as KillAura
+            val killAura = KevinClient.moduleManager.getModule("KillAura") as KillAura
 
             if (killAura.getToggle() && killAura.target != null)
                 return
@@ -82,7 +82,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
         }
 
         // BedCheck
-        val teams = Kevin.getInstance.moduleManager.getModule("Teams") as Teams
+        val teams = KevinClient.moduleManager.getModule("Teams") as Teams
         if (Block.getBlockById(targetId)==Blocks.bed&&teams.bedCheckValue.get()&&pos in teams.teamBed){
             pos = null
             currentDamage = 0F
@@ -135,7 +135,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
             // Destory block
             actionValue.get().equals("destroy", true) || surroundings -> {
                 // Auto Tool
-                val autoTool = Kevin.getInstance.moduleManager.getModule("AutoTool") as AutoTool
+                val autoTool = KevinClient.moduleManager.getModule("AutoTool") as AutoTool
                 if (autoTool.getToggle())
                     autoTool.switchSlot(currentPos)
 

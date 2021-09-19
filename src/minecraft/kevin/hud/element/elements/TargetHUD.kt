@@ -3,7 +3,7 @@ package kevin.hud.element.elements
 import kevin.hud.element.Border
 import kevin.hud.element.Element
 import kevin.hud.element.ElementInfo
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.FloatValue
 import kevin.module.ListValue
 import kevin.module.modules.combat.KillAura
@@ -38,7 +38,7 @@ class TargetHUD : Element() {
     private var lastTarget: Entity? = null
 
     override fun drawElement(): Border? {
-        val target = (Kevin.getInstance.moduleManager.getModule("KillAura") as KillAura).target
+        val target = (KevinClient.moduleManager.getModule("KillAura") as KillAura).target
         when(mode.get()){
             "Liquid" -> {
                 if ((target) is EntityPlayer) {
@@ -46,7 +46,7 @@ class TargetHUD : Element() {
                         abs(easingHealth - target.health) < 0.01) {
                         easingHealth = target.health
                     }
-                    val width = (38 + (target.name?.let(Kevin.getInstance.fontManager.font40!!::getStringWidth) ?: 0))
+                    val width = (38 + (target.name?.let(KevinClient.fontManager.font40!!::getStringWidth) ?: 0))
                         .coerceAtLeast(118)
                         .toFloat()
                     // Draw rect box
@@ -63,12 +63,12 @@ class TargetHUD : Element() {
                         RenderUtils.drawRect((easingHealth / target.maxHealth) * width, 34F,
                             (target.health / target.maxHealth) * width, 36F, Color(44, 201, 144).rgb)
                     easingHealth += ((target.health - easingHealth) / 2.0F.pow(10.0F - fadeSpeed.get())) * RenderUtils.deltaTime
-                    target.name?.let { Kevin.getInstance.fontManager.font40!!.drawString(it, 36f, 3f, 0xffffff) }
-                    Kevin.getInstance.fontManager.font35!!.drawString("Distance: ${decimalFormat.format(mc.thePlayer!!.getDistanceToEntityBox(target))}", 36f, 15f, 0xffffff)
+                    target.name?.let { KevinClient.fontManager.font40!!.drawString(it, 36f, 3f, 0xffffff) }
+                    KevinClient.fontManager.font35!!.drawString("Distance: ${decimalFormat.format(mc.thePlayer!!.getDistanceToEntityBox(target))}", 36f, 15f, 0xffffff)
                     // Draw info
                     val playerInfo = mc.netHandler.getPlayerInfo(target.uniqueID)
                     if (playerInfo != null) {
-                        Kevin.getInstance.fontManager.font35!!.drawString("Ping: ${playerInfo.responseTime.coerceAtLeast(0)}",
+                        KevinClient.fontManager.font35!!.drawString("Ping: ${playerInfo.responseTime.coerceAtLeast(0)}",
                             36f, 24f, 0xffffff)
                     // Draw head
                         val locationSkin = playerInfo.locationSkin
@@ -107,8 +107,8 @@ class TargetHUD : Element() {
 
                     val textList = arrayListOf(nameText,healthText,hurtTimeText,pingText,rotationText,distanceOnGroundText)
                     val textListSorted = textList.toMutableList()
-                    textListSorted.sortBy{Kevin.getInstance.fontManager.font40!!.getStringWidth(it)}
-                    val width = Kevin.getInstance.fontManager.font35!!.getStringWidth(textListSorted.last())
+                    textListSorted.sortBy{KevinClient.fontManager.font40!!.getStringWidth(it)}
+                    val width = KevinClient.fontManager.font35!!.getStringWidth(textListSorted.last())
                     val x2 = if (0.25F+width/2+3F>18*5)0.25F+width/2+3F else 18*5F
                     val text = "A:${target.totalArmorValue} ${(target.totalArmorValue/20F)*100}%"
 
@@ -135,13 +135,13 @@ class TargetHUD : Element() {
                         xO += 18
                     }
 
-                    GL11.glVertex2d((14.75+x2+6.5-(Kevin.getInstance.fontManager.font35!!.getStringWidth(text))*0.8),46.5)
-                    GL11.glVertex2d((14.75+x2+6.5-(Kevin.getInstance.fontManager.font35!!.getStringWidth(text))*0.8),54.5)
+                    GL11.glVertex2d((14.75+x2+6.5-(KevinClient.fontManager.font35!!.getStringWidth(text))*0.8),46.5)
+                    GL11.glVertex2d((14.75+x2+6.5-(KevinClient.fontManager.font35!!.getStringWidth(text))*0.8),54.5)
                     linesEnd()
                     linesStart(5F,Color(255,0,0))
 
                     val h = x2 * (hurtTime / 10F)
-                    val hel = (14.0+x2+6.5-(Kevin.getInstance.fontManager.font35!!.getStringWidth(text))*0.8)*(healthPercent/100)
+                    val hel = (14.0+x2+6.5-(KevinClient.fontManager.font35!!.getStringWidth(text))*0.8)*(healthPercent/100)
 
                     GL11.glVertex2d(14.75,25.5)
                     GL11.glVertex2d(14.75+h,25.5)
@@ -151,7 +151,7 @@ class TargetHUD : Element() {
                     linesEnd()
                     linesStart(5F,Color(0,111,255))
 
-                    val arv = (14.0+x2+6.5-(Kevin.getInstance.fontManager.font35!!.getStringWidth(text))*0.8)*(target.totalArmorValue/20F)
+                    val arv = (14.0+x2+6.5-(KevinClient.fontManager.font35!!.getStringWidth(text))*0.8)*(target.totalArmorValue/20F)
 
                     GL11.glVertex2d(-7.75,52.5)
                     GL11.glVertex2d(-7.75+arv,52.5)
@@ -159,7 +159,7 @@ class TargetHUD : Element() {
 
                     GL11.glPushMatrix()
                     GL11.glScaled(0.5,0.5,0.5)
-                    Kevin.getInstance.fontManager.font35!!.drawString(text,(14.75F+x2-2F)/0.5F-Kevin.getInstance.fontManager.font35!!.getStringWidth(text),48.5F/0.5F,Color(0,111,255).rgb)
+                    KevinClient.fontManager.font35!!.drawString(text,(14.75F+x2-2F)/0.5F-KevinClient.fontManager.font35!!.getStringWidth(text),48.5F/0.5F,Color(0,111,255).rgb)
                     GL11.glPopMatrix()
 
                     if (!(mc.netHandler.getPlayerInfo(target.uniqueID) == null || mc.netHandler.getPlayerInfo(target.uniqueID).locationSkin == null)) {
@@ -174,15 +174,15 @@ class TargetHUD : Element() {
                         yO += if (it == textList.first()){
                             GL11.glPushMatrix()
                             GL11.glScaled(0.6,0.6,0.6)
-                            Kevin.getInstance.fontManager.font40!!.drawString(it,16F/0.6F,(-11F+yO.toFloat())/0.6F,Color.white.rgb)
+                            KevinClient.fontManager.font40!!.drawString(it,16F/0.6F,(-11F+yO.toFloat())/0.6F,Color.white.rgb)
                             GL11.glPopMatrix()
-                            Kevin.getInstance.fontManager.font40!!.fontHeight * 0.6
+                            KevinClient.fontManager.font40!!.fontHeight * 0.6
                         }else{
                             GL11.glPushMatrix()
                             GL11.glScaled(0.5,0.5,0.5)
-                            Kevin.getInstance.fontManager.font35!!.drawString(it,16F/0.5F,(-11F+yO.toFloat())/0.5F,Color.white.rgb)
+                            KevinClient.fontManager.font35!!.drawString(it,16F/0.5F,(-11F+yO.toFloat())/0.5F,Color.white.rgb)
                             GL11.glPopMatrix()
-                            Kevin.getInstance.fontManager.font35!!.fontHeight * 0.5
+                            KevinClient.fontManager.font35!!.fontHeight * 0.5
                         }
                     }
                     val itemList = arrayListOf(itemInHand,armor1,armor2,armor3,armor4)

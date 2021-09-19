@@ -2,7 +2,7 @@ package kevin.module.modules.player
 
 import kevin.event.EventTarget
 import kevin.event.UpdateEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
@@ -16,7 +16,7 @@ class AutoRespawn : Module("AutoRespawn", "Automatically respawns you after dyin
     fun onUpdate(event: UpdateEvent) {
         val thePlayer = mc.thePlayer
 
-        if (thePlayer == null || Kevin.getInstance.moduleManager.getModule("Ghost")!!.getToggle())
+        if (thePlayer == null || KevinClient.moduleManager.getModule("Ghost")!!.getToggle())
             return
 
         if (if (instantValue.get()) thePlayer.health == 0F || thePlayer.isDead else (mc.currentScreen)is GuiGameOver

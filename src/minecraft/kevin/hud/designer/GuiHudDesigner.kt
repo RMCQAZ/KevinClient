@@ -1,7 +1,7 @@
 package kevin.hud.designer
 
 import kevin.hud.element.Element
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import net.minecraft.client.gui.GuiScreen
 import org.lwjgl.input.Keyboard
 import org.lwjgl.input.Mouse
@@ -20,10 +20,10 @@ class GuiHudDesigner : GuiScreen() {
     }
 
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
-        Kevin.getInstance.hud.render(true)
-        Kevin.getInstance.hud.handleMouseMove(mouseX, mouseY)
+        KevinClient.hud.render(true)
+        KevinClient.hud.handleMouseMove(mouseX, mouseY)
 
-        if (!Kevin.getInstance.hud.elements.contains(selectedElement))
+        if (!KevinClient.hud.elements.contains(selectedElement))
             selectedElement = null
 
         val wheel = Mouse.getDWheel()
@@ -31,7 +31,7 @@ class GuiHudDesigner : GuiScreen() {
         editorPanel.drawPanel(mouseX, mouseY, wheel)
 
         if (wheel != 0) {
-            for (element in Kevin.getInstance.hud.elements) {
+            for (element in KevinClient.hud.elements) {
                 if (element.isInBorder(mouseX / element.scale - element.renderX,
                         mouseY / element.scale - element.renderY)) {
                     element.scale = element.scale + if (wheel > 0) 0.05f else -0.05f
@@ -49,7 +49,7 @@ class GuiHudDesigner : GuiScreen() {
             return
         }
 
-        Kevin.getInstance.hud.handleMouseClick(mouseX, mouseY, mouseButton)
+        KevinClient.hud.handleMouseClick(mouseX, mouseY, mouseButton)
 
         if (!(mouseX >= editorPanel.x && mouseX <= editorPanel.x + editorPanel.width && mouseY >= editorPanel.y &&
                     mouseY <= editorPanel.y + min(editorPanel.realHeight, 200))) {
@@ -58,7 +58,7 @@ class GuiHudDesigner : GuiScreen() {
         }
 
         if (mouseButton == 0) {
-            for (element in  Kevin.getInstance.hud.elements) {
+            for (element in  KevinClient.hud.elements) {
                 if (element.isInBorder(mouseX / element.scale - element.renderX, mouseY / element.scale - element.renderY)) {
                     selectedElement = element
                     break
@@ -69,26 +69,26 @@ class GuiHudDesigner : GuiScreen() {
 
     override fun mouseReleased(mouseX: Int, mouseY: Int, state: Int) {
         super.mouseReleased(mouseX, mouseY, state)
-        Kevin.getInstance.hud.handleMouseReleased()
+        KevinClient.hud.handleMouseReleased()
     }
 
     override fun onGuiClosed() {
         Keyboard.enableRepeatEvents(false)
-        Kevin.getInstance.fileManager.saveConfig( Kevin.getInstance.fileManager.hudConfig)
+        KevinClient.fileManager.saveConfig( KevinClient.fileManager.hudConfig)
         super.onGuiClosed()
     }
 
     override fun keyTyped(typedChar: Char, keyCode: Int) {
         when (keyCode) {
             Keyboard.KEY_DELETE -> if (Keyboard.KEY_DELETE == keyCode && selectedElement != null)
-                Kevin.getInstance.hud.removeElement(selectedElement!!)
+                KevinClient.hud.removeElement(selectedElement!!)
 
             Keyboard.KEY_ESCAPE -> {
                 selectedElement = null
                 editorPanel.create = false
             }
 
-            else ->  Kevin.getInstance.hud.handleKey(typedChar, keyCode)
+            else ->  KevinClient.hud.handleKey(typedChar, keyCode)
         }
 
         super.keyTyped(typedChar, keyCode)

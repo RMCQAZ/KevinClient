@@ -1,7 +1,7 @@
 package kevin.module.modules.world
 
 import kevin.event.*
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.utils.*
 import kevin.utils.BlockUtils.canBeClicked
@@ -569,13 +569,13 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
             RenderUtils.drawBorderedRect(
                 scaledResolution.scaledWidth / 2 - 2.toFloat(),
                 scaledResolution.scaledHeight / 2 + 5.toFloat(),
-                scaledResolution.scaledWidth / 2 + Kevin.getInstance.fontManager.font40!!.getStringWidth(info) + 2.toFloat(),
+                scaledResolution.scaledWidth / 2 + KevinClient.fontManager.font40!!.getStringWidth(info) + 2.toFloat(),
                 scaledResolution.scaledHeight / 2 + 16.toFloat(), 3f, Color.BLACK.rgb, Color.BLACK.rgb
             )
 
             GlStateManager.resetColor()
 
-            Kevin.getInstance.fontManager.font40!!.drawString(
+            KevinClient.fontManager.font40!!.drawString(
                 info, scaledResolution.scaledWidth / 2.toFloat(),
                 scaledResolution.scaledHeight / 2 + 7.toFloat(), Color.WHITE.rgb
             )

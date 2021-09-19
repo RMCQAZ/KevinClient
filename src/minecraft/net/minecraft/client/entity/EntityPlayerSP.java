@@ -1,7 +1,7 @@
 package net.minecraft.client.entity;
 
 import kevin.event.*;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.combat.KillAura;
 import kevin.module.modules.movement.InvMove;
 import kevin.module.modules.movement.NoSlow;
@@ -152,7 +152,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void onUpdate()
     {
 
-        //Kevin.getInstance.eventManager.callEvent(new UpdateEvent(UpdateState.OnUpdate));
+        //KevinClient.eventManager.callEvent(new UpdateEvent(UpdateState.OnUpdate));
 
         if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ)))
         {
@@ -176,9 +176,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void onUpdateWalkingPlayer()
     {
         try {
-            Kevin.getInstance.eventManager.callEvent(new MotionEvent(EventState.PRE));
-            final InvMove invMove = (InvMove) Kevin.getInstance.moduleManager.getModule("InvMove");
-            final boolean fakeSprint = (invMove.getToggle() && invMove.getFakeSprint().get()) || Kevin.getInstance.moduleManager.getModule("AntiHunger").getToggle();
+            KevinClient.eventManager.callEvent(new MotionEvent(EventState.PRE));
+            final InvMove invMove = (InvMove) KevinClient.moduleManager.getModule("InvMove");
+            final boolean fakeSprint = (invMove.getToggle() && invMove.getFakeSprint().get()) || KevinClient.moduleManager.getModule("AntiHunger").getToggle();
 
             boolean sprinting = this.isSprinting() && !fakeSprint;
 
@@ -269,7 +269,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
                 }
             }
 
-            Kevin.getInstance.eventManager.callEvent(new MotionEvent(EventState.POST));
+            KevinClient.eventManager.callEvent(new MotionEvent(EventState.POST));
         }catch (final Exception e) {
             e.printStackTrace();
         }
@@ -297,7 +297,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void sendChatMessage(String message)
     {
-        if (!Kevin.getInstance.commandManager.execCommand(message)) {
+        if (!KevinClient.commandManager.execCommand(message)) {
             this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
         }
     }
@@ -307,7 +307,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void swingItem()
     {
-        final NoSwing noSwing = (NoSwing) Kevin.getInstance.moduleManager.getModule("NoSwing");
+        final NoSwing noSwing = (NoSwing) KevinClient.moduleManager.getModule("NoSwing");
 
         if (noSwing.getToggle()) {
             if (!noSwing.getServerSideValue().get()) this.sendQueue.addToSendQueue(new C0APacketAnimation());
@@ -449,7 +449,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
         PushOutEvent event = new PushOutEvent();
         if (this.noClip) event.cancelEvent();
-        Kevin.getInstance.eventManager.callEvent(event);
+        KevinClient.eventManager.callEvent(event);
         if (event.isCancelled()) return false;
 
         if (this.noClip)
@@ -731,7 +731,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void onLivingUpdate()
     {
 
-        Kevin.getInstance.eventManager.callEvent(new UpdateEvent(/*UpdateState.OnLivingUpdate**/));
+        KevinClient.eventManager.callEvent(new UpdateEvent(/*UpdateState.OnLivingUpdate**/));
 
         if (this.sprintingTicksLeft > 0)
         {
@@ -753,7 +753,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         if (this.inPortal)
         {
             if (this.mc.currentScreen != null && !this.mc.currentScreen.doesGuiPauseGame()
-                    && !Kevin.getInstance.moduleManager.getModule("PortalMenu").getToggle())
+                    && !KevinClient.moduleManager.getModule("PortalMenu").getToggle())
             {
                 this.mc.displayGuiScreen(null);
             }
@@ -805,13 +805,13 @@ public class EntityPlayerSP extends AbstractClientPlayer
         boolean flag2 = this.movementInput.moveForward >= f;
         this.movementInput.updatePlayerMoveState();
 
-        final NoSlow noSlow = (NoSlow) Kevin.getInstance.moduleManager.getModule("NoSlow");
-        final KillAura killAura = (KillAura) Kevin.getInstance.moduleManager.getModule("KillAura");
+        final NoSlow noSlow = (NoSlow) KevinClient.moduleManager.getModule("NoSlow");
+        final KillAura killAura = (KillAura) KevinClient.moduleManager.getModule("KillAura");
 
         if (getHeldItem() != null && getHeldItem().getItem() != null && (this.isUsingItem() || (getHeldItem().getItem() instanceof ItemSword && killAura.getBlockingStatus())) && !this.isRiding())
         {
             final SlowDownEvent slowDownEvent = new SlowDownEvent(0.2F, 0.2F);
-            Kevin.getInstance.eventManager.callEvent(slowDownEvent);
+            KevinClient.eventManager.callEvent(slowDownEvent);
             this.movementInput.moveStrafe *= slowDownEvent.getStrafe();
             this.movementInput.moveForward *= slowDownEvent.getForward();
             this.sprintToggleTimer = 0;
@@ -822,7 +822,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         this.pushOutOfBlocks(this.posX + (double)this.width * 0.35D, this.getEntityBoundingBox().minY + 0.5D, this.posZ - (double)this.width * 0.35D);
         this.pushOutOfBlocks(this.posX + (double)this.width * 0.35D, this.getEntityBoundingBox().minY + 0.5D, this.posZ + (double)this.width * 0.35D);
 
-        final Sprint sprint = (Sprint) Kevin.getInstance.moduleManager.getModule("Sprint");
+        final Sprint sprint = (Sprint) KevinClient.moduleManager.getModule("Sprint");
 
         boolean flag3 = !sprint.getFoodValue().get() || (float)this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying;
 
@@ -843,7 +843,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             this.setSprinting(true);
         }
 
-        final Scaffold scaffold = (Scaffold) Kevin.getInstance.moduleManager.getModule("Scaffold");
+        final Scaffold scaffold = (Scaffold) KevinClient.moduleManager.getModule("Scaffold");
 
         if ((scaffold.getToggle() && !scaffold.sprintValue.get()) || (sprint.getToggle() && sprint.getCheckServerSide().get() && (onGround || !sprint.getCheckServerSideGround().get()) && !sprint.getAllDirectionsValue().get() && RotationUtils.targetRotation != null && RotationUtils.getRotationDifference(new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)) > 30))
             this.setSprinting(false);

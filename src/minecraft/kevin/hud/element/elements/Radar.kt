@@ -3,7 +3,7 @@ package kevin.hud.element.elements
 import kevin.hud.element.Border
 import kevin.hud.element.Element
 import kevin.hud.element.ElementInfo
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.FloatValue
 import kevin.module.IntegerValue
@@ -210,7 +210,7 @@ class Radar(x: Double = 5.0, y: Double = 130.0) : Element(x, y) {
 
                 if (triangleMode) {
                     if (useESPColorsValue.get()) {
-                        val color = (Kevin.getInstance.moduleManager.getModule("ESP") as ESP).getColor(entity)
+                        val color = (KevinClient.moduleManager.getModule("ESP") as ESP).getColor(entity)
 
                         GL11.glColor4f(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1.0f)
                     } else {
@@ -225,7 +225,7 @@ class Radar(x: Double = 5.0, y: Double = 130.0) : Element(x, y) {
 
                     GL11.glEnd()
                 } else {
-                    val color = (Kevin.getInstance.moduleManager.getModule("ESP") as ESP).getColor(entity)
+                    val color = (KevinClient.moduleManager.getModule("ESP") as ESP).getColor(entity)
 
                     worldRenderer.pos(((positionRelativeToPlayer.x / viewDistance) * size).toDouble(), ((positionRelativeToPlayer.y / viewDistance) * size).toDouble(), 0.0)
                         .color(color.red / 255.0f, color.green / 255.0f,

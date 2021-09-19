@@ -1,6 +1,6 @@
 package net.minecraft.client.renderer.entity;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.combat.KillAura;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -103,7 +103,7 @@ public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
                 {
                     EnumAction enumaction = itemstack.getItemUseAction();
 
-                    KillAura killAura = (KillAura) Kevin.getInstance.moduleManager.getModule("KillAura");
+                    KillAura killAura = (KillAura) KevinClient.moduleManager.getModule("KillAura");
 
                     if (enumaction == EnumAction.BLOCK || (this.renderEntity == Minecraft.getMinecraft().thePlayer && killAura.getBlockingStatus()))
                     {

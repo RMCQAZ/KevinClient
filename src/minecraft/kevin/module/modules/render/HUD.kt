@@ -2,7 +2,7 @@ package kevin.module.modules.render
 
 import kevin.event.*
 import kevin.hud.designer.GuiHudDesigner
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.Module
 import kevin.module.ModuleCategory
 
@@ -12,7 +12,7 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
         if ((mc.currentScreen) is GuiHudDesigner)
             return
 
-        Kevin.getInstance.hud.render(false)
+        KevinClient.hud.render(false)
     }
 
     @EventTarget
@@ -20,11 +20,11 @@ class HUD : Module("HUD","Toggles visibility of the HUD.",category = ModuleCateg
 
         //if (event!!.eventState == UpdateState.OnUpdate) return
 
-        Kevin.getInstance.hud.update()
+        KevinClient.hud.update()
     }
 
     @EventTarget
     fun onKey(event: KeyEvent) {
-        Kevin.getInstance.hud.handleKey('a', event.key)
+        KevinClient.hud.handleKey('a', event.key)
     }
 }

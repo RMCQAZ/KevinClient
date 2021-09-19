@@ -7,15 +7,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.Module;
-import kevin.module.modules.movement.KeepSprint;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.server.CommandBlockLogic;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -1372,7 +1370,7 @@ public abstract class EntityPlayer extends EntityLivingBase
                         if (i > 0)
                         {
                             targetEntity.addVelocity((double)(-MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F), 0.1D, (double)(MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F));
-                            Module keepSprint = Kevin.getInstance.moduleManager.getModule("KeepSprint");
+                            Module keepSprint = KevinClient.moduleManager.getModule("KeepSprint");
                             boolean keep = keepSprint!=null&&keepSprint.getToggle();
                             if (!keep){
                                 this.motionX *= 0.6D;

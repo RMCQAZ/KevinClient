@@ -12,7 +12,7 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 
 import kevin.event.Render3DEvent;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.player.Reach;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -470,7 +470,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             this.mc.mcProfiler.startSection("pick");
             this.mc.pointedEntity = null;
 
-            final Reach reach = (Reach) Kevin.getInstance.moduleManager.getModule("Reach");
+            final Reach reach = (Reach) KevinClient.moduleManager.getModule("Reach");
 
             double d0 = reach.getToggle() ? reach.getMaxRange() : (double)this.mc.playerController.getBlockReachDistance();
             this.mc.objectMouseOver = entity.rayTrace(reach.getToggle() ? reach.getBuildReachValue().get() : d0, partialTicks);
@@ -686,7 +686,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
     private void hurtCameraEffect(float partialTicks)
     {
-        if (Kevin.getInstance.moduleManager.getModule("NoHurtCam").getToggle()) return;
+        if (KevinClient.moduleManager.getModule("NoHurtCam").getToggle()) return;
 
         if (this.mc.getRenderViewEntity() instanceof EntityLivingBase)
         {
@@ -737,7 +737,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
      */
     private void orientCamera(float partialTicks)
     {
-        if (Kevin.getInstance.moduleManager.getModule("CameraClip").getToggle()){
+        if (KevinClient.moduleManager.getModule("CameraClip").getToggle()){
             Entity entity = this.mc.getRenderViewEntity();
             float f = entity.getEyeHeight();
 
@@ -1005,9 +1005,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         if (this.mc.gameSettings.viewBobbing)
         {
-            if (Kevin.getInstance.moduleManager.getModule("Tracers").getToggle()) GL11.glPushMatrix();
+            if (KevinClient.moduleManager.getModule("Tracers").getToggle()) GL11.glPushMatrix();
             this.setupViewBobbing(partialTicks);
-            if (Kevin.getInstance.moduleManager.getModule("Tracers").getToggle()) GL11.glPopMatrix();
+            if (KevinClient.moduleManager.getModule("Tracers").getToggle()) GL11.glPopMatrix();
         }
 
         float f1 = this.mc.thePlayer.prevTimeInPortal + (this.mc.thePlayer.timeInPortal - this.mc.thePlayer.prevTimeInPortal) * partialTicks;
@@ -1990,7 +1990,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             Reflector.callVoid(Reflector.ForgeHooksClient_dispatchRenderLast, renderglobal, partialTicks);
         }
 
-        Kevin.getInstance.eventManager.callEvent(new Render3DEvent(partialTicks));
+        KevinClient.eventManager.callEvent(new Render3DEvent(partialTicks));
 
         this.mc.mcProfiler.endStartSection("hand");
 

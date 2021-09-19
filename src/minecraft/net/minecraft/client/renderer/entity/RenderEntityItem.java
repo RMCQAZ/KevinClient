@@ -2,7 +2,7 @@ package net.minecraft.client.renderer.entity;
 
 import java.util.Random;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.render.Chams;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -94,7 +94,7 @@ public class RenderEntityItem extends Render<EntityItem>
      */
     public void doRender(EntityItem entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        final Chams chams = (Chams) Kevin.getInstance.moduleManager.getModule("Chams");
+        final Chams chams = (Chams) KevinClient.moduleManager.getModule("Chams");
 
         if (chams.getToggle() && chams.getItemsValue().get()) {
             GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);

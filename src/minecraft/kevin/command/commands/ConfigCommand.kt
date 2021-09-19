@@ -14,7 +14,7 @@ class ConfigCommand : ICommand {
             1 -> {
                 when{
                     args[0].equals("Save",true) || args[0].equals("Load",true) -> {
-                        ChatUtils().messageWithStart("§cUsage: §9.§6config §b${args[0]} §c<ConfigName>")
+                        ChatUtils.messageWithStart("§cUsage: §9.§6config §b${args[0]} §c<ConfigName>")
                     }
                     else -> usageMessage()
                 }
@@ -34,29 +34,29 @@ class ConfigCommand : ICommand {
                     args[0].equals("Save",true) -> {
                         try {
                             ConfigManager.saveConfig(name)
-                            ChatUtils().messageWithStart("§aSuccessfully saved config §b$name.")
+                            ChatUtils.messageWithStart("§aSuccessfully saved config §b$name.")
                         }catch (e: Exception){
-                            ChatUtils().messageWithStart("§cError: $e")
+                            ChatUtils.messageWithStart("§cError: $e")
                         }
                     }
                     args[0].equals("Load",true) -> {
                         try {
                             when(ConfigManager.loadConfig(name)){
                                 0 -> {
-                                    ChatUtils().messageWithStart("§aSuccessfully loaded config §b$name.")
+                                    ChatUtils.messageWithStart("§aSuccessfully loaded config §b$name.")
                                 }
                                 1 -> {
-                                    ChatUtils().messageWithStart("§eWarning: §eThe §eModules §econfig §efile §eis §emissing.§eSuccessfully §eloaded §eHUD §econfig §b$name.")
+                                    ChatUtils.messageWithStart("§eWarning: §eThe §eModules §econfig §efile §eis §emissing.§eSuccessfully §eloaded §eHUD §econfig §b$name.")
                                 }
                                 2 -> {
-                                    ChatUtils().messageWithStart("§eWarning: §eThe §eHUD §econfig §efile §eis §emissing.§eSuccessfully §eloaded §eModules §econfig §b$name.")
+                                    ChatUtils.messageWithStart("§eWarning: §eThe §eHUD §econfig §efile §eis §emissing.§eSuccessfully §eloaded §eModules §econfig §b$name.")
                                 }
                                 3 -> {
-                                    ChatUtils().messageWithStart("§cFailed to load config §b$name.§cFile not found.")
+                                    ChatUtils.messageWithStart("§cFailed to load config §b$name.§cFile not found.")
                                 }
                             }
                         }catch (e: Exception){
-                            ChatUtils().messageWithStart("§cError: $e")
+                            ChatUtils.messageWithStart("§cError: $e")
                         }
                     }
                     else -> usageMessage()
@@ -64,5 +64,5 @@ class ConfigCommand : ICommand {
             }
         }
     }
-    private fun usageMessage() = ChatUtils().messageWithStart("§cUsage: .config <Save/Load> <ConfigName>")
+    private fun usageMessage() = ChatUtils.messageWithStart("§cUsage: .config <Save/Load> <ConfigName>")
 }

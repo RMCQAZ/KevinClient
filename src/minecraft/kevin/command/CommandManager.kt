@@ -1,7 +1,7 @@
 package kevin.command
 
 import kevin.command.commands.*
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.utils.ChatUtils
 
 class CommandManager {
@@ -19,7 +19,7 @@ class CommandManager {
         commands[arrayOf("binds")] = BindsCommand()
 
         val modulesCommand = arrayListOf<String>()
-        for (m in Kevin.getInstance.moduleManager.getModules()) modulesCommand.add(m.getName())
+        for (m in KevinClient.moduleManager.getModules()) modulesCommand.add(m.getName())
         commands[modulesCommand.toTypedArray()] = ValueCommand()
 
         commands[arrayOf("say")] = SayCommand()
@@ -31,6 +31,8 @@ class CommandManager {
         commands[arrayOf("skin")] = SkinCommand()
 
         commands[arrayOf("config")] = ConfigCommand()
+
+        commands[arrayOf("hide")] = HideCommand()
     }
 
     fun execCommand(message: String): Boolean{
@@ -46,10 +48,10 @@ class CommandManager {
                 if (command !is ValueCommand) list.remove(key)
                 command.run(list.toTypedArray())
             } else {
-                ChatUtils().message("${Kevin.getInstance.cStart} §l§4Command Not Found! Use .help for help")
+                ChatUtils.message("${KevinClient.cStart} §l§4Command Not Found! Use .help for help")
             }
         }else {
-            ChatUtils().message("${Kevin.getInstance.cStart} §l§4Command Not Found! Use .help for help")
+            ChatUtils.message("${KevinClient.cStart} §l§4Command Not Found! Use .help for help")
         }
         return true
     }

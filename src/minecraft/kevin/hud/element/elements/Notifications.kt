@@ -2,7 +2,7 @@ package kevin.hud.element.elements
 
 import kevin.hud.designer.GuiHudDesigner
 import kevin.hud.element.*
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.ListValue
 import kevin.utils.AnimationUtils
 import kevin.utils.MSTimer
@@ -19,7 +19,7 @@ class Notifications(x: Double = 0.0, y: Double = 30.0, scale: Float = 1F,
     override fun drawElement(): Border? {
         var animationY = 30F
         val notifications = mutableListOf<Notification>()
-        val hud = Kevin.getInstance.hud
+        val hud = KevinClient.hud
         for(i in hud.notifications)
             notifications.add(i)
         for(i in notifications){
@@ -34,7 +34,7 @@ class Notifications(x: Double = 0.0, y: Double = 30.0, scale: Float = 1F,
             }
         }
         if ((mc.currentScreen) is GuiHudDesigner) {
-            if (!Kevin.getInstance.hud.notifications.contains(exampleNotification)) Kevin.getInstance.hud.addNotification(exampleNotification)
+            if (!KevinClient.hud.notifications.contains(exampleNotification)) KevinClient.hud.addNotification(exampleNotification)
             exampleNotification.fadeState = Notification.FadeState.STAY
             exampleNotification.x = exampleNotification.textLength + 8F
             if (notificationMode.get().equals("liquidbounce-kevin", true)) return Border(-118.114514191981F, -50F, 0F, -30F)
@@ -63,7 +63,7 @@ class Notification(private val message: String) {
     init {
         stayTimer.reset()
         firstY = 1919F
-        textLength = Kevin.getInstance.fontManager.font35!!.getStringWidth(message)
+        textLength = KevinClient.fontManager.font35!!.getStringWidth(message)
     }
 
     fun drawNotification(animationY: Float) {
@@ -87,17 +87,17 @@ class Notification(private val message: String) {
             RenderUtils.drawRect(-x, -y, -x - 5, -20F-y, Color(0, 255, 160,225).rgb)
             RenderUtils.drawRect(-x + 8 + textLength, -19F-y, -x, -20F-y, Color(0, 255, 160,225).rgb)
             RenderUtils.drawRect(-x + 8 + textLength, -y, -x + 7 + textLength, -19F-y, Color(0, 255, 160,225).rgb)
-            Kevin.getInstance.fontManager.font35!!.drawString(message, -x + 4, -14F-y, Color(0, 255, 160).rgb)
+            KevinClient.fontManager.font35!!.drawString(message, -x + 4, -14F-y, Color(0, 255, 160).rgb)
         }else if (message.contains("Disabled")) {
             RenderUtils.drawRect(-x, -y, -x - 5, -20F-y, Color(255, 0, 80,225).rgb)
             RenderUtils.drawRect(-x + 8 + textLength, -19F-y, -x, -20F-y, Color(255, 0, 80,225).rgb)
             RenderUtils.drawRect(-x + 8 + textLength, -y, -x + 7 + textLength, -19F-y, Color(255, 0, 80,225).rgb)
-            Kevin.getInstance.fontManager.font35!!.drawString(message, -x + 4, -14F-y, Color(255, 0, 80).rgb)
+            KevinClient.fontManager.font35!!.drawString(message, -x + 4, -14F-y, Color(255, 0, 80).rgb)
         }else {
             RenderUtils.drawRect(-x, -y, -x - 5, -20F-y, Color(0, 160, 255,225).rgb)
             RenderUtils.drawRect(-x + 8 + textLength, -19F-y, -x, -20F-y, Color(0, 160, 255,225).rgb)
             RenderUtils.drawRect(-x + 8 + textLength, -y, -x + 7 + textLength, -19F-y, Color(0, 160, 255,225).rgb)
-            Kevin.getInstance.fontManager.font35!!.drawString(message, -x + 4, -14F-y, Color(0, 160, 255).rgb)
+            KevinClient.fontManager.font35!!.drawString(message, -x + 4, -14F-y, Color(0, 160, 255).rgb)
         }
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
 
@@ -189,7 +189,7 @@ class Notification(private val message: String) {
                 fadeState = FadeState.END
 
             FadeState.END -> {
-                val hud = Kevin.getInstance.hud
+                val hud = KevinClient.hud
                 hud.removeNotification(this)
             }
 
@@ -221,8 +221,8 @@ class Notification(private val message: String) {
         RenderUtils.drawRect(-x, -y, -x - 1, -40F-y, color)
         RenderUtils.drawRect(-x + 8 + textLength, -39F-y, -x, -40F-y, color)
         RenderUtils.drawRect(-x + 8 + textLength, -y, -x + 7 + textLength, -39F-y, color)
-        Kevin.getInstance.fontManager.font35!!.drawString(message, -x + (8F + textLength)/2 - Kevin.getInstance.fontManager.font35!!.getStringWidth(message)/2, -14F-y, color)
-        Kevin.getInstance.fontManager.font35!!.drawString(text, -x + (8F + textLength)/2 - Kevin.getInstance.fontManager.font35!!.getStringWidth(text)/2, -30F-y, color)
+        KevinClient.fontManager.font35!!.drawString(message, -x + (8F + textLength)/2 - KevinClient.fontManager.font35!!.getStringWidth(message)/2, -14F-y, color)
+        KevinClient.fontManager.font35!!.drawString(text, -x + (8F + textLength)/2 - KevinClient.fontManager.font35!!.getStringWidth(text)/2, -30F-y, color)
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
 
         // Animation
@@ -313,7 +313,7 @@ class Notification(private val message: String) {
                 fadeState = FadeState.END
 
             FadeState.END -> {
-                val hud = Kevin.getInstance.hud
+                val hud = KevinClient.hud
                 hud.removeNotification(this)
             }
 

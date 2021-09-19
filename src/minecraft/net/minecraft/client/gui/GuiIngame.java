@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import kevin.event.Render2DEvent;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.render.AntiBlind;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -371,7 +371,7 @@ public class GuiIngame extends Gui
 
     protected void renderTooltip(ScaledResolution sr, float partialTicks)
     {
-        Kevin.getInstance.eventManager.callEvent(new Render2DEvent(partialTicks));
+        KevinClient.eventManager.callEvent(new Render2DEvent(partialTicks));
         if (this.mc.getRenderViewEntity() instanceof EntityPlayer)
         {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -941,7 +941,7 @@ public class GuiIngame extends Gui
 
     private void renderPumpkinOverlay(ScaledResolution scaledRes)
     {
-        final AntiBlind antiBlind = (AntiBlind) Kevin.getInstance.moduleManager.getModule("AntiBlind");
+        final AntiBlind antiBlind = (AntiBlind) KevinClient.moduleManager.getModule("AntiBlind");
 
         if(antiBlind.getToggle() && antiBlind.getPumpkinEffect().get())
             return;

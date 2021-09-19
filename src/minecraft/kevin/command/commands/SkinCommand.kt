@@ -18,10 +18,10 @@ class SkinCommand : ICommand {
                 val v = args[0]
                 when{
                     v.equals("Set",true) -> {
-                        ChatUtils().messageWithStart("§cUsage: §9.§6skin §b$v §c<SkinName/None>")
+                        ChatUtils.messageWithStart("§cUsage: §9.§6skin §b$v §c<SkinName/None>")
                     }
                     v.equals("Mode",true) -> {
-                        ChatUtils().messageWithStart("§cUsage: §9.§6skin §b$v §c<Default/Slim>")
+                        ChatUtils.messageWithStart("§cUsage: §9.§6skin §b$v §c<Default/Slim>")
                     }
                     v.equals("List",true) -> {
                         SkinManager.list()
@@ -31,7 +31,7 @@ class SkinCommand : ICommand {
                     }
                     v.equals("Reload",true) -> {
                         SkinManager.load()
-                        ChatUtils().messageWithStart("§9Reloaded")
+                        ChatUtils.messageWithStart("§9Reloaded")
                     }
                     else -> {
                         usageMessage()
@@ -60,23 +60,23 @@ class SkinCommand : ICommand {
                         }
                         val state = SkinManager.set(v2)
                         if (state==0){
-                            ChatUtils().messageWithStart("§9Skin was set to §b$v2.")
+                            ChatUtils.messageWithStart("§9Skin was set to §b$v2.")
                         } else {
-                            ChatUtils().messageWithStart("§cNo skin called §b$v2.")
+                            ChatUtils.messageWithStart("§cNo skin called §b$v2.")
                         }
                     }
                     v.equals("Mode",true) -> {
                         when{
                             v2.equals("Default",true) -> {
                                 SkinManager.setMode(SkinManager.SkinMode.Default)
-                                ChatUtils().messageWithStart("§9Skin mode was set to §b$v2.")
+                                ChatUtils.messageWithStart("§9Skin mode was set to §b$v2.")
                             }
                             v2.equals("Slim",true) -> {
                                 SkinManager.setMode(SkinManager.SkinMode.Slim)
-                                ChatUtils().messageWithStart("§9Skin mode was set to §b$v2.")
+                                ChatUtils.messageWithStart("§9Skin mode was set to §b$v2.")
                             }
                             else -> {
-                                ChatUtils().messageWithStart("§cUsage: §9.§6skin §b$v §c<Default/Slim>")
+                                ChatUtils.messageWithStart("§cUsage: §9.§6skin §b$v §c<Default/Slim>")
                             }
                         }
                     }
@@ -88,7 +88,7 @@ class SkinCommand : ICommand {
                     }
                     v.equals("Reload",true) -> {
                         SkinManager.load()
-                        ChatUtils().messageWithStart("§9Reloaded")
+                        ChatUtils.messageWithStart("§9Reloaded")
                     }
                     else -> {
                         usageMessage()
@@ -100,7 +100,7 @@ class SkinCommand : ICommand {
     private fun clearSkin(){
         SkinManager.nowSkin = null
         SkinManager.save()
-        ChatUtils().messageWithStart("§9Skin was set to §bNone.")
+        ChatUtils.messageWithStart("§9Skin was set to §bNone.")
     }
-    private fun usageMessage() = ChatUtils().messageWithStart("§cUsage: .skin <Set/Clear/List/Reload/Mode>")
+    private fun usageMessage() = ChatUtils.messageWithStart("§cUsage: .skin <Set/Clear/List/Reload/Mode>")
 }

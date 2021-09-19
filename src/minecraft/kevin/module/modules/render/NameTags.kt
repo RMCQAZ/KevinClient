@@ -2,7 +2,7 @@ package kevin.module.modules.render
 
 import kevin.event.EventTarget
 import kevin.event.Render3DEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.utils.ColorUtils
 import kevin.utils.EntityUtils
@@ -22,7 +22,7 @@ class NameTags : Module("NameTags", "Changes the scale of the nametags so you ca
     private val distanceValue = BooleanValue("Distance", false)
     private val armorValue = BooleanValue("Armor", true)
     private val clearNamesValue = BooleanValue("ClearNames", true)
-    private val fontValue = Kevin.getInstance.fontManager.font40!!
+    private val fontValue = KevinClient.fontManager.font40!!
     private val borderValue = BooleanValue("Border", true)
     private val jelloColorValue = BooleanValue("JelloHPColor", true)
     private val jelloAlphaValue = IntegerValue("JelloAlpha", 170, 0, 255)

@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.util.Set;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.world.ChestStealer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -101,7 +101,7 @@ public abstract class GuiContainer extends GuiScreen
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        ChestStealer chestStealer=(ChestStealer) Kevin.getInstance.moduleManager.getModule("ChestStealer");
+        ChestStealer chestStealer=(ChestStealer) KevinClient.moduleManager.getModule("ChestStealer");
         try {
             Minecraft mc=Minecraft.getMinecraft();
             GuiScreen guiScreen=mc.currentScreen;

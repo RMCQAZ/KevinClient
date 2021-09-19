@@ -4,7 +4,7 @@ import kevin.event.EventState
 import kevin.event.EventTarget
 import kevin.event.MotionEvent
 import kevin.event.SlowDownEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.combat.KillAura
 import kevin.utils.MovementUtils
@@ -38,7 +38,7 @@ class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and
         if ((heldItem.item) !is ItemSword || !MovementUtils.isMoving)
             return
 
-        val aura = Kevin.getInstance.moduleManager.getModule("KillAura") as KillAura
+        val aura = KevinClient.moduleManager.getModule("KillAura") as KillAura
         if (!thePlayer.isBlocking && !aura.blockingStatus)
             return
 

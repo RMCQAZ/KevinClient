@@ -18,6 +18,7 @@ import net.minecraft.network.play.client.C09PacketHeldItemChange
 class AutoWeapon : Module("AutoWeapon", "Automatically selects the best weapon in your hotbar.", category = ModuleCategory.COMBAT) {
     private val silentValue = BooleanValue("SpoofItem", false)
     private val ticksValue = IntegerValue("SpoofTicks", 10, 1, 20)
+    private val swordsFirst = BooleanValue("SwordsFirst",false)
     private var attackEnemy = false
 
     private var spoofedSlot = 0
@@ -41,7 +42,7 @@ class AutoWeapon : Module("AutoWeapon", "Automatically selects the best weapon i
             attackEnemy = false
 
             // Find best weapon in hotbar (#Kotlin Style)
-            val (slot, _) = (0..8)
+            var (slot, _) = (0..8)
                 .map { Pair(it, thePlayer.inventory.getStackInSlot(it)) }
                 .filter { it.second != null && (it.second?.item is ItemSword || it.second?.item is ItemTool) }
                 .maxByOrNull {
@@ -50,6 +51,21 @@ class AutoWeapon : Module("AutoWeapon", "Automatically selects the best weapon i
                         Enchantment.sharpness
                     )
                 } ?: return
+
+            if (swordsFirst.get()){
+                val bestSword = (0..8)
+                    .map { Pair(it, thePlayer.inventory.getStackInSlot(it)) }
+                    .filter { it.second != null && it.second?.item is ItemSword }
+                    .maxByOrNull {
+                        it.second!!.attributeModifiers["generic.attackDamage"].first().amount + 1.25 * ItemUtils.getEnchantment(
+                            it.second,
+                            Enchantment.sharpness
+                        )
+                    }
+                if (bestSword!=null){
+                    slot = bestSword.first
+                }
+            }
 
             if (slot == thePlayer.inventory.currentItem) // If in hand no need to swap
                 return

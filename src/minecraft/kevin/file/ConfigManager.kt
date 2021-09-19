@@ -4,7 +4,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.Value
 import org.apache.commons.io.FileUtils
 import java.io.*
@@ -12,7 +12,7 @@ import java.util.function.Consumer
 
 object ConfigManager {
     val configList = arrayListOf<File>()
-    private val configDir = Kevin.getInstance.fileManager.configsDir
+    private val configDir = KevinClient.fileManager.configsDir
     fun load(){
         configList.clear()
         val configs = configDir.listFiles()
@@ -29,7 +29,7 @@ object ConfigManager {
         if (!hudFile.exists()||!hudFile.isFile) hudFile.createNewFile()
         //Modules
         val modulesConfig = JsonObject()
-        Kevin.getInstance.moduleManager.getModules().forEach {
+        KevinClient.moduleManager.getModules().forEach {
             val jsonMod = JsonObject()
             jsonMod.addProperty("State", it.getToggle())
             jsonMod.addProperty("KeyBind", it.getKeyBind())
@@ -41,7 +41,7 @@ object ConfigManager {
         printWriter.close()
         //HUD
         val hudPrintWriter = PrintWriter(FileWriter(hudFile))
-        hudPrintWriter.println(Config(Kevin.getInstance.hud).toJson())
+        hudPrintWriter.println(Config(KevinClient.hud).toJson())
         hudPrintWriter.close()
         //Add to config list
         configList.add(file)
@@ -60,7 +60,7 @@ object ConfigManager {
                     jsonElement.asJsonObject.entrySet().iterator()
                 while (entryIterator.hasNext()) {
                     val (key, value) = entryIterator.next()
-                    val module = Kevin.getInstance.moduleManager.getModule(key)
+                    val module = KevinClient.moduleManager.getModule(key)
                     if (module != null) {
                         val jsonModule = value as JsonObject
                         module.toggle(jsonModule["State"].asBoolean)
@@ -75,8 +75,8 @@ object ConfigManager {
         } else returnValue = 1
         //LoadHUD
         if (hudConfig.exists()&&modulesConfig.isFile){
-            Kevin.getInstance.hud.clearElements()
-            Kevin.getInstance.hud = Config(FileUtils.readFileToString(hudConfig)).toHUD()
+            KevinClient.hud.clearElements()
+            KevinClient.hud = Config(FileUtils.readFileToString(hudConfig)).toHUD()
         } else if (returnValue==1) returnValue = 3 else returnValue = 2
         return returnValue
     }

@@ -5,7 +5,7 @@ import kevin.hud.element.Border
 import kevin.hud.element.Element
 import kevin.hud.element.ElementInfo
 import kevin.hud.element.Side
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.utils.AnimationUtils
 import kevin.utils.FontManager
@@ -19,7 +19,7 @@ import java.awt.Color
 class Arraylist(x: Double = 1.0, y: Double = 2.0, scale: Float = 1F,
                 side: Side = Side(Side.Horizontal.RIGHT, Side.Vertical.UP)) : Element(x, y, scale, side) {
 
-    private val fontValue = Kevin.getInstance.fontManager.font40!!
+    private val fontValue = KevinClient.fontManager.font40!!
     private var modules = emptyList<Module>()
 
     private val tagMode = ListValue("ArrayList-TagMode", arrayOf("<>","[]","None"),"<>")
@@ -68,7 +68,7 @@ class Arraylist(x: Double = 1.0, y: Double = 2.0, scale: Float = 1F,
         // Slide animation - update every render
         val delta = RenderUtils.deltaTime
 
-        for (module in Kevin.getInstance.moduleManager.getModules()) {
+        for (module in KevinClient.moduleManager.getModules()) {
             if (!module.array || (!module.getToggle() && module.slide == 0F)) continue
 
             var displayString = if (!tags.get())
@@ -229,7 +229,7 @@ class Arraylist(x: Double = 1.0, y: Double = 2.0, scale: Float = 1F,
         val tags = arrayListTags
         val upperCaseValue = arrayListUpperCaseValue
         val tagsArrayColor = arrayListTagsArrayColor
-        modules = Kevin.getInstance.moduleManager.getModules()
+        modules = KevinClient.moduleManager.getModules()
             .filter { it.array && it.slide > 0 }
             .sortedBy { -fontValue.getStringWidth(if (upperCaseValue.get()) (if (!tags.get()) it.getName() else if (tagsArrayColor.get()) it.getColorlessTagName(tagLeft,tagRight) else it.getTagName(tagLeft,tagRight)).toUpperCase() else if (!tags.get()) it.getName() else if (tagsArrayColor.get()) it.getColorlessTagName(tagLeft,tagRight) else it.getTagName(tagLeft,tagRight)) }
     }

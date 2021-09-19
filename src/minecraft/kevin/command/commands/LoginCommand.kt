@@ -20,14 +20,14 @@ import java.net.URL
 class LoginCommand : ICommand {
     override fun run(args: Array<out String>?) {
         if (args == null || args.isEmpty()){
-            ChatUtils().messageWithStart("§cUsage: .login <Name> <Password>")
+            ChatUtils.messageWithStart("§cUsage: .login <Name> <Password>")
             return
         }
         if (args.size == 1){
             Minecraft.getMinecraft().session = Session(args[0], getUUID(args[0]), "-", "legacy")
-            ChatUtils().messageWithStart("§c现在你的名字是 §f§l${args[0]}§c。")
+            ChatUtils.messageWithStart("§c现在你的名字是 §f§l${args[0]}§c。")
         } else
-            ChatUtils().messageWithStart(login(args[0],args[1]))
+            ChatUtils.messageWithStart(login(args[0],args[1]))
         if (Minecraft.getMinecraft().isIntegratedServerRunning)
             return
         Minecraft.getMinecraft().theWorld.sendQuittingDisconnectingPacket()

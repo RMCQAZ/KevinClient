@@ -3,7 +3,7 @@ package kevin.module.modules.world
 import kevin.event.EventTarget
 import kevin.event.Render3DEvent
 import kevin.event.UpdateEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.render.BlockOverlay
 import kevin.utils.*
@@ -56,7 +56,7 @@ class TeleportUse : Module("TeleportUse", "Allows you to use items over a long d
         if (timer.hasTimePassed(250L) && mc.gameSettings.keyBindUseItem.isKeyDown){
             if(thread == null || !thread!!.isAlive) {
                 if ((mc.thePlayer?.inventory?.getCurrentItem()?.item) !is ItemBlock && onlyBlockV.get()) return
-                if (rangeCheck.get()&&(Kevin.getInstance.moduleManager.getModule("BlockOverlay") as BlockOverlay).currentBlock!=null) return
+                if (rangeCheck.get()&&(KevinClient.moduleManager.getModule("BlockOverlay") as BlockOverlay).currentBlock!=null) return
                 thread = Thread {
                     val entityLookVec = mc.thePlayer!!.lookVec ?: return@Thread
                     val lookVec = Vec3(entityLookVec.xCoord * 300, entityLookVec.yCoord * 300, entityLookVec.zCoord * 300)
@@ -187,7 +187,7 @@ class TeleportUse : Module("TeleportUse", "Allows you to use items over a long d
         }
 
         if (!pos.get()) return
-        if (rangeCheck.get()&&(Kevin.getInstance.moduleManager.getModule("BlockOverlay") as BlockOverlay).currentBlock!=null) return
+        if (rangeCheck.get()&&(KevinClient.moduleManager.getModule("BlockOverlay") as BlockOverlay).currentBlock!=null) return
         val entityLookVec = mc.thePlayer!!.lookVec ?: return
         val lookVec = Vec3(entityLookVec.xCoord * 300, entityLookVec.yCoord * 300, entityLookVec.zCoord * 300)
         val posVec = Vec3(mc.thePlayer!!.posX, mc.thePlayer!!.posY + 1.62, mc.thePlayer!!.posZ)

@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import java.io.File;
 import java.util.Objects;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.render.NoFOV;
 import kevin.skin.SkinManager;
 import net.minecraft.client.Minecraft;
@@ -101,8 +101,8 @@ public abstract class AbstractClientPlayer extends EntityPlayer
 
     public ResourceLocation getLocationCape()
     {
-        if(Kevin.getInstance.capeManager.getNowCape() != null && getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()))
-            return Kevin.getInstance.capeManager.getNowCape().getResource();
+        if(KevinClient.capeManager.getNowCape() != null && getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()))
+            return KevinClient.capeManager.getNowCape().getResource();
 
         if (!Config.isShowCapes())
         {
@@ -161,7 +161,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
 
     public float getFovModifier()
     {
-        final NoFOV fovModule = (NoFOV) Kevin.getInstance.moduleManager.getModule("NoFOV");
+        final NoFOV fovModule = (NoFOV) KevinClient.moduleManager.getModule("NoFOV");
 
         if (Objects.requireNonNull(fovModule).getToggle()) {
             float newFOV = fovModule.getFovValue().get();

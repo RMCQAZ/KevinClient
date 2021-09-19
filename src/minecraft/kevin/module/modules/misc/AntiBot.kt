@@ -5,12 +5,11 @@ import kevin.event.PacketEvent
 import kevin.event.TextEvent
 import kevin.event.UpdateEvent
 import kevin.hud.element.elements.Notification
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.ListValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
-import kevin.module.modules.render.HUD
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemArmor
 import net.minecraft.network.play.server.S02PacketChat
@@ -69,12 +68,12 @@ class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bot
                 if (packet is S02PacketChat){
                     if (packet.chatComponent.formattedText.contains("获得胜利",true)){
                         gameStarted = false
-                        Kevin.getInstance.hud.addNotification(Notification("GameEnd!"),"Antibot")
+                        KevinClient.hud.addNotification(Notification("GameEnd!"),"Antibot")
                     }
 
                     if (packet.chatComponent.formattedText.contains("游戏开始",true)){
                         gameStarted = true
-                        Kevin.getInstance.hud.addNotification(Notification("GameStart!"),"Antibot")
+                        KevinClient.hud.addNotification(Notification("GameStart!"),"Antibot")
                     }
                 }
             }
@@ -88,7 +87,7 @@ class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bot
             modeValue equal "ZQAT-ArmorAndColor(BW)" -> {
                 if (text != null && text.contains("游戏结束",true) && gameStarted && !text.contains("后",true)){
                     gameStarted = false
-                    Kevin.getInstance.hud.addNotification(Notification("GameEnd!"),"Antibot")
+                    KevinClient.hud.addNotification(Notification("GameEnd!"),"Antibot")
                 }
             }
         }
@@ -218,6 +217,6 @@ class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bot
     }
     private fun removeBot(bot: Entity){
         mc.theWorld.removeEntityFromWorld(bot.entityId)
-        Kevin.getInstance.hud.addNotification(Notification("Removed Bot"),"AntiBot")
+        KevinClient.hud.addNotification(Notification("Removed Bot"),"AntiBot")
     }
 }

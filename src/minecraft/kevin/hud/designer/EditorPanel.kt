@@ -5,7 +5,7 @@ import kevin.hud.HUD.Companion.elements
 import kevin.hud.element.Element
 import kevin.hud.element.ElementInfo
 import kevin.hud.element.Side
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.FloatValue
 import kevin.module.IntegerValue
@@ -112,14 +112,14 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
         for (element in elements) {
             val info = element.getAnnotation(ElementInfo::class.java) ?: continue
 
-            if (info.single && Kevin.getInstance.hud.elements.any { it.javaClass == element })
+            if (info.single && KevinClient.hud.elements.any { it.javaClass == element })
                 continue
 
             val name = info.name
 
-            Kevin.getInstance.fontManager.font35!!.drawString(name, x + 2.0f, y + height.toFloat(), Color.WHITE.rgb)
+            KevinClient.fontManager.font35!!.drawString(name, x + 2.0f, y + height.toFloat(), Color.WHITE.rgb)
 
-            val stringWidth = Kevin.getInstance.fontManager.font35!!.getStringWidth(name)
+            val stringWidth = KevinClient.fontManager.font35!!.getStringWidth(name)
             if (width < stringWidth + 8)
                 width = stringWidth + 8
 
@@ -129,7 +129,7 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
                     val newElement = element.newInstance()
 
                     if (newElement.createElement())
-                        Kevin.getInstance.hud.addElement(newElement)
+                        KevinClient.hud.addElement(newElement)
                 } catch (e: InstantiationException) {
                     e.printStackTrace()
                 } catch (e: IllegalAccessException) {
@@ -143,7 +143,7 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
         }
 
         RenderUtils.drawRect(x, y, x + width, y + 12, Color(0,111,255).rgb)
-        Kevin.getInstance.fontManager.font35!!.drawString("§lCreate element", x + 2F, y + 3.5F, Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString("§lCreate element", x + 2F, y + 3.5F, Color.WHITE.rgb)
     }
 
     /**
@@ -154,7 +154,7 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
         realHeight = 15
         width = 120
 
-        Kevin.getInstance.fontManager.font35!!.drawString("§lCreate element", x + 2.0f, y.toFloat() + height, Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString("§lCreate element", x + 2.0f, y.toFloat() + height, Color.WHITE.rgb)
         if (Mouse.isButtonDown(0) && !mouseDown && mouseX >= x && mouseX <= x + width && mouseY >= y + height
             && mouseY <= y + height + 10)
             create = true
@@ -162,22 +162,22 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
         height += 10
         realHeight += 10
 
-        Kevin.getInstance.fontManager.font35!!.drawString("§lReset", x + 2.toFloat(), y.toFloat() + height, Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString("§lReset", x + 2.toFloat(), y.toFloat() + height, Color.WHITE.rgb)
         if (Mouse.isButtonDown(0) && !mouseDown && mouseX >= x && mouseX <= x + width && mouseY >= y + height
             && mouseY <= y + height + 10)
-            Kevin.getInstance.hud = createDefault()
+            KevinClient.hud = createDefault()
 
         height += 15
         realHeight += 15
 
-        Kevin.getInstance.fontManager.font35!!.drawString("§lAvailable Elements", x + 2.0f, y + height.toFloat(), Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString("§lAvailable Elements", x + 2.0f, y + height.toFloat(), Color.WHITE.rgb)
         height += 10
         realHeight += 10
 
-        for (element in Kevin.getInstance.hud.elements) {
-            Kevin.getInstance.fontManager.font35!!.drawString(element.name, x + 2f, y + height.toFloat(), Color.WHITE.rgb)
+        for (element in KevinClient.hud.elements) {
+            KevinClient.fontManager.font35!!.drawString(element.name, x + 2f, y + height.toFloat(), Color.WHITE.rgb)
 
-            val stringWidth = Kevin.getInstance.fontManager.font35!!.getStringWidth(element.name)
+            val stringWidth = KevinClient.fontManager.font35!!.getStringWidth(element.name)
             if (width < stringWidth + 8)
                 width = stringWidth + 8
 
@@ -191,7 +191,7 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
 
         RenderUtils.drawRect(x, y, x + width, y + 12, Color(0,111,255).rgb)
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
-        Kevin.getInstance.fontManager.font35!!.drawString("§lEditor", x + 2F, y + 3.5f, Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString("§lEditor", x + 2F, y + 3.5f, Color.WHITE.rgb)
     }
 
     /**
@@ -207,23 +207,23 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
         val element = currentElement ?: return
 
         // X
-        Kevin.getInstance.fontManager.font35!!.drawString("X: ${"%.2f".format(element.renderX)} (${"%.2f".format(element.x)})", x + 2f, y + height.toFloat(), Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString("X: ${"%.2f".format(element.renderX)} (${"%.2f".format(element.x)})", x + 2f, y + height.toFloat(), Color.WHITE.rgb)
         height += 10
         realHeight += 10
 
         // Y
-        Kevin.getInstance.fontManager.font35!!.drawString("Y: ${"%.2f".format(element.renderY)} (${"%.2f".format(element.y)})", x + 2f, y + height.toFloat(), Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString("Y: ${"%.2f".format(element.renderY)} (${"%.2f".format(element.y)})", x + 2f, y + height.toFloat(), Color.WHITE.rgb)
         height += 10
         realHeight += 10
 
         // Scale
-        Kevin.getInstance.fontManager.font35!!.drawString("Scale: ${"%.2f".format(element.scale)}", x + 2f, y + height.toFloat(), Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString("Scale: ${"%.2f".format(element.scale)}", x + 2f, y + height.toFloat(), Color.WHITE.rgb)
         height += 10
         realHeight += 10
 
         // Horizontal
-        Kevin.getInstance.fontManager.font35!!.drawString("H:", x + 2f, y + height.toFloat(), Color.WHITE.rgb)
-        Kevin.getInstance.fontManager.font35!!.drawString(element.side.horizontal.sideName,
+        KevinClient.fontManager.font35!!.drawString("H:", x + 2f, y + height.toFloat(), Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString(element.side.horizontal.sideName,
             x + 12f, y + height.toFloat(), Color.GRAY.rgb)
 
         if (Mouse.isButtonDown(0) && !mouseDown && mouseX >= x && mouseX <= x + width && mouseY >= y + height
@@ -245,8 +245,8 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
         realHeight += 10
 
         // Vertical
-        Kevin.getInstance.fontManager.font35!!.drawString("V:", x + 2f, y + height.toFloat(), Color.WHITE.rgb)
-        Kevin.getInstance.fontManager.font35!!.drawString(element.side.vertical.sideName,
+        KevinClient.fontManager.font35!!.drawString("V:", x + 2f, y + height.toFloat(), Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString(element.side.vertical.sideName,
             x + 12F, y + height.toFloat(), Color.GRAY.rgb)
 
         if (Mouse.isButtonDown(0) && !mouseDown && mouseX >= x && mouseX <= x + width && mouseY >= y + height && mouseY <= y + height + 10) {
@@ -272,9 +272,9 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
             when (value) {
                 is BooleanValue -> {
                     // Title
-                    Kevin.getInstance.fontManager.font35!!.drawString(value.name, x + 2f, y + height.toFloat(), if (value.get()) Color.WHITE.rgb else Color.GRAY.rgb)
+                    KevinClient.fontManager.font35!!.drawString(value.name, x + 2f, y + height.toFloat(), if (value.get()) Color.WHITE.rgb else Color.GRAY.rgb)
 
-                    val stringWidth = Kevin.getInstance.fontManager.font35!!.getStringWidth(value.name)
+                    val stringWidth = KevinClient.fontManager.font35!!.getStringWidth(value.name)
                     if (width < stringWidth + 8)
                         width = stringWidth + 8
 
@@ -296,9 +296,9 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
                     // Title
                     val text = "${value.name}: §c${"%.2f".format(current)}"
 
-                    Kevin.getInstance.fontManager.font35!!.drawString(text, x + 2f, y + height.toFloat(), Color.WHITE.rgb)
+                    KevinClient.fontManager.font35!!.drawString(text, x + 2f, y + height.toFloat(), Color.WHITE.rgb)
 
-                    val stringWidth = Kevin.getInstance.fontManager.font35!!.getStringWidth(text)
+                    val stringWidth = KevinClient.fontManager.font35!!.getStringWidth(text)
                     if (width < stringWidth + 8)
                         width = stringWidth + 8
 
@@ -331,9 +331,9 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
                     // Title
                     val text = "${value.name}: §c$current"
 
-                    Kevin.getInstance.fontManager.font35!!.drawString(text, x + 2f, y + height.toFloat(), Color.WHITE.rgb)
+                    KevinClient.fontManager.font35!!.drawString(text, x + 2f, y + height.toFloat(), Color.WHITE.rgb)
 
-                    val stringWidth = Kevin.getInstance.fontManager.font35!!.getStringWidth(text)
+                    val stringWidth = KevinClient.fontManager.font35!!.getStringWidth(text)
                     if (width < stringWidth + 8)
                         width = stringWidth + 8
 
@@ -360,7 +360,7 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
 
                 is ListValue -> {
                     // Title
-                    Kevin.getInstance.fontManager.font35!!.drawString(value.name, x + 2f, y + height.toFloat(), Color.WHITE.rgb)
+                    KevinClient.fontManager.font35!!.drawString(value.name, x + 2f, y + height.toFloat(), Color.WHITE.rgb)
 
                     height += 10
                     realHeight += 10
@@ -369,9 +369,9 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
                     for (s in value.values) {
                         // Value title
                         val text = "§c> §r$s"
-                        Kevin.getInstance.fontManager.font35!!.drawString(text, x + 2f, y + height.toFloat(), if (s == value.get()) Color.WHITE.rgb else Color.GRAY.rgb)
+                        KevinClient.fontManager.font35!!.drawString(text, x + 2f, y + height.toFloat(), if (s == value.get()) Color.WHITE.rgb else Color.GRAY.rgb)
 
-                        val stringWidth = Kevin.getInstance.fontManager.font35!!.getStringWidth(text)
+                        val stringWidth = KevinClient.fontManager.font35!!.getStringWidth(text)
                         if (width < stringWidth + 8)
                             width = stringWidth + 8
 
@@ -390,15 +390,15 @@ class EditorPanel(private val hudDesigner: GuiHudDesigner, var x: Int, var y: In
 
         // Header
         RenderUtils.drawRect(x, y, x + width, y + 12, Color(0,111,255).rgb)
-        Kevin.getInstance.fontManager.font35!!.drawString("§l${element.name}", x + 2F, y + 3.5F, Color.WHITE.rgb)
+        KevinClient.fontManager.font35!!.drawString("§l${element.name}", x + 2F, y + 3.5F, Color.WHITE.rgb)
 
         // Delete button
         if (!element.info.force) {
-            val deleteWidth = x + width - Kevin.getInstance.fontManager.font35!!.getStringWidth("§lDelete") - 2F
-            Kevin.getInstance.fontManager.font35!!.drawString("§lDelete", deleteWidth, y + 3.5F, Color.WHITE.rgb)
+            val deleteWidth = x + width - KevinClient.fontManager.font35!!.getStringWidth("§lDelete") - 2F
+            KevinClient.fontManager.font35!!.drawString("§lDelete", deleteWidth, y + 3.5F, Color.WHITE.rgb)
             if (Mouse.isButtonDown(0) && !mouseDown && mouseX >= deleteWidth && mouseX <= x + width && mouseY >= y
                 && mouseY <= y + 10)
-                Kevin.getInstance.hud.removeElement(element)
+                KevinClient.hud.removeElement(element)
         }
     }
 

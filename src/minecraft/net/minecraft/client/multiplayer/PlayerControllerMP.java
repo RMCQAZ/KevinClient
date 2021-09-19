@@ -2,7 +2,7 @@ package net.minecraft.client.multiplayer;
 
 import kevin.event.AttackEvent;
 import kevin.event.ClickWindowEvent;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -505,7 +505,7 @@ public class PlayerControllerMP
      */
     public void attackEntity(EntityPlayer playerIn, Entity targetEntity)
     {
-        Kevin.getInstance.eventManager.callEvent(new AttackEvent(targetEntity));
+        KevinClient.eventManager.callEvent(new AttackEvent(targetEntity));
 
         this.syncCurrentPlayItem();
         this.netClientHandler.addToSendQueue(new C02PacketUseEntity(targetEntity, C02PacketUseEntity.Action.ATTACK));
@@ -547,7 +547,7 @@ public class PlayerControllerMP
     public ItemStack windowClick(int windowId, int slotId, int mouseButtonClicked, int mode, EntityPlayer playerIn)
     {
         final ClickWindowEvent event = new ClickWindowEvent(windowId, slotId, mouseButtonClicked, mode);
-        Kevin.getInstance.eventManager.callEvent(event);
+        KevinClient.eventManager.callEvent(event);
         if (event.isCancelled()) return null;
         short short1 = playerIn.openContainer.getNextTransactionID(playerIn.inventory);
         ItemStack itemstack = playerIn.openContainer.slotClick(slotId, mouseButtonClicked, mode, playerIn);

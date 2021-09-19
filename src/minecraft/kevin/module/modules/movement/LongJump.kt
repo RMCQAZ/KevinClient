@@ -34,6 +34,7 @@ class LongJump : Module("LongJump", "Allows you to jump further.", category = Mo
     }
     override fun onDisable() {
         if (modeValue equal "Timer") {
+            mc.timer.timerSpeed = 1F
             timerState = 0
         }
     }

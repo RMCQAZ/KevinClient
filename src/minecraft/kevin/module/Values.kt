@@ -2,7 +2,7 @@ package kevin.module
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import java.util.*
 
 abstract class Value<T>(val name: String, protected var value: T) {
@@ -19,7 +19,7 @@ abstract class Value<T>(val name: String, protected var value: T) {
             onChange(oldValue, newValue)
             changeValue(newValue)
             onChanged(oldValue, newValue)
-            Kevin.getInstance.fileManager.saveConfig(Kevin.getInstance.fileManager.modulesConfig)
+            KevinClient.fileManager.saveConfig(KevinClient.fileManager.modulesConfig)
         } catch (e: Exception) {
             println("[ValueSystem ($name)]: ${e.javaClass.name} (${e.message}) [$oldValue >> $newValue]")
         }

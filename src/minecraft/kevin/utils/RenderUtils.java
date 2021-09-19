@@ -1,6 +1,6 @@
 package kevin.utils;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -206,10 +206,10 @@ public final class RenderUtils extends MinecraftInstance{
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        final int width = Kevin.getInstance.fontManager.getFont35().getStringWidth(string) / 2;
+        final int width = KevinClient.fontManager.getFont35().getStringWidth(string) / 2;
 
-        drawRect(-width - 1, -1, width + 1, Kevin.getInstance.fontManager.getFont35().getFontHeight(), Integer.MIN_VALUE);
-        Kevin.getInstance.fontManager.getFont35().drawString(string, -width, 1.5F, Color.WHITE.getRGB(), true);
+        drawRect(-width - 1, -1, width + 1, KevinClient.fontManager.getFont35().getFontHeight(), Integer.MIN_VALUE);
+        KevinClient.fontManager.getFont35().drawString(string, -width, 1.5F, Color.WHITE.getRGB(), true);
 
         glEnable(GL_LIGHTING);
         glEnable(GL_DEPTH_TEST);

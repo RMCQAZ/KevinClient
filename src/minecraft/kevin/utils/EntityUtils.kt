@@ -1,6 +1,6 @@
 package kevin.utils
 
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.modules.misc.Teams
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
@@ -38,7 +38,7 @@ object EntityUtils : MinecraftInstance() {
                             return false
 
                         if (entity.isSpectator) return false
-                        val teams = Kevin.getInstance.moduleManager.getModule("Teams") as Teams
+                        val teams = KevinClient.moduleManager.getModule("Teams") as Teams
                         return !teams.getToggle() || !teams.isInYourTeam(entity)
                     }
                     return true

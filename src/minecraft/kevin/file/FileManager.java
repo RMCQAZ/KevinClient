@@ -2,7 +2,7 @@ package kevin.file;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.utils.ChatUtils;
 import kevin.utils.MinecraftInstance;
 
@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 public class FileManager extends MinecraftInstance {
     public static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    public final File dir = new File(mc.mcDataDir, Kevin.getInstance.name);
+    public final File dir = new File(mc.mcDataDir, KevinClient.INSTANCE.getName());
     public final File fontsDir = new File(dir, "Fonts");
     public final File spammerDir = new File(dir,"SpammerMessages");
     public final File capesDir = new File(dir,"Capes");
@@ -37,7 +37,7 @@ public class FileManager extends MinecraftInstance {
         saveConfig(config, false);
     }
     private void saveConfig(final FileConfig config, final boolean ignoreStarting) {
-        if (!ignoreStarting && Kevin.getInstance.fileManager == null)
+        if (!ignoreStarting && KevinClient.fileManager == null)
             return;
 
         try {
@@ -45,7 +45,7 @@ public class FileManager extends MinecraftInstance {
                 config.createConfig();
             config.saveConfig();
         }catch(final Throwable t) {
-            new ChatUtils().messageWithStart("§cSaveConfig Error: " + t);
+            ChatUtils.INSTANCE.messageWithStart("§cSaveConfig Error: " + t);
         }
     }
     public void loadConfigs(final FileConfig... configs) {

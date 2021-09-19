@@ -2,8 +2,7 @@ package kevin.module
 
 import kevin.event.Listenable
 import kevin.hud.element.elements.Notification
-import kevin.main.Kevin
-import kevin.module.modules.render.HUD
+import kevin.main.KevinClient
 import kevin.utils.ColorUtils.stripColor
 import kevin.utils.MinecraftInstance
 import net.minecraft.client.Minecraft
@@ -51,7 +50,7 @@ open class Module(name: String, description: String = "", keyBind: Int = Keyboar
 
     open fun setKeyBind(keyBind: Int) {
         this.keyBind = keyBind
-        Kevin.getInstance.fileManager.saveConfig(Kevin.getInstance.fileManager.modulesConfig)
+        KevinClient.fileManager.saveConfig(KevinClient.fileManager.modulesConfig)
     }
 
     open fun getCategory(): ModuleCategory {
@@ -64,7 +63,7 @@ open class Module(name: String, description: String = "", keyBind: Int = Keyboar
 
     open fun toggle() {
         enable = !enable!!
-        val hud = Kevin.getInstance.hud
+        val hud = KevinClient.hud
         if (enable!!) {
             Minecraft.getMinecraft().soundHandler.playSound(
                 PositionedSoundRecord.create(
@@ -73,7 +72,7 @@ open class Module(name: String, description: String = "", keyBind: Int = Keyboar
                 )
             )
             hud.addNotification(Notification("Enabled $name"))
-            Kevin.getInstance.fileManager.saveConfig(Kevin.getInstance.fileManager.modulesConfig)
+            KevinClient.fileManager.saveConfig(KevinClient.fileManager.modulesConfig)
             onEnable()
         } else {
             Minecraft.getMinecraft().soundHandler.playSound(
@@ -83,7 +82,7 @@ open class Module(name: String, description: String = "", keyBind: Int = Keyboar
                 )
             )
             hud.addNotification(Notification("Disabled $name"))
-            Kevin.getInstance.fileManager.saveConfig(Kevin.getInstance.fileManager.modulesConfig)
+            KevinClient.fileManager.saveConfig(KevinClient.fileManager.modulesConfig)
             onDisable()
         }
     }
@@ -93,10 +92,10 @@ open class Module(name: String, description: String = "", keyBind: Int = Keyboar
         enable = state
         if (enable !== oldEnable) {
             if (enable!!) {
-                Kevin.getInstance.fileManager.saveConfig(Kevin.getInstance.fileManager.modulesConfig)
+                KevinClient.fileManager.saveConfig(KevinClient.fileManager.modulesConfig)
                 onEnable()
             } else {
-                Kevin.getInstance.fileManager.saveConfig(Kevin.getInstance.fileManager.modulesConfig)
+                KevinClient.fileManager.saveConfig(KevinClient.fileManager.modulesConfig)
                 onDisable()
             }
         }

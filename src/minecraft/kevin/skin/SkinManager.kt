@@ -3,7 +3,7 @@ package kevin.skin
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kevin.file.FileManager
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.utils.ChatUtils
 import net.minecraft.client.Minecraft
 import org.apache.commons.io.IOUtils
@@ -14,11 +14,11 @@ import javax.imageio.ImageIO
 object SkinManager {
     var nowSkin:Skin? = null
     var skinMode:SkinMode = SkinMode.Default
-    private val jsonFile = File(Kevin.getInstance.fileManager.skinsDir,"skin.json")
+    private val jsonFile = File(KevinClient.fileManager.skinsDir,"skin.json")
     private val skinList = mutableListOf<Skin>()
     fun load(){
         skinList.clear()
-        Kevin.getInstance.fileManager.skinsDir.listFiles().forEach { file ->
+        KevinClient.fileManager.skinsDir.listFiles().forEach { file ->
             if (file.isFile&&!file.name.equals(jsonFile.name)){
                 try {
                     val args = file.name.split(".").toTypedArray()
@@ -71,10 +71,10 @@ object SkinManager {
     fun list(){
         if (skinList.isNotEmpty()){
             skinList.forEach {
-                ChatUtils().messageWithStart("§b${it.name}")
+                ChatUtils.messageWithStart("§b${it.name}")
             }
         } else {
-            ChatUtils().messageWithStart("§bSkin List is Empty.")
+            ChatUtils.messageWithStart("§bSkin List is Empty.")
         }
     }
     private fun loadSkinFromFile(name: String, file: File) = Skin(name,ImageIO.read(file))

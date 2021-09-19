@@ -2,7 +2,7 @@ package kevin.module.modules.render
 
 import kevin.event.EventTarget
 import kevin.event.PacketEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.Targets
 import kevin.module.modules.render.ClickGui.NewClickGui.Category.*
@@ -39,8 +39,8 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
 
     override fun onEnable() {
         when(mode.get()){
-            "New" -> mc.displayGuiScreen(Kevin.getInstance.newClickGui)
-            "Old" -> mc.displayGuiScreen(Kevin.getInstance.clickGUI)
+            "New" -> mc.displayGuiScreen(KevinClient.newClickGui)
+            "Old" -> mc.displayGuiScreen(KevinClient.clickGUI)
         }
         this.toggle(false)
     }
@@ -91,7 +91,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
         override fun doesGuiPauseGame(): Boolean = false
         override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
             RenderUtils.drawRect(mc.currentScreen.width/4F,mc.currentScreen.height/4F,mc.currentScreen.width/4F*3,mc.currentScreen.height/4F*3,Color(80,80,80,255).rgb)
-            Kevin.getInstance.fontManager.fontBold180!!.drawStringWithShadow("K",mc.currentScreen.width/4F + 3,mc.currentScreen.height/4F - 4,Color(0,114,255).rgb)
+            KevinClient.fontManager.fontBold180!!.drawStringWithShadow("K",mc.currentScreen.width/4F + 3,mc.currentScreen.height/4F - 4,Color(0,114,255).rgb)
 
             canModuleRoll = isClick(mc.currentScreen.width/8F*3,mc.currentScreen.height / 4F,mc.currentScreen.width / 16F * 9,mc.currentScreen.height/4F*3,mouseX.toFloat(),mouseY.toFloat())
             canSettingRoll = isClick(mc.currentScreen.width / 16F * 9,mc.currentScreen.height / 4F,mc.currentScreen.width/4F*3,mc.currentScreen.height/4F*3,mouseX.toFloat(),mouseY.toFloat())
@@ -105,7 +105,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             glBegin(GL_LINES)
 
             glVertex2f(mc.currentScreen.width/4F, mc.currentScreen.height/4F)
-            glVertex2f(mc.currentScreen.width/4F, mc.currentScreen.height/4F - 4 + Kevin.getInstance.fontManager.fontBold180!!.fontHeight)
+            glVertex2f(mc.currentScreen.width/4F, mc.currentScreen.height/4F - 4 + KevinClient.fontManager.fontBold180!!.fontHeight)
 
             glVertex2f(mc.currentScreen.width/4F, mc.currentScreen.height/4F)
             glVertex2f(mc.currentScreen.width/4F*3, mc.currentScreen.height/4F)
@@ -114,7 +114,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             glVertex2f(mc.currentScreen.width/4F*3, mc.currentScreen.height/4F*3)
 
             glVertex2f(mc.currentScreen.width/8F*3,mc.currentScreen.height/4F)
-            glVertex2f(mc.currentScreen.width/8F*3, mc.currentScreen.height/4F - 4 + Kevin.getInstance.fontManager.fontBold180!!.fontHeight)
+            glVertex2f(mc.currentScreen.width/8F*3, mc.currentScreen.height/4F - 4 + KevinClient.fontManager.fontBold180!!.fontHeight)
 
             if (categoryOpen != 0 && categoryOpen != 8) {
                 glVertex2f(mc.currentScreen.width / 16F * 9, mc.currentScreen.height / 4F)
@@ -129,8 +129,8 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             glDisable(GL_BLEND)
             glDisable(GL_LINE_SMOOTH)
 
-            var y = mc.currentScreen.height/4F - 4 + Kevin.getInstance.fontManager.fontBold180!!.fontHeight
-            val high = ((mc.currentScreen.height/4F*3) - (mc.currentScreen.height/4F - 4 + Kevin.getInstance.fontManager.fontBold180!!.fontHeight)) / 8
+            var y = mc.currentScreen.height/4F - 4 + KevinClient.fontManager.fontBold180!!.fontHeight
+            val high = ((mc.currentScreen.height/4F*3) - (mc.currentScreen.height/4F - 4 + KevinClient.fontManager.fontBold180!!.fontHeight)) / 8
             for (c in category){
                 val fontRainbow = category.indexOf(c) + 1 == categoryOpen
                 val borderRainbow = isClick(mc.currentScreen.width/4F,y,mc.currentScreen.width/8F*3,y+high,mouseX.toFloat(),mouseY.toFloat())
@@ -156,7 +156,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     glDisable(GL_LINE_SMOOTH)
                 }
                 FontManager.RainbowFontShader.begin(fontRainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
-                    Kevin.getInstance.fontManager.font35!!.drawString(c,mc.currentScreen.width/4F+(mc.currentScreen.width/8F*3-mc.currentScreen.width/4F)/2 - Kevin.getInstance.fontManager.font35!!.getStringWidth(c)/2,y+high/2-Kevin.getInstance.fontManager.font35!!.fontHeight/3,Color(0,111,255).rgb)
+                    KevinClient.fontManager.font35!!.drawString(c,mc.currentScreen.width/4F+(mc.currentScreen.width/8F*3-mc.currentScreen.width/4F)/2 - KevinClient.fontManager.font35!!.getStringWidth(c)/2,y+high/2-KevinClient.fontManager.font35!!.fontHeight/3,Color(0,111,255).rgb)
                 }
 
                 y += high
@@ -194,14 +194,14 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 }
                 8 -> {
                     var setY = moduleY
-                    for (s in (Kevin.getInstance.moduleManager.getModule("Targets") as Targets).values){
+                    for (s in (KevinClient.moduleManager.getModule("Targets") as Targets).values){
                         if (s !is BooleanValue) continue
                         glPushMatrix()
                         glScalef(0.8F,0.8F,0.8F)
-                        Kevin.getInstance.fontManager.font40!!.drawString(s.name,(moduleX + 3)/0.8F,(setY + 3)/0.8F,Color(0,0,0).rgb)
+                        KevinClient.fontManager.font40!!.drawString(s.name,(moduleX + 3)/0.8F,(setY + 3)/0.8F,Color(0,0,0).rgb)
                         glPopMatrix()
                         drawButton1(mc.currentScreen.width/4F*3 - 13,setY + 3.5F,s.get(),isClick(mc.currentScreen.width/4F*3 - 13,setY + 3.5F,mc.currentScreen.width/4F*3 - 4,setY + 8.5F,mouseX.toFloat(),mouseY.toFloat()),1F)
-                        setY += Kevin.getInstance.fontManager.font40!!.fontHeight + 2
+                        setY += KevinClient.fontManager.font40!!.fontHeight + 2
                     }
                 }
             }
@@ -210,8 +210,8 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
         }
 
         override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
-            var y = mc.currentScreen.height/4F - 4 + Kevin.getInstance.fontManager.fontBold180!!.fontHeight
-            val high = ((mc.currentScreen.height/4F*3) - (mc.currentScreen.height/4F - 4 + Kevin.getInstance.fontManager.fontBold180!!.fontHeight)) / 8
+            var y = mc.currentScreen.height/4F - 4 + KevinClient.fontManager.fontBold180!!.fontHeight
+            val high = ((mc.currentScreen.height/4F*3) - (mc.currentScreen.height/4F - 4 + KevinClient.fontManager.fontBold180!!.fontHeight)) / 8
             for (c in category){
                 if (isClick(mc.currentScreen.width/4F,y,mc.currentScreen.width/8F*3,y+high,mouseX.toFloat(),mouseY.toFloat())) {if (mouseButton == 0) {categoryOpen = category.indexOf(c)+1;mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("gui.button.press"), 1f))} else {if (categoryOpen == category.indexOf(c)+1) {categoryOpen = 0;mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("gui.button.press"), 0.6114514191981f));break} else {categoryOpen = category.indexOf(c)+1;mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("gui.button.press"), 1f))}}}
                 y += high
@@ -248,10 +248,10 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 }
                 8 -> {
                     var setY = moduleY
-                    for (s in (Kevin.getInstance.moduleManager.getModule("Targets") as Targets).values){
+                    for (s in (KevinClient.moduleManager.getModule("Targets") as Targets).values){
                         if (s !is BooleanValue) continue
                         if (isClick(mc.currentScreen.width/4F*3 - 13,setY + 3.5F,mc.currentScreen.width/4F*3 - 4,setY + 8.5F,mouseX.toFloat(),mouseY.toFloat())) {s.set(!s.get())}
-                        setY += Kevin.getInstance.fontManager.font40!!.fontHeight + 2
+                        setY += KevinClient.fontManager.font40!!.fontHeight + 2
                     }
                 }
             }
@@ -297,7 +297,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             var jumpOver = 0
             var y = mc.currentScreen.height / 4F
             val moduleHigh = mc.currentScreen.height/16F
-            for (m in Kevin.getInstance.moduleManager.getModules()){
+            for (m in KevinClient.moduleManager.getModules()){
                 if (y > mc.currentScreen.height / 4F+moduleHigh*7)break
                 if (m.getCategory() != category) continue
                 if (jumpOver != start){jumpOver+=1;continue}
@@ -317,10 +317,10 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     ModuleCategory.WORLD -> {moduleOpen!!["World"]!!}
                 }
                 FontManager.RainbowFontShader.begin(fontRainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
-                    Kevin.getInstance.fontManager.font35!!.drawString(
+                    KevinClient.fontManager.font35!!.drawString(
                         m.getName(),
                         mc.currentScreen.width / 8F * 3 + 5,
-                        y - Kevin.getInstance.fontManager.font35!!.fontHeight / 3 + moduleHigh / 2,
+                        y - KevinClient.fontManager.font35!!.fontHeight / 3 + moduleHigh / 2,
                         Color(0, 111, 255).rgb
                     )
                 }
@@ -343,7 +343,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             var jumpOver = 0
             var y = mc.currentScreen.height / 4F
             val moduleHigh = mc.currentScreen.height/16F
-            for (m in Kevin.getInstance.moduleManager.getModules()){
+            for (m in KevinClient.moduleManager.getModules()){
                 if (y > mc.currentScreen.height / 4F+moduleHigh*7)break
                 if (m.getCategory() != category) continue
                 if (jumpOver != start){jumpOver+=1;continue}
@@ -414,7 +414,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 else -> ModuleCategory.MISC
             }
             var modulesNumber = 0
-            for (m in Kevin.getInstance.moduleManager.getModules()){
+            for (m in KevinClient.moduleManager.getModules()){
                 if (m.getCategory() == moduleCategory) modulesNumber += 1
             }
             when{
@@ -449,54 +449,54 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             for (v in values){
                 when(v){
                     is BooleanValue ->{
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight >mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight;continue}
+                        if (y + KevinClient.fontManager.font35!!.fontHeight >mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight;continue}
                         glPushMatrix()
                         glScaled(0.6,0.6,0.6)
-                        Kevin.getInstance.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
+                        KevinClient.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
                         glPopMatrix()
                         drawButton1(mc.currentScreen.width / 4F * 3 - 13,y,v.get(),isClick(mc.currentScreen.width / 4F * 3 - 13,y,mc.currentScreen.width / 4F * 3 - 4,y + 5,mouseX.toFloat(),mouseY.toFloat()),1F)
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight
+                        y += KevinClient.fontManager.font35!!.fontHeight
                     }
                     is ListValue -> {
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F;continue}
+                        if (y + KevinClient.fontManager.font35!!.fontHeight * 0.6F > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight * 0.6F;continue}
                         var x = 0
                         val maxWidth = (mc.currentScreen.width / 4F * 3) - (mc.currentScreen.width / 16F * 9 + 5)
                         glPushMatrix()
                         glScaled(0.6,0.6,0.6)
-                        Kevin.getInstance.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F
+                        KevinClient.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
+                        y += KevinClient.fontManager.font35!!.fontHeight * 0.6F
                         for (i in v.values){
-                            if (y + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
-                            if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F;continue}
-                            if (x + Kevin.getInstance.fontManager.font35!!.getStringWidth(i) > maxWidth) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F;x = 0}
+                            if (y + KevinClient.fontManager.font35!!.fontHeight * 0.6F > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
+                            if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight * 0.6F;continue}
+                            if (x + KevinClient.fontManager.font35!!.getStringWidth(i) > maxWidth) {y += KevinClient.fontManager.font35!!.fontHeight * 0.6F;x = 0}
                             val color = if (v.get() == i) Color(0,111,255).rgb else Color(150,150,150).rgb
-                            Kevin.getInstance.fontManager.font35!!.drawString(i,(mc.currentScreen.width / 16F * 9 + 5 + x)/0.6F,y/0.6F,color)
-                            x += Kevin.getInstance.fontManager.font35!!.getStringWidth(i)
+                            KevinClient.fontManager.font35!!.drawString(i,(mc.currentScreen.width / 16F * 9 + 5 + x)/0.6F,y/0.6F,color)
+                            x += KevinClient.fontManager.font35!!.getStringWidth(i)
                         }
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight
+                        y += KevinClient.fontManager.font35!!.fontHeight
                         glPopMatrix()
                     }
                     is TextValue -> {
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight * 1.6F > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 1.6F;continue}
+                        if (y + KevinClient.fontManager.font35!!.fontHeight * 1.6F > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight * 1.6F;continue}
                         glPushMatrix()
                         glScaled(0.6,0.6,0.6)
-                        Kevin.getInstance.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F
-                        Kevin.getInstance.fontManager.font35!!.drawString(v.get(),(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,111,255).rgb)
+                        KevinClient.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
+                        y += KevinClient.fontManager.font35!!.fontHeight * 0.6F
+                        KevinClient.fontManager.font35!!.drawString(v.get(),(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,111,255).rgb)
                         glPopMatrix()
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight
+                        y += KevinClient.fontManager.font35!!.fontHeight
                     }
                     is IntegerValue -> {
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F + 8 > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F + 8;continue}
+                        if (y + KevinClient.fontManager.font35!!.fontHeight * 0.8F + 8 > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight * 0.8F + 8;continue}
                         glPushMatrix()
                         glScaled(0.6,0.6,0.6)
-                        Kevin.getInstance.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
-                        Kevin.getInstance.fontManager.font35!!.drawString(v.get().toString(),(mc.currentScreen.width / 4F * 3 - Kevin.getInstance.fontManager.font35!!.getStringWidth(v.get().toString())/2 - 10)/0.6F,y/0.6F,Color(0,0,0).rgb)
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F
+                        KevinClient.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
+                        KevinClient.fontManager.font35!!.drawString(v.get().toString(),(mc.currentScreen.width / 4F * 3 - KevinClient.fontManager.font35!!.getStringWidth(v.get().toString())/2 - 10)/0.6F,y/0.6F,Color(0,0,0).rgb)
+                        y += KevinClient.fontManager.font35!!.fontHeight*0.8F
                         glPopMatrix()
                         drawButton2(mc.currentScreen.width / 16F * 9 + 5,y,mc.currentScreen.width / 4F * 3 - 5,v.minimum.toFloat(),v.maximum.toFloat(),v.get().toFloat())
                         if (isClick(mc.currentScreen.width / 16F * 9 + 5,y - 3,mc.currentScreen.width / 4F * 3 - 5,y + 3,mouseX.toFloat(),mouseY.toFloat())){
@@ -508,13 +508,13 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                         y += 8
                     }
                     is FloatValue -> {
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F + 8 > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F + 8;continue}
+                        if (y + KevinClient.fontManager.font35!!.fontHeight * 0.8F + 8 > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight * 0.8F + 8;continue}
                         glPushMatrix()
                         glScaled(0.6,0.6,0.6)
-                        Kevin.getInstance.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
-                        Kevin.getInstance.fontManager.font35!!.drawString(v.get().toString(),(mc.currentScreen.width / 4F * 3 - Kevin.getInstance.fontManager.font35!!.getStringWidth(v.get().toString())/2 - 10)/0.6F,y/0.6F,Color(0,0,0).rgb)
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F
+                        KevinClient.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
+                        KevinClient.fontManager.font35!!.drawString(v.get().toString(),(mc.currentScreen.width / 4F * 3 - KevinClient.fontManager.font35!!.getStringWidth(v.get().toString())/2 - 10)/0.6F,y/0.6F,Color(0,0,0).rgb)
+                        y += KevinClient.fontManager.font35!!.fontHeight*0.8F
                         glPopMatrix()
                         drawButton2(mc.currentScreen.width / 16F * 9 + 5,y,mc.currentScreen.width / 4F * 3 - 5,v.minimum,v.maximum,v.get())
                         if (isClick(mc.currentScreen.width / 16F * 9 + 5,y - 3,mc.currentScreen.width / 4F * 3 - 5,y + 3,mouseX.toFloat(),mouseY.toFloat())){
@@ -526,14 +526,14 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                         y += 8
                     }
                     is BlockValue -> {
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight;continue}
+                        if (y + KevinClient.fontManager.font35!!.fontHeight > mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight;continue}
                         glPushMatrix()
                         glScaled(0.6,0.6,0.6)
-                        Kevin.getInstance.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
-                        Kevin.getInstance.fontManager.font35!!.drawString(BlockUtils.getBlockName(v.get()),(mc.currentScreen.width / 4F * 3 - 5 - Kevin.getInstance.fontManager.font35!!.getStringWidth(BlockUtils.getBlockName(v.get())))/0.6F,y/0.6F,Color(60,60,60).rgb)
+                        KevinClient.fontManager.font35!!.drawString(v.name,(mc.currentScreen.width / 16F * 9 + 5)/0.6F,y/0.6F,Color(0,0,0).rgb)
+                        KevinClient.fontManager.font35!!.drawString(BlockUtils.getBlockName(v.get()),(mc.currentScreen.width / 4F * 3 - 5 - KevinClient.fontManager.font35!!.getStringWidth(BlockUtils.getBlockName(v.get())))/0.6F,y/0.6F,Color(60,60,60).rgb)
                         glPopMatrix()
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight
+                        y += KevinClient.fontManager.font35!!.fontHeight
                     }
                 }
                 if (y>mc.currentScreen.height/4F*3) {canSettingRoll2 = true;break}
@@ -564,50 +564,50 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             for (v in values){
                 when(v){
                     is BooleanValue ->{
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight >mc.currentScreen.height/4F*3)break
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight;continue}
+                        if (y + KevinClient.fontManager.font35!!.fontHeight >mc.currentScreen.height/4F*3)break
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight;continue}
                         if (isClick(mc.currentScreen.width / 4F * 3 - 13,y,mc.currentScreen.width / 4F * 3 - 4,y + 5,mouseX.toFloat(),mouseY.toFloat())) {v.set(!v.get());if(v.get())mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("gui.button.press"), 1f))else mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("gui.button.press"), 0.6114514191981f))}
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight
+                        y += KevinClient.fontManager.font35!!.fontHeight
                     }
 
                     is ListValue -> {
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F > mc.currentScreen.height/4F*3)break
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F;continue}
+                        if (y + KevinClient.fontManager.font35!!.fontHeight * 0.6F > mc.currentScreen.height/4F*3)break
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight * 0.6F;continue}
                         var x = 0
                         val maxWidth = (mc.currentScreen.width / 4F * 3) - (mc.currentScreen.width / 16F * 9 + 5)
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F
+                        y += KevinClient.fontManager.font35!!.fontHeight * 0.6F
                         for (i in v.values){
-                            if (y + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F > mc.currentScreen.height/4F*3)break
-                            if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F;continue}
-                            if (x + Kevin.getInstance.fontManager.font35!!.getStringWidth(i) > maxWidth) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F;x = 0}
-                            val click = isClick(mc.currentScreen.width/16F*9+5+x,y,mc.currentScreen.width/16F*9+5+x+Kevin.getInstance.fontManager.font35!!.getStringWidth(i),y+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F,mouseX.toFloat(),mouseY.toFloat())
+                            if (y + KevinClient.fontManager.font35!!.fontHeight * 0.6F > mc.currentScreen.height/4F*3)break
+                            if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight * 0.6F;continue}
+                            if (x + KevinClient.fontManager.font35!!.getStringWidth(i) > maxWidth) {y += KevinClient.fontManager.font35!!.fontHeight * 0.6F;x = 0}
+                            val click = isClick(mc.currentScreen.width/16F*9+5+x,y,mc.currentScreen.width/16F*9+5+x+KevinClient.fontManager.font35!!.getStringWidth(i),y+KevinClient.fontManager.font35!!.fontHeight*0.6F,mouseX.toFloat(),mouseY.toFloat())
                             if (click) {v.set(i);mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("gui.button.press"), 1f))}
-                            x += Kevin.getInstance.fontManager.font35!!.getStringWidth(i)
+                            x += KevinClient.fontManager.font35!!.getStringWidth(i)
                         }
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight
+                        y += KevinClient.fontManager.font35!!.fontHeight
                     }
                     is TextValue -> {
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight * 1.6F > mc.currentScreen.height/4F*3)break
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 1.6F;continue}
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight
+                        if (y + KevinClient.fontManager.font35!!.fontHeight * 1.6F > mc.currentScreen.height/4F*3)break
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight * 1.6F;continue}
+                        y += KevinClient.fontManager.font35!!.fontHeight * 0.6F
+                        y += KevinClient.fontManager.font35!!.fontHeight
                     }
                     is IntegerValue -> {
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F + 8 > mc.currentScreen.height/4F*3)break
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F + 8;continue}
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F
+                        if (y + KevinClient.fontManager.font35!!.fontHeight * 0.8F + 8 > mc.currentScreen.height/4F*3)break
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight * 0.8F + 8;continue}
+                        y += KevinClient.fontManager.font35!!.fontHeight*0.8F
                         y += 8
                     }
                     is FloatValue -> {
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F + 8 > mc.currentScreen.height/4F*3) break
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F + 8;continue}
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F
+                        if (y + KevinClient.fontManager.font35!!.fontHeight * 0.8F + 8 > mc.currentScreen.height/4F*3) break
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight * 0.8F + 8;continue}
+                        y += KevinClient.fontManager.font35!!.fontHeight*0.8F
                         y += 8
                     }
                     is BlockValue -> {
-                        if (y + Kevin.getInstance.fontManager.font35!!.fontHeight > mc.currentScreen.height/4F*3)break
-                        if (y < mc.currentScreen.height/4F + 5) {y += Kevin.getInstance.fontManager.font35!!.fontHeight;continue}
-                        y += Kevin.getInstance.fontManager.font35!!.fontHeight
+                        if (y + KevinClient.fontManager.font35!!.fontHeight > mc.currentScreen.height/4F*3)break
+                        if (y < mc.currentScreen.height/4F + 5) {y += KevinClient.fontManager.font35!!.fontHeight;continue}
+                        y += KevinClient.fontManager.font35!!.fontHeight
                     }
                 }
                 if (y>mc.currentScreen.height/4F*3) break
@@ -676,7 +676,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 moduleY[it] = 0F
                 lastModule[it] = -1
             }
-            Kevin.getInstance.moduleManager.getModules().forEach {
+            KevinClient.moduleManager.getModules().forEach {
                 if(!(it is Targets||it is ClickGui||it is CapeManager||it is HudDesigner))
                     cateMaxY[it.getCategory()] = cateMaxY[it.getCategory()]!! + 1
             }
@@ -711,7 +711,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             RenderUtils.drawSector(x2-radius/4*3,y1+radius/4*3,0,360,(x2-x1)/128.0,if(closeButtonLight)Color(255,0,0,250)else Color(225,0,0))
             glPushMatrix()
             glScaled(0.5,0.5,0.5)
-            Kevin.getInstance.fontManager.font35!!.drawString("x",(x2-radius.toFloat()/16F*13.75F)/0.5F,(y1+radius.toFloat()/4F*1.9F)/0.5F,Color.white.rgb)
+            KevinClient.fontManager.font35!!.drawString("x",(x2-radius.toFloat()/16F*13.75F)/0.5F,(y1+radius.toFloat()/4F*1.9F)/0.5F,Color.white.rgb)
             glPopMatrix()
             //DrawLine
             RenderUtils.drawLineStart(if(mode==1)Color(255,255,255)else Color(20,20,20,225),5F)
@@ -728,17 +728,17 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             if (lineAnim["Line1"]!!>18.75F&&clickButton==Target) animLine("LineTarget",1.5F,false) else if (lineAnim["LineTarget"]!!>80) lineAnim["LineTarget"] = 80F else animLine("LineTarget",1.5F,true)
             //DrawTitle
             FontManager.RainbowFontShader.begin(true,-0.00314514F,0.00314514F,System.currentTimeMillis() % 10000 / 10000F).use {
-                Kevin.getInstance.fontManager.font35!!.drawString("Kevin",x1+10F,y1+6.5F,0)
+                KevinClient.fontManager.font35!!.drawString("Kevin",x1+10F,y1+6.5F,0)
             }
             //DrawModeButton
-            val modeButtonLight = isClick(mouseX.toFloat(),mouseY.toFloat(),x2-32F,y1+9.5F,x2-20F,y1+7.25F+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F)
+            val modeButtonLight = isClick(mouseX.toFloat(),mouseY.toFloat(),x2-32F,y1+9.5F,x2-20F,y1+7.25F+KevinClient.fontManager.font35!!.fontHeight*0.6F)
             glPushMatrix()
             glScaled(.6,.6,.6)
-            Kevin.getInstance.fontManager.font35!!.drawString("D",(x2-35F)/.6F,(y1+9.5F)/.6F,if(mode==1)Color(255,255,255).rgb else Color(20,20,20,225).rgb)
-            Kevin.getInstance.fontManager.font35!!.drawString("L",(x2-19F)/.6F,(y1+9.5F)/.6F,if(mode==1)Color(255,255,255).rgb else Color(20,20,20,225).rgb)
+            KevinClient.fontManager.font35!!.drawString("D",(x2-35F)/.6F,(y1+9.5F)/.6F,if(mode==1)Color(255,255,255).rgb else Color(20,20,20,225).rgb)
+            KevinClient.fontManager.font35!!.drawString("L",(x2-19F)/.6F,(y1+9.5F)/.6F,if(mode==1)Color(255,255,255).rgb else Color(20,20,20,225).rgb)
             glPopMatrix()
             animButton("ModeButton",10F,mode==1)
-            drawButton1(x2-32F,y1+9.5F,x2-20F,y1+7.25F+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F,if (mode==1) if(modeButtonLight) Color(170,170,170) else Color.white else if(modeButtonLight) Color.darkGray else Color.black,Color(0,111,255),buttonsAnim["ModeButton"]!!)
+            drawButton1(x2-32F,y1+9.5F,x2-20F,y1+7.25F+KevinClient.fontManager.font35!!.fontHeight*0.6F,if (mode==1) if(modeButtonLight) Color(170,170,170) else Color.white else if(modeButtonLight) Color.darkGray else Color.black,Color(0,111,255),buttonsAnim["ModeButton"]!!)
             //DrawCategoryButtons
             val mouseButtonDown = Mouse.isButtonDown(0) || Mouse.isButtonDown(1)
             categoryButtons.forEach {
@@ -838,7 +838,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             //CloseButton
             if (isClick(mouseX.toFloat(),mouseY.toFloat(),x2-radius.toFloat()/4F*3F-(x2-x1)/128F,y1+radius.toFloat()/4F*3F-(x2-x1)/128F,x2-radius.toFloat()/4F*3F+(x2-x1)/128F,y1+radius.toFloat()/4F*3F+(x2-x1)/128F)) mc.displayGuiScreen(null)
             //ModeButton
-            if (isClick(mouseX.toFloat(),mouseY.toFloat(),x2-32F,y1+9.5F,x2-20F,y1+7.25F+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F)) mode = if (mode==1) 2 else 1
+            if (isClick(mouseX.toFloat(),mouseY.toFloat(),x2-32F,y1+9.5F,x2-20F,y1+7.25F+KevinClient.fontManager.font35!!.fontHeight*0.6F)) mode = if (mode==1) 2 else 1
             //CategoryButtons
             categoryButtons.forEach {
                 if (it.isClick(mouseX,mouseY)) {
@@ -896,12 +896,12 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             }
             fun drawButton(){
                 drawButtonNoText()
-                val fontHigh = Kevin.getInstance.fontManager.font35!!.fontHeight
-                val x = ((x2-x1)-Kevin.getInstance.fontManager.font35!!.getStringWidth(text)*0.8f)/2F
+                val fontHigh = KevinClient.fontManager.font35!!.fontHeight
+                val x = ((x2-x1)-KevinClient.fontManager.font35!!.getStringWidth(text)*0.8f)/2F
                 glPushMatrix()
                 glScaled(0.8,0.8,0.8)
-                if (textPos==TextPos.Middle) Kevin.getInstance.fontManager.font35!!.drawString(text,(x1+x)/0.8f,(y1+(y2-y1)/2F-fontHigh/4F)/0.8f,fontColor.rgb)
-                if (textPos==TextPos.Left) Kevin.getInstance.fontManager.font35!!.drawString(text,(x1+5)/0.8f,(y1+(y2-y1)/2F-fontHigh/4F)/0.8f,fontColor.rgb)
+                if (textPos==TextPos.Middle) KevinClient.fontManager.font35!!.drawString(text,(x1+x)/0.8f,(y1+(y2-y1)/2F-fontHigh/4F)/0.8f,fontColor.rgb)
+                if (textPos==TextPos.Left) KevinClient.fontManager.font35!!.drawString(text,(x1+5)/0.8f,(y1+(y2-y1)/2F-fontHigh/4F)/0.8f,fontColor.rgb)
                 glPopMatrix()
             }
             enum class TextPos{
@@ -936,7 +936,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     drawModules(ModuleCategory.WORLD,mouseX,mouseY,mouseButton,click,yS,startX,endX)
                 }
                 Target -> {
-                    val targets = Kevin.getInstance.moduleManager.getModule("Targets") as Targets
+                    val targets = KevinClient.moduleManager.getModule("Targets") as Targets
                     val buttonList = arrayListOf<Button>()
                     var yO = 1.5F
                     targets.values.forEach{
@@ -1015,7 +1015,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 Gui -> {
                     val buttonList = arrayListOf<Button>()
                     var yO = 1.5F
-                    Kevin.getInstance.moduleManager.getModules().forEach {
+                    KevinClient.moduleManager.getModules().forEach {
                         if (it is ClickGui||it is CapeManager||it is HudDesigner){
                             buttonList.add(Button(it.getName(),startX.toFloat(),y1+radius.toFloat()*2.25F+yO,endX.toFloat(),y1+radius.toFloat()*2.25F+yO+yS.toFloat(),Color.white,Color.black,it.getName(),Button.TextPos.Middle))
                             yO += yS.toFloat() + 1F
@@ -1080,7 +1080,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             var yO = 1.5F
             val start = cateY[moduleCategory]!!
             var r = 0
-            for (it in Kevin.getInstance.moduleManager.getModules()) {
+            for (it in KevinClient.moduleManager.getModules()) {
                 if (it is Targets||it is ClickGui||it is CapeManager||it is HudDesigner) continue
                 if (it.getCategory()==moduleCategory){
                     if (r!=start){r+=1;continue}
@@ -1210,15 +1210,15 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 Gui -> {
                     when(guiOpen){
                         0 -> {
-                            val capeManager = Kevin.getInstance.moduleManager.getModule("CapeManager") as CapeManager
+                            val capeManager = KevinClient.moduleManager.getModule("CapeManager") as CapeManager
                             drawGuiModuleSetting(capeManager,0F,click,mouseX,mouseY)
                         }
                         1 -> {
-                            val clickGui = Kevin.getInstance.moduleManager.getModule("ClickGui") as ClickGui
+                            val clickGui = KevinClient.moduleManager.getModule("ClickGui") as ClickGui
                             drawGuiModuleSetting(clickGui,0F,click,mouseX,mouseY)
                         }
                         2 -> {
-                            val hudDesigner = Kevin.getInstance.moduleManager.getModule("HudDesigner") as HudDesigner
+                            val hudDesigner = KevinClient.moduleManager.getModule("HudDesigner") as HudDesigner
                             drawGuiModuleSetting(hudDesigner,0F,click,mouseX,mouseY)
                         }
                     }
@@ -1245,7 +1245,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 var yO = 1.5F - yad
                 //Open
                 yO -= 2F
-                val tr = ((yO + startY.toFloat() + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F) - (yO + startY.toFloat()))/2.0
+                val tr = ((yO + startY.toFloat() + KevinClient.fontManager.font35!!.fontHeight * 0.8F) - (yO + startY.toFloat()))/2.0
                 val tx = endX.toFloat() - 25F + tr
                 val ty = yO + startY.toFloat() + tr
                 val l = isClick(
@@ -1257,14 +1257,14 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     ty.toFloat()+tr.toFloat()
                 )
                 if (l) module.toggle()
-                yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F + 4F
+                yO += KevinClient.fontManager.font35!!.fontHeight * 0.8F + 4F
                 //Description
                 val textList = arrayListOf<String>()
                 var text = ""
                 val t = module.getDescription().split(" ").toMutableList()
                 var cou = 0
                 t.forEach {
-                    if (Kevin.getInstance.fontManager.font35!!.getStringWidth("$text $it") * 0.7 < endX - startX) {
+                    if (KevinClient.fontManager.font35!!.getStringWidth("$text $it") * 0.7 < endX - startX) {
                         text += if (text.isEmpty()) it else " $it"
                     } else {
                         textList += text
@@ -1274,7 +1274,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     if (cou == t.size && text.isNotEmpty()) textList += text
                 }
                 textList.forEach { _ ->
-                    yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.7F
+                    yO += KevinClient.fontManager.font35!!.fontHeight * 0.7F
                 }
                 yO += 3F
                 //Settings
@@ -1290,19 +1290,19 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 endX.toFloat() - 18F,
                                 startY.toFloat() + yO,
                                 endX.toFloat() - 5F,
-                                startY.toFloat() + yO + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F
+                                startY.toFloat() + yO + KevinClient.fontManager.font35!!.fontHeight * 0.65F
                             ) && (mouseX.toFloat() in startX - 2F..endX + 2F && mouseY.toFloat() in startY - 2F..endY + 2F)
                             if (cl) it.set(!it.get())
-                            yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F + 3.5F
+                            yO += KevinClient.fontManager.font35!!.fontHeight * 0.65F + 3.5F
                         }
                         is TextValue -> {
-                            yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F
+                            yO += KevinClient.fontManager.font35!!.fontHeight * 0.65F
                             val tl = arrayListOf<String>()
                             var tt = ""
                             val tl2 = it.get().toCharArray()
                             var co = 0
                             tl2.forEach { ch ->
-                                if (Kevin.getInstance.fontManager.font35!!.getStringWidth("$tt$ch") * 0.5 < endX - startX) {
+                                if (KevinClient.fontManager.font35!!.getStringWidth("$tt$ch") * 0.5 < endX - startX) {
                                     tt += ch
                                 } else {
                                     tl += tt
@@ -1312,12 +1312,12 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 if (co == tl2.size && tt.isNotEmpty()) tl += tt
                             }
                             tl.forEach { _ ->
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.5F
+                                yO += KevinClient.fontManager.font35!!.fontHeight * 0.5F
                             }
                             yO += 3F
                         }
                         is IntegerValue -> {
-                            yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F
+                            yO += KevinClient.fontManager.font35!!.fontHeight * 0.65F
                             yO += 1.5F
 
                             val dv = (it.get() - it.minimum).toFloat() / (it.maximum - it.minimum).toFloat()
@@ -1340,7 +1340,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                             yO += 4F
                         }
                         is FloatValue -> {
-                            yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F
+                            yO += KevinClient.fontManager.font35!!.fontHeight * 0.65F
                             yO += 1.5F
 
                             val dv = (it.get() - it.minimum) / (it.maximum - it.minimum)
@@ -1365,32 +1365,32 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                         is ListValue -> {
                             val p1x = (endX.toFloat() - 5F - 5F)
                             val p1y =
-                                (startY.toFloat() + yO + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F / 2)
+                                (startY.toFloat() + yO + KevinClient.fontManager.font35!!.fontHeight * 0.65F / 2)
                             val p23x = (endX.toFloat() - 5F)
                             if (isClick(
                                     mouseX.toFloat(),
                                     mouseY.toFloat(),
                                     (p1x + (p23x - p1x) / 2.0F) - ((p23x - p1x) / 2.0F),
-                                    p1y + (-Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F / 2 + 1F),
+                                    p1y + (-KevinClient.fontManager.font35!!.fontHeight * 0.65F / 2 + 1F),
                                     (p1x + (p23x - p1x) / 2.0F) + (p23x - p1x) / 2.0F,
-                                    p1y + (+Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F / 2 - 1F)
+                                    p1y + (+KevinClient.fontManager.font35!!.fontHeight * 0.65F / 2 - 1F)
                                 )
                             ) listOpen["$moduleName${it.name}"] = !listOpen["$moduleName${it.name}"]!!
                             val open = listOpen["$moduleName${it.name}"]!!
-                            yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F
+                            yO += KevinClient.fontManager.font35!!.fontHeight * 0.65F
                             if (open || listAnim["$moduleName${it.name}"] != 0F) {
                                 var ly = 0F
                                 it.values.forEach { _ ->
-                                    ly += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F
+                                    ly += KevinClient.fontManager.font35!!.fontHeight * 0.6F
                                 }
                                 val animY = ly * listAnim["$moduleName${it.name}"]!! / 100F
                                 val yOf = yO + animY
                                 it.values.forEach vfe@{ v ->
                                     val alpha = when {
-                                        yOf > yO + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F -> 255
-                                        yOf in yO..yO + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F -> {
+                                        yOf > yO + KevinClient.fontManager.font35!!.fontHeight * 0.6F -> 255
+                                        yOf in yO..yO + KevinClient.fontManager.font35!!.fontHeight * 0.6F -> {
                                             val ya = yOf - yO
-                                            ((ya / (Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F)) * 255).toInt()
+                                            ((ya / (KevinClient.fontManager.font35!!.fontHeight * 0.6F)) * 255).toInt()
                                         }
                                         else -> 0
                                     }
@@ -1398,15 +1398,15 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                     if (isClick(
                                             mouseX.toFloat(),
                                             mouseY.toFloat(),
-                                            endX.toFloat() - 10F - Kevin.getInstance.fontManager.font35!!.getStringWidth(
+                                            endX.toFloat() - 10F - KevinClient.fontManager.font35!!.getStringWidth(
                                                 v
                                             ) * 0.6F,
                                             startY.toFloat() + yO,
                                             endX.toFloat() - 10F,
-                                            startY.toFloat() + yO + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F
+                                            startY.toFloat() + yO + KevinClient.fontManager.font35!!.fontHeight * 0.6F
                                         )
                                     ) it.set(v)
-                                    yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F
+                                    yO += KevinClient.fontManager.font35!!.fontHeight * 0.6F
                                 }
                             }
                             yO += 3F
@@ -1431,7 +1431,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 //Open
                 glPushMatrix()
                 glScaled(0.8, 0.8, 0.8)
-                Kevin.getInstance.fontManager.font35!!.drawString(
+                KevinClient.fontManager.font35!!.drawString(
                     "Open",
                     (startX.toFloat() + 1F) / 0.8F,
                     (yO + startY.toFloat()) / 0.8F,
@@ -1439,7 +1439,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 )
                 glPopMatrix()
                 yO -= 2F
-                val tr = ((yO + startY.toFloat() + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F) - (yO + startY.toFloat()))/2.0
+                val tr = ((yO + startY.toFloat() + KevinClient.fontManager.font35!!.fontHeight * 0.8F) - (yO + startY.toFloat()))/2.0
                 val tx = endX.toFloat() - 25F + tr
                 val ty = yO + startY.toFloat() + tr
                 val l = isClick(
@@ -1451,7 +1451,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     ty.toFloat()+tr.toFloat()
                 ) && (mouseX.toFloat() in startX - 2F..endX + 2F && mouseY.toFloat() in startY - 2F..endY + 2F)
                 RenderUtils.drawSector(tx,ty,0,360,tr,if (l) Color(0,255,150) else Color.green)
-                yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.8F + 4F
+                yO += KevinClient.fontManager.font35!!.fontHeight * 0.8F + 4F
                 //DrawDescription
                 glPushMatrix()
                 glScaled(0.7, 0.7, 0.7)
@@ -1460,7 +1460,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 val t = module.getDescription().split(" ").toMutableList()
                 var cou = 0
                 t.forEach {
-                    if (Kevin.getInstance.fontManager.font35!!.getStringWidth("$text $it") * 0.7 < endX - startX) {
+                    if (KevinClient.fontManager.font35!!.getStringWidth("$text $it") * 0.7 < endX - startX) {
                         text += if (text.isEmpty()) it else " $it"
                     } else {
                         textList += text
@@ -1470,13 +1470,13 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     if (cou == t.size && text.isNotEmpty()) textList += text
                 }
                 textList.forEach {
-                    Kevin.getInstance.fontManager.font35!!.drawString(
+                    KevinClient.fontManager.font35!!.drawString(
                         it,
                         (startX.toFloat() + 1F) / 0.7F,
                         (yO + startY.toFloat()) / 0.7F,
                         if (isLight()) Color.black.rgb else Color.white.rgb
                     )
-                    yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.7F
+                    yO += KevinClient.fontManager.font35!!.fontHeight * 0.7F
                 }
                 yO += 3F
                 glPopMatrix()
@@ -1487,7 +1487,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                         is BooleanValue -> {
                             glPushMatrix()
                             glScaled(0.65, 0.65, 0.65)
-                            Kevin.getInstance.fontManager.font35!!.drawString(
+                            KevinClient.fontManager.font35!!.drawString(
                                 it.name,
                                 (startX.toFloat() + 1F) / 0.65F,
                                 (startY.toFloat() + yO) / 0.65F,
@@ -1506,13 +1506,13 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 endX.toFloat() - 18F,
                                 startY.toFloat() + yO,
                                 endX.toFloat() - 5F,
-                                startY.toFloat() + yO + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F
+                                startY.toFloat() + yO + KevinClient.fontManager.font35!!.fontHeight * 0.65F
                             ) && (mouseX.toFloat() in startX - 2F..endX + 2F && mouseY.toFloat() in startY - 2F..endY + 2F)
                             drawButton1(
                                 endX.toFloat() - 18F,
                                 startY.toFloat() + yO,
                                 endX.toFloat() - 5F,
-                                startY.toFloat() + yO + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F,
+                                startY.toFloat() + yO + KevinClient.fontManager.font35!!.fontHeight * 0.65F,
                                 if (isLight()) if (cl) Color(
                                     170,
                                     170,
@@ -1521,18 +1521,18 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 if (it.get()) Color.green else Color.red,
                                 buttonsAnim["$moduleName${it.name}Button"]!!
                             )
-                            yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F + 3.5F
+                            yO += KevinClient.fontManager.font35!!.fontHeight * 0.65F + 3.5F
                         }
                         is TextValue -> {
                             glPushMatrix()
                             glScaled(0.65, 0.65, 0.65)
-                            Kevin.getInstance.fontManager.font35!!.drawString(
+                            KevinClient.fontManager.font35!!.drawString(
                                 it.name,
                                 (startX.toFloat() + 1F) / 0.65F,
                                 (startY.toFloat() + yO) / 0.65F,
                                 if (isLight()) Color.black.rgb else Color.white.rgb
                             )
-                            yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F
+                            yO += KevinClient.fontManager.font35!!.fontHeight * 0.65F
                             glPopMatrix()
                             glPushMatrix()
                             glScaled(0.5, 0.5, 0.5)
@@ -1541,7 +1541,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                             val tl2 = it.get().toCharArray()
                             var co = 0
                             tl2.forEach { ch ->
-                                if (Kevin.getInstance.fontManager.font35!!.getStringWidth("$tt$ch") * 0.5 < endX - startX) {
+                                if (KevinClient.fontManager.font35!!.getStringWidth("$tt$ch") * 0.5 < endX - startX) {
                                     tt += ch
                                 } else {
                                     tl += tt
@@ -1551,13 +1551,13 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 if (co == tl2.size && tt.isNotEmpty()) tl += tt
                             }
                             tl.forEach { s ->
-                                Kevin.getInstance.fontManager.font35!!.drawString(
+                                KevinClient.fontManager.font35!!.drawString(
                                     s,
                                     (startX.toFloat() + 1F) / 0.5F,
                                     (yO + startY.toFloat()) / 0.5F,
                                     Color(0, 111, 255).rgb
                                 )
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.5F
+                                yO += KevinClient.fontManager.font35!!.fontHeight * 0.5F
                             }
                             glPopMatrix()
                             yO += 3F
@@ -1565,7 +1565,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                         is IntegerValue -> {
                             glPushMatrix()
                             glScaled(0.65, 0.65, 0.65)
-                            Kevin.getInstance.fontManager.font35!!.drawString(
+                            KevinClient.fontManager.font35!!.drawString(
                                 it.name,
                                 (startX.toFloat() + 1F) / 0.65F,
                                 (startY.toFloat() + yO) / 0.65F,
@@ -1575,14 +1575,14 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                             glPushMatrix()
                             glScaled(0.55, 0.55, 0.55)
                             val ra =
-                                (Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F - Kevin.getInstance.fontManager.font35!!.fontHeight * 0.55F) / 2F
-                            Kevin.getInstance.fontManager.font35!!.drawString(
+                                (KevinClient.fontManager.font35!!.fontHeight * 0.65F - KevinClient.fontManager.font35!!.fontHeight * 0.55F) / 2F
+                            KevinClient.fontManager.font35!!.drawString(
                                 "${it.get()}",
-                                (endX.toFloat() - 5F - Kevin.getInstance.fontManager.font35!!.getStringWidth("${it.get()}") * 0.55F) / 0.55F,
+                                (endX.toFloat() - 5F - KevinClient.fontManager.font35!!.getStringWidth("${it.get()}") * 0.55F) / 0.55F,
                                 (startY.toFloat() + yO + ra) / 0.55F,
                                 if (isLight()) Color.black.rgb else Color.white.rgb
                             )
-                            yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F
+                            yO += KevinClient.fontManager.font35!!.fontHeight * 0.65F
                             glPopMatrix()
                             yO += 1.5F
                             RenderUtils.drawLineStart(Color(0, 111, 255), 4F)
@@ -1634,7 +1634,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                         is FloatValue -> {
                             glPushMatrix()
                             glScaled(0.65, 0.65, 0.65)
-                            Kevin.getInstance.fontManager.font35!!.drawString(
+                            KevinClient.fontManager.font35!!.drawString(
                                 it.name,
                                 (startX.toFloat() + 1F) / 0.65F,
                                 (startY.toFloat() + yO) / 0.65F,
@@ -1644,14 +1644,14 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                             glPushMatrix()
                             glScaled(0.55, 0.55, 0.55)
                             val ra =
-                                (Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F - Kevin.getInstance.fontManager.font35!!.fontHeight * 0.55F) / 2F
-                            Kevin.getInstance.fontManager.font35!!.drawString(
+                                (KevinClient.fontManager.font35!!.fontHeight * 0.65F - KevinClient.fontManager.font35!!.fontHeight * 0.55F) / 2F
+                            KevinClient.fontManager.font35!!.drawString(
                                 "${it.get()}",
-                                (endX.toFloat() - 5F - Kevin.getInstance.fontManager.font35!!.getStringWidth("${it.get()}") * 0.55F) / 0.55F,
+                                (endX.toFloat() - 5F - KevinClient.fontManager.font35!!.getStringWidth("${it.get()}") * 0.55F) / 0.55F,
                                 (startY.toFloat() + yO + ra) / 0.55F,
                                 if (isLight()) Color.black.rgb else Color.white.rgb
                             )
-                            yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F
+                            yO += KevinClient.fontManager.font35!!.fontHeight * 0.65F
                             glPopMatrix()
                             yO += 1.5F
                             RenderUtils.drawLineStart(Color(0, 111, 255), 4F)
@@ -1707,17 +1707,17 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                             if (listAnim["$moduleName${it.name}"] == null) listAnim["$moduleName${it.name}"] = 0F
                             glPushMatrix()
                             glScaled(0.65, 0.65, 0.65)
-                            Kevin.getInstance.fontManager.font35!!.drawString(
+                            KevinClient.fontManager.font35!!.drawString(
                                 it.name,
                                 (startX.toFloat() + 1F) / 0.65F,
                                 (startY.toFloat() + yO) / 0.65F,
                                 if (isLight()) Color.black.rgb else Color.white.rgb
                             )
 
-                            //Kevin.getInstance.fontManager.font35!!.drawString("<",(endX.toFloat()-5F-Kevin.getInstance.fontManager.font35!!.getStringWidth("<")*0.65F)/0.65F,(startY.toFloat()+yO)/0.65F,if(open) Color(0,111,255).rgb else if(isLight())Color.black.rgb else Color.white.rgb)
+                            //KevinClient.fontManager.font35!!.drawString("<",(endX.toFloat()-5F-KevinClient.fontManager.font35!!.getStringWidth("<")*0.65F)/0.65F,(startY.toFloat()+yO)/0.65F,if(open) Color(0,111,255).rgb else if(isLight())Color.black.rgb else Color.white.rgb)
                             val p1x = (endX.toFloat() - 5F - 5F) / .65
                             val p1y =
-                                (startY.toFloat() + yO + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F / 2) / .65
+                                (startY.toFloat() + yO + KevinClient.fontManager.font35!!.fontHeight * 0.65F / 2) / .65
                             val p23x = (endX.toFloat() - 5F) / .65
                             glEnable(GL_BLEND)
                             glDisable(GL_TEXTURE_2D)
@@ -1726,9 +1726,9 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 mouseX.toFloat(),
                                 mouseY.toFloat(),
                                 (p1x * .65F + (p23x * .65F - p1x * .65F) / 2.0F).toFloat() - ((p23x * .65F - p1x * .65F) / 2.0F).toFloat(),
-                                p1y.toFloat() * .65F + (-Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F / 2 + 1F),
+                                p1y.toFloat() * .65F + (-KevinClient.fontManager.font35!!.fontHeight * 0.65F / 2 + 1F),
                                 (p1x * .65F + (p23x * .65F - p1x * .65F) / 2.0F).toFloat() + (p23x * .65F - p1x * .65F).toFloat() / 2.0F,
-                                p1y.toFloat() * .65F + (+Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F / 2 - 1F)
+                                p1y.toFloat() * .65F + (+KevinClient.fontManager.font35!!.fontHeight * 0.65F / 2 - 1F)
                             )
                             glColor(
                                 if (open) if (isMouseOn) Color(0, 150, 255) else Color(
@@ -1747,24 +1747,24 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                             glVertex3d(-((p23x - p1x) / 2.0), .0, .0)
                             glVertex3d(
                                 (p23x - p1x) / 2.0,
-                                (-Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F / 2 + 1F) / .65,
+                                (-KevinClient.fontManager.font35!!.fontHeight * 0.65F / 2 + 1F) / .65,
                                 .0
                             )
                             glVertex3d(
                                 (p23x - p1x) / 2.0,
-                                (+Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F / 2 - 1F) / .65,
+                                (+KevinClient.fontManager.font35!!.fontHeight * 0.65F / 2 - 1F) / .65,
                                 .0
                             )
                             glEnd()
                             glEnable(GL_TEXTURE_2D)
                             glDisable(GL_BLEND)
 
-                            yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.65F
+                            yO += KevinClient.fontManager.font35!!.fontHeight * 0.65F
                             glPopMatrix()
                             if (open || listAnim["$moduleName${it.name}"] != 0F) {
                                 var ly = 0F
                                 it.values.forEach { _ ->
-                                    ly += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F
+                                    ly += KevinClient.fontManager.font35!!.fontHeight * 0.6F
                                 }
                                 glPushMatrix()
                                 glScaled(.6, .6, .6)
@@ -1772,23 +1772,23 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 val yOf = yO + animY
                                 it.values.forEach vfe@{ v ->
                                     val alpha = when {
-                                        yOf > yO + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F -> 255
-                                        yOf in yO..yO + Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F -> {
+                                        yOf > yO + KevinClient.fontManager.font35!!.fontHeight * 0.6F -> 255
+                                        yOf in yO..yO + KevinClient.fontManager.font35!!.fontHeight * 0.6F -> {
                                             val ya = yOf - yO
-                                            ((ya / (Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F)) * 255).toInt()
+                                            ((ya / (KevinClient.fontManager.font35!!.fontHeight * 0.6F)) * 255).toInt()
                                         }
                                         else -> 0
                                     }
                                     if (alpha == 0) return@vfe
                                     val w = Color(255, 255, 255, alpha)
                                     val b = Color(0, 0, 0, alpha)
-                                    Kevin.getInstance.fontManager.font35!!.drawString(
+                                    KevinClient.fontManager.font35!!.drawString(
                                         v,
-                                        (endX.toFloat() - 10F - Kevin.getInstance.fontManager.font35!!.getStringWidth(v) * 0.6F) / 0.6F,
+                                        (endX.toFloat() - 10F - KevinClient.fontManager.font35!!.getStringWidth(v) * 0.6F) / 0.6F,
                                         (startY.toFloat() + yO) / 0.6F,
                                         if (it.get() == v) Color(0, 111, 255).rgb else if (isLight()) b.rgb else w.rgb
                                     )
-                                    yO += Kevin.getInstance.fontManager.font35!!.fontHeight * 0.6F
+                                    yO += KevinClient.fontManager.font35!!.fontHeight * 0.6F
                                 }
                                 glPopMatrix()
                             }
@@ -1818,7 +1818,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             val endY = y2-2.0
             var c = 0
             val cn = if (clickModule[category]!=-1) clickModule[category] else lastModule[category]
-            for (it in Kevin.getInstance.moduleManager.getModules()){
+            for (it in KevinClient.moduleManager.getModules()){
                 if (it is Targets||it is ClickGui||it is CapeManager||it is HudDesigner) continue
                 if (it.getCategory()!=category) continue
                 if (c != cn) {c+=1;continue}
@@ -1830,21 +1830,21 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     var yO = 1.5F - moduleY[category]!!
                     //State
                     //A1
-                    val alpha1 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F)
+                    val alpha1 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.8F)
                     if (alpha1==0) return
                     yO -= 2F
                     //A2
-                    val alpha2 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F)
+                    val alpha2 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.8F)
                     if (alpha2==0) return
-                    if (isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-25F,yO+startY.toFloat(),endX.toFloat()-5F,yO+startY.toFloat()+Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F)) it.toggle()
-                    yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F + 4F
+                    if (isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-25F,yO+startY.toFloat(),endX.toFloat()-5F,yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.8F)) it.toggle()
+                    yO += KevinClient.fontManager.font35!!.fontHeight*0.8F + 4F
                     //Description
                     val textList = arrayListOf<String>()
                     var text = ""
                     val t = it.getDescription().split(" ").toMutableList()
                     var cou = 0
                     t.forEach{
-                        if (Kevin.getInstance.fontManager.font35!!.getStringWidth("$text $it")*0.7<endX-startX){
+                        if (KevinClient.fontManager.font35!!.getStringWidth("$text $it")*0.7<endX-startX){
                             text += if (text.isEmpty()) it else " $it"
                         } else {
                             textList += text
@@ -1855,10 +1855,10 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     }
                     textList.forEach { _ ->
                         //A3
-                        val alpha3 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+Kevin.getInstance.fontManager.font35!!.fontHeight*0.7F)
+                        val alpha3 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.7F)
                         if (alpha3 == 0) return
 
-                        yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.7F
+                        yO += KevinClient.fontManager.font35!!.fontHeight*0.7F
                     }
                     yO += 3F
                     //Settings
@@ -1868,27 +1868,27 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                         when(it){
                             is BooleanValue -> {
                                 //A4
-                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha4 == 0) return
                                 yO -= 1.5F
                                 //A5
-                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha5 == 0) return
-                                val cl = isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-18F,startY.toFloat()+yO,endX.toFloat()-5F,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F) && (mouseX.toFloat() in startX-2F..endX+2F && mouseY.toFloat() in startY-2F..endY+2F)
+                                val cl = isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-18F,startY.toFloat()+yO,endX.toFloat()-5F,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F) && (mouseX.toFloat() in startX-2F..endX+2F && mouseY.toFloat() in startY-2F..endY+2F)
                                 if (cl) it.set(!it.get())
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F+3.5F
+                                yO += KevinClient.fontManager.font35!!.fontHeight*0.65F+3.5F
                             }
                             is TextValue -> {
                                 //A4
-                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha4 == 0) return
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F
+                                yO += KevinClient.fontManager.font35!!.fontHeight*0.65F
                                 val tl = arrayListOf<String>()
                                 var tt = ""
                                 val tl2 = it.get().toCharArray()
                                 var co = 0
                                 tl2.forEach { ch ->
-                                    if (Kevin.getInstance.fontManager.font35!!.getStringWidth("$tt$ch")*0.5<endX-startX){
+                                    if (KevinClient.fontManager.font35!!.getStringWidth("$tt$ch")*0.5<endX-startX){
                                         tt += ch
                                     } else {
                                         tl += tt
@@ -1899,21 +1899,21 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 }
                                 tl.forEach { _ ->
                                     //A5
-                                    val alpha5 = getAlpha(animLineY,yO+startY.toFloat(),Kevin.getInstance.fontManager.font35!!.fontHeight*0.5F)
+                                    val alpha5 = getAlpha(animLineY,yO+startY.toFloat(),KevinClient.fontManager.font35!!.fontHeight*0.5F)
                                     if (alpha5 == 0) return
-                                    yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.5F
+                                    yO += KevinClient.fontManager.font35!!.fontHeight*0.5F
                                 }
                                 yO += 3F
                             }
                             is IntegerValue -> {
                                 //A4
-                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha4==0) return
                                 //A5
-                                val ra = (Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F-Kevin.getInstance.fontManager.font35!!.fontHeight*0.55F)/2F
-                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO+ra,startY.toFloat()+yO+ra+Kevin.getInstance.fontManager.font35!!.fontHeight*0.55F)
+                                val ra = (KevinClient.fontManager.font35!!.fontHeight*0.65F-KevinClient.fontManager.font35!!.fontHeight*0.55F)/2F
+                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO+ra,startY.toFloat()+yO+ra+KevinClient.fontManager.font35!!.fontHeight*0.55F)
                                 if (alpha5==0) return
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F
+                                yO += KevinClient.fontManager.font35!!.fontHeight*0.65F
                                 yO += 1.5F
                                 //A6
                                 val alpha6 = getAlpha(animLineY,startY.toFloat()+yO-1.5F,startY.toFloat()+yO+1.5F)
@@ -1931,13 +1931,13 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                             }
                             is FloatValue -> {
                                 //A4
-                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha4 == 0) return
                                 //A5
-                                val ra = (Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F-Kevin.getInstance.fontManager.font35!!.fontHeight*0.55F)/2F
-                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO+ra,startY.toFloat()+yO+ra+Kevin.getInstance.fontManager.font35!!.fontHeight*0.55F)
+                                val ra = (KevinClient.fontManager.font35!!.fontHeight*0.65F-KevinClient.fontManager.font35!!.fontHeight*0.55F)/2F
+                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO+ra,startY.toFloat()+yO+ra+KevinClient.fontManager.font35!!.fontHeight*0.55F)
                                 if (alpha5 == 0) return
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F
+                                yO += KevinClient.fontManager.font35!!.fontHeight*0.65F
                                 yO += 1.5F
                                 //A6
                                 val alpha6 = getAlpha(animLineY,startY.toFloat()+yO-1.5F,startY.toFloat()+yO+1.5F)
@@ -1955,39 +1955,39 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                             }
                             is ListValue -> {
                                 //A4
-                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha4 == 0) return
                                 val p1x = (endX.toFloat()-5F-5F)
-                                val p1y = (startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2)
+                                val p1y = (startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F/2)
                                 val p23x = (endX.toFloat()-5F)
                                 //A5
-                                val alpha5 = getAlpha(animLineY,p1y.toFloat()*.65F+ (-Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2+1F),p1y.toFloat()*.65F+(+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2-1F))
+                                val alpha5 = getAlpha(animLineY,p1y.toFloat()*.65F+ (-KevinClient.fontManager.font35!!.fontHeight*0.65F/2+1F),p1y.toFloat()*.65F+(+KevinClient.fontManager.font35!!.fontHeight*0.65F/2-1F))
                                 if (alpha5 == 0) return
-                                if (isClick(mouseX.toFloat(),mouseY.toFloat(),(p1x+(p23x-p1x)/2.0F)-((p23x-p1x)/2.0F),p1y+(-Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2+1F),(p1x+(p23x-p1x)/2.0F)+(p23x-p1x)/2.0F,p1y+(+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2-1F))) listOpen["$moduleName${it.name}"] = !listOpen["$moduleName${it.name}"]!!
+                                if (isClick(mouseX.toFloat(),mouseY.toFloat(),(p1x+(p23x-p1x)/2.0F)-((p23x-p1x)/2.0F),p1y+(-KevinClient.fontManager.font35!!.fontHeight*0.65F/2+1F),(p1x+(p23x-p1x)/2.0F)+(p23x-p1x)/2.0F,p1y+(+KevinClient.fontManager.font35!!.fontHeight*0.65F/2-1F))) listOpen["$moduleName${it.name}"] = !listOpen["$moduleName${it.name}"]!!
                                 val open = listOpen["$moduleName${it.name}"]!!
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F
+                                yO += KevinClient.fontManager.font35!!.fontHeight*0.65F
                                 if (open||listAnim["$moduleName${it.name}"] != 0F) {
                                     var ly = 0F
                                     it.values.forEach { _ ->
-                                        ly += Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F
+                                        ly += KevinClient.fontManager.font35!!.fontHeight*0.6F
                                     }
                                     val animY=ly * listAnim["$moduleName${it.name}"]!! / 100F
                                     val yOf = yO + animY
                                     it.values.forEach vfe@ { v ->
                                         //A6
-                                        val alpha6 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F)
+                                        val alpha6 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.6F)
                                         if (alpha6 == 0) return
                                         val alpha = when {
-                                            yOf > yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F -> 255
-                                            yOf in yO..yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F -> {
+                                            yOf > yO+KevinClient.fontManager.font35!!.fontHeight*0.6F -> 255
+                                            yOf in yO..yO+KevinClient.fontManager.font35!!.fontHeight*0.6F -> {
                                                 val ya = yOf-yO
-                                                ((ya/(Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F))*255).toInt()
+                                                ((ya/(KevinClient.fontManager.font35!!.fontHeight*0.6F))*255).toInt()
                                             }
                                             else -> 0
                                         }
                                         if (alpha == 0) return@vfe
-                                        if (isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-10F-Kevin.getInstance.fontManager.font35!!.getStringWidth(v)*0.6F,startY.toFloat()+yO,endX.toFloat()-10F,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F)) it.set(v)
-                                        yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F
+                                        if (isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-10F-KevinClient.fontManager.font35!!.getStringWidth(v)*0.6F,startY.toFloat()+yO,endX.toFloat()-10F,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.6F)) it.set(v)
+                                        yO += KevinClient.fontManager.font35!!.fontHeight*0.6F
                                     }
                                 }
                                 yO += 3F
@@ -2014,13 +2014,13 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     glScaled(0.8,0.8,0.8)
 
                     //Alpha1
-                    val alpha1 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F)
+                    val alpha1 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.8F)
                     if (alpha1==0) {
                         glPopMatrix()
                         glDisable(GL_SCISSOR_TEST)
                         return
                     }
-                    Kevin.getInstance.fontManager.font35!!.drawString("State",(startX.toFloat()+1F)/0.8F,(yO+startY.toFloat())/0.8F,Color(0,111,255,alpha1).rgb)
+                    KevinClient.fontManager.font35!!.drawString("State",(startX.toFloat()+1F)/0.8F,(yO+startY.toFloat())/0.8F,Color(0,111,255,alpha1).rgb)
 
                     glPopMatrix()
                     if (buttonsAnim["${it.getName()}State"]!=null){
@@ -2028,17 +2028,17 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     }
                     if (buttonsAnim["${it.getName()}State"]==null) buttonsAnim["${it.getName()}State"] = if (it.getToggle()) 100F else 0F
                     yO -= 2F
-                    val l = isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-25F,yO+startY.toFloat(),endX.toFloat()-5F,yO+startY.toFloat()+Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F) && (mouseX.toFloat() in startX-2F..endX+2F && mouseY.toFloat() in startY-2F..endY+2F)
+                    val l = isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-25F,yO+startY.toFloat(),endX.toFloat()-5F,yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.8F) && (mouseX.toFloat() in startX-2F..endX+2F && mouseY.toFloat() in startY-2F..endY+2F)
 
                     //Alpha2
-                    val alpha2 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F)
+                    val alpha2 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.8F)
                     if (alpha2==0) {
                         glDisable(GL_SCISSOR_TEST)
                         return
                     }
-                    drawButton1(endX.toFloat()-25F,yO+startY.toFloat(),endX.toFloat()-5F,yO+startY.toFloat()+Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F,if(isLight()) if (l) Color(170,170,170,alpha2) else Color(255,255,255,alpha2) else if (l) Color(64,64,64,alpha2) else Color(0,0,0,alpha2),if (it.getToggle()) Color(0,255,0,alpha2) else Color(255,0,0,alpha2),buttonsAnim["${it.getName()}State"]!!)
+                    drawButton1(endX.toFloat()-25F,yO+startY.toFloat(),endX.toFloat()-5F,yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.8F,if(isLight()) if (l) Color(170,170,170,alpha2) else Color(255,255,255,alpha2) else if (l) Color(64,64,64,alpha2) else Color(0,0,0,alpha2),if (it.getToggle()) Color(0,255,0,alpha2) else Color(255,0,0,alpha2),buttonsAnim["${it.getName()}State"]!!)
 
-                    yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.8F + 4F
+                    yO += KevinClient.fontManager.font35!!.fontHeight*0.8F + 4F
                     //DrawDescription
                     glPushMatrix()
                     glScaled(0.7,0.7,0.7)
@@ -2047,7 +2047,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     val t = it.getDescription().split(" ").toMutableList()
                     var cou = 0
                     t.forEach{
-                        if (Kevin.getInstance.fontManager.font35!!.getStringWidth("$text $it")*0.7<endX-startX){
+                        if (KevinClient.fontManager.font35!!.getStringWidth("$text $it")*0.7<endX-startX){
                             text += if (text.isEmpty()) it else " $it"
                         } else {
                             textList += text
@@ -2059,15 +2059,15 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     textList.forEach {
 
                         //Alpha3
-                        val alpha3 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+Kevin.getInstance.fontManager.font35!!.fontHeight*0.7F)
+                        val alpha3 = getAlpha(animLineY,yO+startY.toFloat(),yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.7F)
                         if (alpha3 == 0) {
                             glPopMatrix()
                             glDisable(GL_SCISSOR_TEST)
                             return
                         }
-                        Kevin.getInstance.fontManager.font35!!.drawString(it,(startX.toFloat()+1F)/0.7F,(yO+startY.toFloat())/0.7F,if(isLight())Color(0,0,0,alpha3).rgb else Color(255,255,255,alpha3).rgb)
+                        KevinClient.fontManager.font35!!.drawString(it,(startX.toFloat()+1F)/0.7F,(yO+startY.toFloat())/0.7F,if(isLight())Color(0,0,0,alpha3).rgb else Color(255,255,255,alpha3).rgb)
 
-                        yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.7F
+                        yO += KevinClient.fontManager.font35!!.fontHeight*0.7F
                     }
                     yO += 3F
                     glPopMatrix()
@@ -2080,13 +2080,13 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 glScaled(0.65,0.65,0.65)
 
                                 //Alpha4
-                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha4 == 0) {
                                     glPopMatrix()
                                     glDisable(GL_SCISSOR_TEST)
                                     return
                                 }
-                                Kevin.getInstance.fontManager.font35!!.drawString(it.name,(startX.toFloat()+1F)/0.65F,(startY.toFloat()+yO)/0.65F,if(isLight())Color(0,0,0,alpha4).rgb else Color(255,255,255,alpha4).rgb)
+                                KevinClient.fontManager.font35!!.drawString(it.name,(startX.toFloat()+1F)/0.65F,(startY.toFloat()+yO)/0.65F,if(isLight())Color(0,0,0,alpha4).rgb else Color(255,255,255,alpha4).rgb)
 
                                 glPopMatrix()
                                 if(buttonsAnim["$moduleName${it.name}Button"]!=null){
@@ -2094,32 +2094,32 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 }
                                 if(buttonsAnim["$moduleName${it.name}Button"]==null) buttonsAnim["$moduleName${it.name}Button"] = if(it.get()) 100F else 0F
                                 yO -= 1.5F
-                                val cl = isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-18F,startY.toFloat()+yO,endX.toFloat()-5F,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F) && (mouseX.toFloat() in startX-2F..endX+2F && mouseY.toFloat() in startY-2F..endY+2F)
+                                val cl = isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-18F,startY.toFloat()+yO,endX.toFloat()-5F,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F) && (mouseX.toFloat() in startX-2F..endX+2F && mouseY.toFloat() in startY-2F..endY+2F)
 
                                 //Alpha5
-                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha5 == 0) {
                                     glDisable(GL_SCISSOR_TEST)
                                     return
                                 }
-                                drawButton1(endX.toFloat()-18F,startY.toFloat()+yO,endX.toFloat()-5F,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F,if(isLight()) if (cl) Color(170,170,170,alpha5) else Color(255,255,255,alpha5) else if (cl) Color(64,64,64,alpha5) else Color(0,0,0,alpha5),if(it.get())Color(0,255,0,alpha5) else Color(255,0,0,alpha5),buttonsAnim["$moduleName${it.name}Button"]!!)
+                                drawButton1(endX.toFloat()-18F,startY.toFloat()+yO,endX.toFloat()-5F,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F,if(isLight()) if (cl) Color(170,170,170,alpha5) else Color(255,255,255,alpha5) else if (cl) Color(64,64,64,alpha5) else Color(0,0,0,alpha5),if(it.get())Color(0,255,0,alpha5) else Color(255,0,0,alpha5),buttonsAnim["$moduleName${it.name}Button"]!!)
 
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F+3.5F
+                                yO += KevinClient.fontManager.font35!!.fontHeight*0.65F+3.5F
                             }
                             is TextValue -> {
                                 glPushMatrix()
                                 glScaled(0.65,0.65,0.65)
 
                                 //Alpha4
-                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha4 == 0) {
                                     glPopMatrix()
                                     glDisable(GL_SCISSOR_TEST)
                                     return
                                 }
-                                Kevin.getInstance.fontManager.font35!!.drawString(it.name,(startX.toFloat()+1F)/0.65F,(startY.toFloat()+yO)/0.65F,if(isLight())Color(0,0,0,alpha4).rgb else Color(255,255,255,alpha4).rgb)
+                                KevinClient.fontManager.font35!!.drawString(it.name,(startX.toFloat()+1F)/0.65F,(startY.toFloat()+yO)/0.65F,if(isLight())Color(0,0,0,alpha4).rgb else Color(255,255,255,alpha4).rgb)
 
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F
+                                yO += KevinClient.fontManager.font35!!.fontHeight*0.65F
                                 glPopMatrix()
                                 glPushMatrix()
                                 glScaled(0.5,0.5,0.5)
@@ -2128,7 +2128,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 val tl2 = it.get().toCharArray()
                                 var co = 0
                                 tl2.forEach { ch ->
-                                    if (Kevin.getInstance.fontManager.font35!!.getStringWidth("$tt$ch")*0.5<endX-startX){
+                                    if (KevinClient.fontManager.font35!!.getStringWidth("$tt$ch")*0.5<endX-startX){
                                         tt += ch
                                     } else {
                                         tl += tt
@@ -2139,15 +2139,15 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 }
                                 tl.forEach { s ->
                                     //Alpha5
-                                    val alpha5 = getAlpha(animLineY,yO+startY.toFloat(),Kevin.getInstance.fontManager.font35!!.fontHeight*0.5F)
+                                    val alpha5 = getAlpha(animLineY,yO+startY.toFloat(),KevinClient.fontManager.font35!!.fontHeight*0.5F)
                                     if (alpha5 == 0) {
                                         glPopMatrix()
                                         glDisable(GL_SCISSOR_TEST)
                                         return
                                     }
-                                    Kevin.getInstance.fontManager.font35!!.drawString(s,(startX.toFloat()+1F)/0.5F,(yO+startY.toFloat())/0.5F,Color(0,111,255,alpha5).rgb)
+                                    KevinClient.fontManager.font35!!.drawString(s,(startX.toFloat()+1F)/0.5F,(yO+startY.toFloat())/0.5F,Color(0,111,255,alpha5).rgb)
 
-                                    yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.5F
+                                    yO += KevinClient.fontManager.font35!!.fontHeight*0.5F
                                 }
                                 glPopMatrix()
                                 yO += 3F
@@ -2157,29 +2157,29 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 glScaled(0.65,0.65,0.65)
 
                                 //Alpha4
-                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha4==0) {
                                     glPopMatrix()
                                     glDisable(GL_SCISSOR_TEST)
                                     return
                                 }
-                                Kevin.getInstance.fontManager.font35!!.drawString(it.name,(startX.toFloat()+1F)/0.65F,(startY.toFloat()+yO)/0.65F,if(isLight())Color(0,0,0,alpha4).rgb else Color(255,255,255,alpha4).rgb)
+                                KevinClient.fontManager.font35!!.drawString(it.name,(startX.toFloat()+1F)/0.65F,(startY.toFloat()+yO)/0.65F,if(isLight())Color(0,0,0,alpha4).rgb else Color(255,255,255,alpha4).rgb)
 
                                 glPopMatrix()
                                 glPushMatrix()
                                 glScaled(0.55,0.55,0.55)
-                                val ra = (Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F-Kevin.getInstance.fontManager.font35!!.fontHeight*0.55F)/2F
+                                val ra = (KevinClient.fontManager.font35!!.fontHeight*0.65F-KevinClient.fontManager.font35!!.fontHeight*0.55F)/2F
 
                                 //Alpha5
-                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO+ra,startY.toFloat()+yO+ra+Kevin.getInstance.fontManager.font35!!.fontHeight*0.55F)
+                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO+ra,startY.toFloat()+yO+ra+KevinClient.fontManager.font35!!.fontHeight*0.55F)
                                 if (alpha5==0) {
                                     glPopMatrix()
                                     glDisable(GL_SCISSOR_TEST)
                                     return
                                 }
-                                Kevin.getInstance.fontManager.font35!!.drawString("${it.get()}",(endX.toFloat()-5F-Kevin.getInstance.fontManager.font35!!.getStringWidth("${it.get()}")*0.55F)/0.55F,(startY.toFloat()+yO+ra)/0.55F,if(isLight())Color(0,0,0,alpha5).rgb else Color(255,255,255,alpha5).rgb)
+                                KevinClient.fontManager.font35!!.drawString("${it.get()}",(endX.toFloat()-5F-KevinClient.fontManager.font35!!.getStringWidth("${it.get()}")*0.55F)/0.55F,(startY.toFloat()+yO+ra)/0.55F,if(isLight())Color(0,0,0,alpha5).rgb else Color(255,255,255,alpha5).rgb)
 
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F
+                                yO += KevinClient.fontManager.font35!!.fontHeight*0.65F
                                 glPopMatrix()
                                 yO += 1.5F
 
@@ -2218,29 +2218,29 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 glScaled(0.65,0.65,0.65)
 
                                 //Alpha4
-                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha4 == 0) {
                                     glPopMatrix()
                                     glDisable(GL_SCISSOR_TEST)
                                     return
                                 }
-                                Kevin.getInstance.fontManager.font35!!.drawString(it.name,(startX.toFloat()+1F)/0.65F,(startY.toFloat()+yO)/0.65F,if(isLight())Color(0,0,0,alpha4).rgb else Color(255,255,255,alpha4).rgb)
+                                KevinClient.fontManager.font35!!.drawString(it.name,(startX.toFloat()+1F)/0.65F,(startY.toFloat()+yO)/0.65F,if(isLight())Color(0,0,0,alpha4).rgb else Color(255,255,255,alpha4).rgb)
 
                                 glPopMatrix()
                                 glPushMatrix()
                                 glScaled(0.55,0.55,0.55)
-                                val ra = (Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F-Kevin.getInstance.fontManager.font35!!.fontHeight*0.55F)/2F
+                                val ra = (KevinClient.fontManager.font35!!.fontHeight*0.65F-KevinClient.fontManager.font35!!.fontHeight*0.55F)/2F
 
                                 //Alpha5
-                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO+ra,startY.toFloat()+yO+ra+Kevin.getInstance.fontManager.font35!!.fontHeight*0.55F)
+                                val alpha5 = getAlpha(animLineY,startY.toFloat()+yO+ra,startY.toFloat()+yO+ra+KevinClient.fontManager.font35!!.fontHeight*0.55F)
                                 if (alpha5 == 0) {
                                     glPopMatrix()
                                     glDisable(GL_SCISSOR_TEST)
                                     return
                                 }
-                                Kevin.getInstance.fontManager.font35!!.drawString("${it.get()}",(endX.toFloat()-5F-Kevin.getInstance.fontManager.font35!!.getStringWidth("${it.get()}")*0.55F)/0.55F,(startY.toFloat()+yO+ra)/0.55F,if(isLight())Color(0,0,0,alpha5).rgb else Color(255,255,255,alpha5).rgb)
+                                KevinClient.fontManager.font35!!.drawString("${it.get()}",(endX.toFloat()-5F-KevinClient.fontManager.font35!!.getStringWidth("${it.get()}")*0.55F)/0.55F,(startY.toFloat()+yO+ra)/0.55F,if(isLight())Color(0,0,0,alpha5).rgb else Color(255,255,255,alpha5).rgb)
 
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F
+                                yO += KevinClient.fontManager.font35!!.fontHeight*0.65F
                                 glPopMatrix()
                                 yO += 1.5F
 
@@ -2283,20 +2283,20 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 glScaled(0.65,0.65,0.65)
 
                                 //Alpha4
-                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F)
+                                val alpha4 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F)
                                 if (alpha4 == 0) {
                                     glPopMatrix()
                                     glDisable(GL_SCISSOR_TEST)
                                     return
                                 }
-                                Kevin.getInstance.fontManager.font35!!.drawString(it.name,(startX.toFloat()+1F)/0.65F,(startY.toFloat()+yO)/0.65F,if(isLight())Color(0,0,0,alpha4).rgb else Color(255,255,255,alpha4).rgb)
+                                KevinClient.fontManager.font35!!.drawString(it.name,(startX.toFloat()+1F)/0.65F,(startY.toFloat()+yO)/0.65F,if(isLight())Color(0,0,0,alpha4).rgb else Color(255,255,255,alpha4).rgb)
 
-                                //Kevin.getInstance.fontManager.font35!!.drawString("<",(endX.toFloat()-5F-Kevin.getInstance.fontManager.font35!!.getStringWidth("<")*0.65F)/0.65F,(startY.toFloat()+yO)/0.65F,if(open) Color(0,111,255).rgb else if(isLight())Color.black.rgb else Color.white.rgb)
+                                //KevinClient.fontManager.font35!!.drawString("<",(endX.toFloat()-5F-KevinClient.fontManager.font35!!.getStringWidth("<")*0.65F)/0.65F,(startY.toFloat()+yO)/0.65F,if(open) Color(0,111,255).rgb else if(isLight())Color.black.rgb else Color.white.rgb)
                                 val p1x = (endX.toFloat()-5F-5F)/.65
-                                val p1y = (startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2)/.65
+                                val p1y = (startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.65F/2)/.65
                                 val p23x = (endX.toFloat()-5F)/.65
                                 //Alpha5
-                                val alpha5 = getAlpha(animLineY,p1y.toFloat()*.65F+ (-Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2+1F),p1y.toFloat()*.65F+(+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2-1F))
+                                val alpha5 = getAlpha(animLineY,p1y.toFloat()*.65F+ (-KevinClient.fontManager.font35!!.fontHeight*0.65F/2+1F),p1y.toFloat()*.65F+(+KevinClient.fontManager.font35!!.fontHeight*0.65F/2-1F))
                                 if (alpha5 == 0) {
                                     glPopMatrix()
                                     glDisable(GL_SCISSOR_TEST)
@@ -2305,24 +2305,24 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                 glEnable(GL_BLEND)
                                 glDisable(GL_TEXTURE_2D)
                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-                                val isMouseOn = isClick(mouseX.toFloat(),mouseY.toFloat(),(p1x*.65F+(p23x*.65F-p1x*.65F)/2.0F).toFloat()-((p23x*.65F-p1x*.65F)/2.0F).toFloat(),p1y.toFloat()*.65F+ (-Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2+1F),(p1x*.65F+(p23x*.65F-p1x*.65F)/2.0F).toFloat()+(p23x*.65F-p1x*.65F).toFloat()/2.0F,p1y.toFloat()*.65F+(+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2-1F))
+                                val isMouseOn = isClick(mouseX.toFloat(),mouseY.toFloat(),(p1x*.65F+(p23x*.65F-p1x*.65F)/2.0F).toFloat()-((p23x*.65F-p1x*.65F)/2.0F).toFloat(),p1y.toFloat()*.65F+ (-KevinClient.fontManager.font35!!.fontHeight*0.65F/2+1F),(p1x*.65F+(p23x*.65F-p1x*.65F)/2.0F).toFloat()+(p23x*.65F-p1x*.65F).toFloat()/2.0F,p1y.toFloat()*.65F+(+KevinClient.fontManager.font35!!.fontHeight*0.65F/2-1F))
                                 glColor(if(open) if (isMouseOn) Color(0,150,255,alpha5) else Color(0,111,255,alpha5) else if(isLight()) if (isMouseOn) Color(170,170,170,alpha5) else Color(0,0,0,alpha5) else if (isMouseOn) Color(192,192,192,alpha5) else Color(255,255,255,alpha5))
                                 glTranslated(p1x+(p23x-p1x)/2.0,p1y,0.0)
                                 glRotated((listAnim["$moduleName${it.name}"]!!/100.0)*-90.0,.0,.0,1.0)
                                 glBegin(GL_TRIANGLES)
                                 glVertex3d(-((p23x-p1x)/2.0),.0,.0)
-                                glVertex3d((p23x-p1x)/2.0,(-Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2+1F)/.65,.0)
-                                glVertex3d((p23x-p1x)/2.0,(+Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F/2-1F)/.65,.0)
+                                glVertex3d((p23x-p1x)/2.0,(-KevinClient.fontManager.font35!!.fontHeight*0.65F/2+1F)/.65,.0)
+                                glVertex3d((p23x-p1x)/2.0,(+KevinClient.fontManager.font35!!.fontHeight*0.65F/2-1F)/.65,.0)
                                 glEnd()
                                 glEnable(GL_TEXTURE_2D)
                                 glDisable(GL_BLEND)
 
-                                yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.65F
+                                yO += KevinClient.fontManager.font35!!.fontHeight*0.65F
                                 glPopMatrix()
                                 if (open||listAnim["$moduleName${it.name}"] != 0F) {
                                     var ly = 0F
                                     it.values.forEach { _ ->
-                                        ly += Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F
+                                        ly += KevinClient.fontManager.font35!!.fontHeight*0.6F
                                     }
                                     glPushMatrix()
                                     glScaled(.6, .6, .6)
@@ -2330,25 +2330,25 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                     val yOf = yO + animY
                                     it.values.forEach vfe@ { v ->
                                         //Alpha6
-                                        val alpha6 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F)
+                                        val alpha6 = getAlpha(animLineY,startY.toFloat()+yO,startY.toFloat()+yO+KevinClient.fontManager.font35!!.fontHeight*0.6F)
                                         if (alpha6 == 0) {
                                             glPopMatrix()
                                             glDisable(GL_SCISSOR_TEST)
                                             return
                                         }
                                         val alpha = if (alpha6!=255) alpha6 else when {
-                                            yOf > yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F -> 255
-                                            yOf in yO..yO+Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F -> {
+                                            yOf > yO+KevinClient.fontManager.font35!!.fontHeight*0.6F -> 255
+                                            yOf in yO..yO+KevinClient.fontManager.font35!!.fontHeight*0.6F -> {
                                                 val ya = yOf-yO
-                                                ((ya/(Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F))*255).toInt()
+                                                ((ya/(KevinClient.fontManager.font35!!.fontHeight*0.6F))*255).toInt()
                                             }
                                             else -> 0
                                         }
                                         if (alpha == 0) return@vfe
                                         val w = Color(255,255,255,alpha)
                                         val b = Color(0,0,0,alpha)
-                                        Kevin.getInstance.fontManager.font35!!.drawString(v,(endX.toFloat()-10F-Kevin.getInstance.fontManager.font35!!.getStringWidth(v)*0.6F)/0.6F,(startY.toFloat()+yO)/0.6F,if(it.get()==v) Color(0,111,255,alpha).rgb else if(isLight()) b.rgb else w.rgb)
-                                        yO += Kevin.getInstance.fontManager.font35!!.fontHeight*0.6F
+                                        KevinClient.fontManager.font35!!.drawString(v,(endX.toFloat()-10F-KevinClient.fontManager.font35!!.getStringWidth(v)*0.6F)/0.6F,(startY.toFloat()+yO)/0.6F,if(it.get()==v) Color(0,111,255,alpha).rgb else if(isLight()) b.rgb else w.rgb)
+                                        yO += KevinClient.fontManager.font35!!.fontHeight*0.6F
                                     }
                                     glPopMatrix()
                                 }

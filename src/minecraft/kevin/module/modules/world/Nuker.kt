@@ -3,7 +3,7 @@ package kevin.module.modules.world
 import kevin.event.EventTarget
 import kevin.event.Render3DEvent
 import kevin.event.UpdateEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.player.AutoTool
 import kevin.utils.BlockUtils
@@ -53,7 +53,7 @@ class Nuker : Module("Nuker", "Breaks all blocks around you.", category = Module
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         // Block hit delay
-        if (blockHitDelay > 0 && !Kevin.getInstance.moduleManager.getModule("FastBreak")!!.getToggle()) {
+        if (blockHitDelay > 0 && !KevinClient.moduleManager.getModule("FastBreak")!!.getToggle()) {
             blockHitDelay--
             return
         }
@@ -132,7 +132,7 @@ class Nuker : Module("Nuker", "Breaks all blocks around you.", category = Module
                 attackedBlocks.add(blockPos)
 
                 // Call auto tool
-                val autoTool = Kevin.getInstance.moduleManager.getModule("AutoTool") as AutoTool
+                val autoTool = KevinClient.moduleManager.getModule("AutoTool") as AutoTool
                 if (autoTool.getToggle())
                     autoTool.switchSlot(blockPos)
 

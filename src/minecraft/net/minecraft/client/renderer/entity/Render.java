@@ -1,7 +1,7 @@
 package net.minecraft.client.renderer.entity;
 
 import kevin.event.RenderEntityEvent;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -62,7 +62,7 @@ public abstract class Render<T extends Entity> implements IEntityRenderer
      */
     public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        Kevin.getInstance.eventManager.callEvent(new RenderEntityEvent(entity, x, y, z, entityYaw, partialTicks));
+        KevinClient.eventManager.callEvent(new RenderEntityEvent(entity, x, y, z, entityYaw, partialTicks));
         this.renderName(entity, x, y, z);
     }
 

@@ -2,7 +2,7 @@ package kevin.file
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import net.minecraft.client.Minecraft
 import org.apache.commons.io.IOUtils
 import java.awt.image.BufferedImage
@@ -12,7 +12,7 @@ import javax.imageio.ImageIO
 
 object ImageManager {
     var saveServerIcon = false
-    private val jsonFile = File(Kevin.getInstance.fileManager.serverIconsDir,"config.json")
+    private val jsonFile = File(KevinClient.fileManager.serverIconsDir,"config.json")
     fun load(){
         if (!jsonFile.exists()) return
         val json = JsonParser().parse(IOUtils.toString(FileInputStream(jsonFile),"utf-8")).asJsonObject
@@ -30,10 +30,10 @@ object ImageManager {
     }
     fun saveIcon(icon: BufferedImage,serverIP: String){
         try {
-            val files = Kevin.getInstance.fileManager.serverIconsDir.listFiles()
+            val files = KevinClient.fileManager.serverIconsDir.listFiles()
             val ip = if (serverIP.contains(":")) serverIP.replace(":","_") else serverIP
             val name = "${files?.size} IP-$ip "
-            val file = File(Kevin.getInstance.fileManager.serverIconsDir,"$name.png")
+            val file = File(KevinClient.fileManager.serverIconsDir,"$name.png")
             var save = true
             if (!files.isNullOrEmpty()) for (f in files){
                 if (!f.name.endsWith(".png")) continue

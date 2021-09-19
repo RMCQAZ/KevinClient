@@ -3,7 +3,7 @@ package kevin.module.modules.world
 import kevin.event.EventTarget
 import kevin.event.PacketEvent
 import kevin.event.Render3DEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.IntegerValue
 import kevin.module.Module
@@ -114,7 +114,7 @@ class ChestStealer : Module("ChestStealer", description = "Automatically steals 
             return
 
         // inventory cleaner
-        val inventoryCleaner = Kevin.getInstance.moduleManager.getModule("InventoryCleaner") as InventoryCleaner
+        val inventoryCleaner = KevinClient.moduleManager.getModule("InventoryCleaner") as InventoryCleaner
 
         // Is empty?
         if (!isEmpty(screen) && (!closeOnFullValue.get() || !fullInventory)) {
@@ -186,7 +186,7 @@ class ChestStealer : Module("ChestStealer", description = "Automatically steals 
     }
 
     private fun isEmpty(chest: GuiChest): Boolean {
-        val inventoryCleaner = Kevin.getInstance.moduleManager.getModule("InventoryCleaner") as InventoryCleaner
+        val inventoryCleaner = KevinClient.moduleManager.getModule("InventoryCleaner") as InventoryCleaner
 
         for (i in 0 until chest.inventoryRows * 9) {
             val slot = chest.inventorySlots!!.getSlot(i)

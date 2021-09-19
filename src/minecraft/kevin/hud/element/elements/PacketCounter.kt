@@ -7,7 +7,7 @@ import kevin.hud.element.Border
 import kevin.hud.element.Element
 import kevin.hud.element.ElementInfo
 import kevin.hud.element.Side
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.IntegerValue
 import kevin.module.ListValue
 import kevin.utils.MSTimer
@@ -20,7 +20,7 @@ import java.awt.Color
 class PacketCounter(x: Double = 100.0, y: Double = 30.0, scale: Float = 1F, side: Side = Side(Side.Horizontal.LEFT, Side.Vertical.UP)) : Element(x, y, scale, side),Listenable {
 
     init {
-        Kevin.getInstance.eventManager.registerListener(this)
+        KevinClient.eventManager.registerListener(this)
     }
     override fun handleEvents(): Boolean = true
 
@@ -92,8 +92,8 @@ class PacketCounter(x: Double = 100.0, y: Double = 30.0, scale: Float = 1F, side
             val y1 = receivedPacketsList[i + 1] * 10 * 0.03F / tickdelay
 
             RenderUtils.glColor(Color(0, 255, 0, 255))
-            GL11.glVertex2d(i.toDouble() - receivedStart, height.get()*2 + 1 - y.coerceAtMost(height.get().toFloat()).toDouble() + if (messageMode.equals("Up",true)) Kevin.getInstance.fontManager.font35!!.fontHeight else 0)
-            GL11.glVertex2d(i + 1.0 - receivedStart, height.get()*2 + 1 - y1.coerceAtMost(height.get().toFloat()).toDouble() + if (messageMode.equals("Up",true)) Kevin.getInstance.fontManager.font35!!.fontHeight else 0)
+            GL11.glVertex2d(i.toDouble() - receivedStart, height.get()*2 + 1 - y.coerceAtMost(height.get().toFloat()).toDouble() + if (messageMode.equals("Up",true)) KevinClient.fontManager.font35!!.fontHeight else 0)
+            GL11.glVertex2d(i + 1.0 - receivedStart, height.get()*2 + 1 - y1.coerceAtMost(height.get().toFloat()).toDouble() + if (messageMode.equals("Up",true)) KevinClient.fontManager.font35!!.fontHeight else 0)
         }
 
         GL11.glEnd()
@@ -112,36 +112,36 @@ class PacketCounter(x: Double = 100.0, y: Double = 30.0, scale: Float = 1F, side
             if (messageMode.equals("Right",true)) {
                 val y1 = sentPacketsList.last() * 10 * 0.25F / tickdelay
                 val y12 = receivedPacketsList.last() * 10 * 0.03F / tickdelay
-                Kevin.getInstance.fontManager.font35!!.drawString(
+                KevinClient.fontManager.font35!!.drawString(
                     "Sent ${sentPacketsList.last()} packets in the past $delay MS.",
                     (sentPacketsList.lastIndex + 4F - sentStart) / 0.6F,
                     (height.get() + 1 - y1.coerceAtMost(height.get().toFloat())) / 0.6F,
                     Color(255, 0, 0, 255).rgb
                 )
-                Kevin.getInstance.fontManager.font35!!.drawString(
+                KevinClient.fontManager.font35!!.drawString(
                     "Received ${receivedPacketsList.last()} packets in the past $delay MS.",
                     (receivedPacketsList.lastIndex + 4F - receivedStart) / 0.6F,
                     (height.get() * 2 + 1 - y12.coerceAtMost(height.get().toFloat())) / 0.6F,
                     Color(0, 255, 0, 255).rgb
                 )
             }else if (messageMode.equals("Up",true)){
-                Kevin.getInstance.fontManager.font35!!.drawString(
+                KevinClient.fontManager.font35!!.drawString(
                     "Sent ${sentPacketsList.last()} packets in the past $delay MS.",
                     0F,
-                    (-Kevin.getInstance.fontManager.font35!!.fontHeight/2) / 0.6F,
+                    (-KevinClient.fontManager.font35!!.fontHeight/2) / 0.6F,
                     Color(255, 0, 0, 255).rgb
                 )
-                Kevin.getInstance.fontManager.font35!!.drawString(
+                KevinClient.fontManager.font35!!.drawString(
                     "Received ${receivedPacketsList.last()} packets in the past $delay MS.",
                     0F,
-                    (height.get() + Kevin.getInstance.fontManager.font35!!.fontHeight/2) / 0.6F,
+                    (height.get() + KevinClient.fontManager.font35!!.fontHeight/2) / 0.6F,
                     Color(0, 255, 0, 255).rgb
                 )
             }
             GL11.glPopMatrix()
         }
-        val x2 = if (!messageMode.equals("Up",true)) Kevin.getInstance.fontManager.font35!!.getStringWidth("Received ${receivedPacketsList.last()} packets in the past $delay MS.").toFloat() else (receivedPacketsList.size - receivedStart).toFloat()
-        val y2 = height.get()*2 + 2F + if (!messageMode.equals("Up",true)) Kevin.getInstance.fontManager.font35!!.fontHeight else 0
+        val x2 = if (!messageMode.equals("Up",true)) KevinClient.fontManager.font35!!.getStringWidth("Received ${receivedPacketsList.last()} packets in the past $delay MS.").toFloat() else (receivedPacketsList.size - receivedStart).toFloat()
+        val y2 = height.get()*2 + 2F + if (!messageMode.equals("Up",true)) KevinClient.fontManager.font35!!.fontHeight else 0
 
         return Border(0F,0F,x2,y2)
     }

@@ -13,7 +13,7 @@ import java.util.Properties;
 import java.util.Random;
 
 import kevin.event.TextEvent;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -647,9 +647,9 @@ public class FontRenderer implements IResourceManagerReloadListener
      */
     private int renderString(String text, float x, float y, int color, boolean dropShadow)
     {
-        if (Kevin.getInstance.eventManager != null){
+        if (KevinClient.eventManager != null){
             final TextEvent textEvent = new TextEvent(text);
-            Kevin.getInstance.eventManager.callEvent(textEvent);
+            KevinClient.eventManager.callEvent(textEvent);
             text =  textEvent.getText();
         }
         if (text == null)
@@ -690,9 +690,9 @@ public class FontRenderer implements IResourceManagerReloadListener
      */
     public int getStringWidth(String text)
     {
-        if (Kevin.getInstance.eventManager != null){
+        if (KevinClient.eventManager != null){
             final TextEvent textEvent = new TextEvent(text);
-            Kevin.getInstance.eventManager.callEvent(textEvent);
+            KevinClient.eventManager.callEvent(textEvent);
             text =  textEvent.getText();
         }
         if (text == null)

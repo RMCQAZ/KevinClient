@@ -6,7 +6,7 @@ import java.awt.*;
 import java.nio.FloatBuffer;
 import java.util.List;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.render.Chams;
 import kevin.module.modules.render.ESP;
 import kevin.module.modules.render.TrueSight;
@@ -26,7 +26,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -125,7 +124,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
      */
     public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        final Chams chams = (Chams) Kevin.getInstance.moduleManager.getModule("Chams");
+        final Chams chams = (Chams) KevinClient.moduleManager.getModule("Chams");
 
         if (chams.getToggle() && chams.getTargetsValue().get() && EntityUtils.isSelected(entity, false)) {
             GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
@@ -364,7 +363,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     protected void renderModel(T entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float scaleFactor)
     {
         boolean flag = !entitylivingbaseIn.isInvisible();
-        final TrueSight trueSight = (TrueSight) Kevin.getInstance.moduleManager.getModule("TrueSight");
+        final TrueSight trueSight = (TrueSight) KevinClient.moduleManager.getModule("TrueSight");
         boolean flag1 = !flag && (!entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer) || (trueSight.getToggle() && trueSight.getEntitiesValue().get()));
 
         if (flag || flag1)
@@ -384,7 +383,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 GlStateManager.alphaFunc(516, 0.003921569F);
             }
 
-            final ESP esp = (ESP) Kevin.getInstance.moduleManager.getModule("ESP");
+            final ESP esp = (ESP) KevinClient.moduleManager.getModule("ESP");
             if(esp.getToggle() && EntityUtils.isSelected(entitylivingbaseIn, false)) {
                 Minecraft mc = Minecraft.getMinecraft();
                 boolean fancyGraphics = mc.gameSettings.fancyGraphics;
@@ -414,7 +413,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                         break;
                     case "outline":
                         if (mc.gameSettings.ofFastRender) {
-                            new ChatUtils().messageWithStart("§cPlease Turn OFF Fast Render!");
+                            ChatUtils.INSTANCE.messageWithStart("§cPlease Turn OFF Fast Render!");
                             esp.toggle(false);
                             return;
                         }
@@ -834,7 +833,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
     protected boolean canRenderName(T entity)
     {
-        if (!ESP.renderNameTags || (Kevin.getInstance.moduleManager.getModule("NameTags").getToggle() && EntityUtils.isSelected(entity, false))) return false;
+        if (!ESP.renderNameTags || (KevinClient.moduleManager.getModule("NameTags").getToggle() && EntityUtils.isSelected(entity, false))) return false;
 
         EntityPlayerSP entityplayersp = Minecraft.getMinecraft().thePlayer;
 

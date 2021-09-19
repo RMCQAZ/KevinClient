@@ -2,7 +2,7 @@ package kevin.module.modules.misc
 
 import kevin.event.EventTarget
 import kevin.event.TextEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.Module
 import kevin.module.ModuleCategory
 import kevin.module.TextValue
@@ -17,7 +17,7 @@ class NameProtect : Module(name = "NameProtect", description = "Changes playerna
     fun onText(event: TextEvent) {
         val thePlayer = mc.thePlayer
 
-        if (thePlayer == null || event.text!!.contains(Kevin.getInstance.cStart))
+        if (thePlayer == null || event.text!!.contains(KevinClient.cStart))
             return
 
         event.text = StringUtils.replace(event.text, thePlayer.name, translateAlternateColorCodes(fakeNameValue.get()) + "§f")

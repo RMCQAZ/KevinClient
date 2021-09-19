@@ -2,7 +2,7 @@ package kevin.module.modules.render
 
 import kevin.event.EventTarget
 import kevin.event.UpdateEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.ListValue
 import kevin.module.Module
@@ -237,7 +237,7 @@ object Renderer : Module("Renderer","Allows you to modify some renderings.",cate
                 head.rotateAngleY = netHeadYaw * (Math.PI.toFloat() / 180f)
             }
 
-            val killAura = Kevin.getInstance.moduleManager.getModule("Killaura") as KillAura
+            val killAura = KevinClient.moduleManager.getModule("Killaura") as KillAura
             if (killAura.getToggle()&&killAura.target!=null){
                 head.rotateAngleX = RotationUtils.serverRotation.pitch / (180f / Math.PI.toFloat())
             }

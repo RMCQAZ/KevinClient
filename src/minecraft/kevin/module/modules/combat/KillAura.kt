@@ -1,7 +1,7 @@
 package kevin.module.modules.combat
 
 import kevin.event.*
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.misc.Teams
 import kevin.utils.*
@@ -496,7 +496,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
                 if (player.isClientFriend() && !LiquidBounce.moduleManager[NoFriends::class.java].state)
                     return false
  **/
-                val teams = Kevin.getInstance.moduleManager.getModule("Teams") as Teams
+                val teams = KevinClient.moduleManager.getModule("Teams") as Teams
 
                 return !teams.getToggle() || !teams.isInYourTeam(entity)
             }
@@ -518,7 +518,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
             stopBlocking()
 
         // Call attack event
-        Kevin.getInstance.eventManager.callEvent(AttackEvent(entity))
+        KevinClient.eventManager.callEvent(AttackEvent(entity))
 
         // Attack target
         if (swingValue.get()) thePlayer.swingItem()
@@ -540,7 +540,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         }
 
         // Extra critical effects
-        val criticals = Kevin.getInstance.moduleManager.getModule("Criticals") as Criticals
+        val criticals = KevinClient.moduleManager.getModule("Criticals") as Criticals
 
         for (i in 0..2) {
             // Critical Effect
@@ -676,7 +676,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
      */
     private val cancelRun: Boolean
         inline get() = mc.thePlayer!!.isSpectator || !isAlive(mc.thePlayer!!)
-                || Kevin.getInstance.moduleManager.getModule("Blink")!!.getToggle() || Kevin.getInstance.moduleManager.getModule("FreeCam")!!.getToggle()
+                || KevinClient.moduleManager.getModule("Blink")!!.getToggle() || KevinClient.moduleManager.getModule("FreeCam")!!.getToggle()
 
     /**
      * Check if [entity] is alive

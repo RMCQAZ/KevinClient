@@ -1,6 +1,6 @@
 package net.minecraft.client.renderer;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.combat.KillAura;
 import kevin.module.modules.render.Animations;
 import kevin.module.modules.render.AntiBlind;
@@ -385,7 +385,7 @@ public class ItemRenderer
     public void renderItemInFirstPerson(float partialTicks)
     {
         if(animations==null){
-            animations = (Animations) Kevin.getInstance.moduleManager.getModule("Animations");
+            animations = (Animations) KevinClient.moduleManager.getModule("Animations");
         }
 
         if (!Config.isShaders() || !Shaders.isSkipRenderHand())
@@ -403,7 +403,7 @@ public class ItemRenderer
 
             if (this.itemToRender != null)
             {
-                final KillAura killAura = (KillAura) Kevin.getInstance.moduleManager.getModule("KillAura");
+                final KillAura killAura = (KillAura) KevinClient.moduleManager.getModule("KillAura");
 
                 if (this.itemToRender.getItem() instanceof ItemMap)
                 {
@@ -836,7 +836,7 @@ public class ItemRenderer
      */
     private void renderFireInFirstPerson(float partialTicks)
     {
-        final AntiBlind antiBlind = (AntiBlind) Kevin.getInstance.moduleManager.getModule("AntiBlind");
+        final AntiBlind antiBlind = (AntiBlind) KevinClient.moduleManager.getModule("AntiBlind");
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         float f = 1.0F;

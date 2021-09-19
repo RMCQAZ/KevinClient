@@ -5,7 +5,7 @@ import kevin.hud.element.Border
 import kevin.hud.element.Element
 import kevin.hud.element.ElementInfo
 import kevin.hud.element.Side
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.FloatValue
 import kevin.module.IntegerValue
@@ -40,7 +40,7 @@ class Text(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F,
             return text
         }
         fun defaultClientVersion(): Text {
-            val text = Text((Kevin.getInstance.fontManager.font40!!.getStringWidth(Kevin.getInstance.name) + 1)/0.6,(11F)/0.6, scale = 0.6F)
+            val text = Text((KevinClient.fontManager.font40!!.getStringWidth(KevinClient.name) + 1)/0.6,(11F)/0.6, scale = 0.6F)
 
             text.displayString.set("%clientVersion%")
             text.shadow.set(true)
@@ -57,7 +57,7 @@ class Text(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F,
     private val rainbowX = FloatValue("Rainbow-X", -1000F, -2000F, 2000F)
     private val rainbowY = FloatValue("Rainbow-Y", -1000F, -2000F, 2000F)
     private val shadow = BooleanValue("Shadow", true)
-    private var fontValue = Kevin.getInstance.fontManager.font35!!
+    private var fontValue = KevinClient.fontManager.font35!!
 
     private var editMode = false
     private var editTicks = 0
@@ -97,8 +97,8 @@ class Text(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F,
 
         return when (str.toLowerCase()) {
             "username" -> mc.session.username
-            "clientname" -> Kevin.getInstance.name
-            "clientversion" -> Kevin.getInstance.version
+            "clientname" -> KevinClient.name
+            "clientversion" -> KevinClient.version
             "fps" -> Minecraft.getDebugFPS().toString()
             "date" -> DATE_FORMAT.format(System.currentTimeMillis())
             "time" -> HOUR_FORMAT.format(System.currentTimeMillis())

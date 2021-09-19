@@ -7,7 +7,7 @@ import com.google.common.collect.Maps;
 import java.util.*;
 
 import kevin.event.JumpEvent;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.render.Animations;
 import kevin.module.modules.render.AntiBlind;
 import net.minecraft.block.Block;
@@ -730,7 +730,7 @@ public abstract class EntityLivingBase extends Entity
 
     public boolean isPotionActive(Potion potionIn)
     {
-        final AntiBlind antiBlind = (AntiBlind) Kevin.getInstance.moduleManager.getModule("AntiBlind");
+        final AntiBlind antiBlind = (AntiBlind) KevinClient.moduleManager.getModule("AntiBlind");
         if ((potionIn == Potion.confusion || potionIn == Potion.blindness) && Objects.requireNonNull(antiBlind).getToggle() && antiBlind.getConfusionEffect().get())
             return false;
         return this.activePotionsMap.containsKey(potionIn.id);
@@ -1348,7 +1348,7 @@ public abstract class EntityLivingBase extends Entity
      */
     private int getArmSwingAnimationEnd()
     {
-        Animations animations = (Animations) Kevin.getInstance.moduleManager.getModule("Animations");
+        Animations animations = (Animations) KevinClient.moduleManager.getModule("Animations");
         if (animations.getToggle() && this == Minecraft.getMinecraft().thePlayer){
             return animations.getAnimationSpeed().get();
         } else if (this.isPotionActive(Potion.digSpeed))
@@ -1592,7 +1592,7 @@ public abstract class EntityLivingBase extends Entity
     protected void jump()
     {
         final JumpEvent jumpEvent = new JumpEvent(this.getJumpUpwardsMotion());
-        Kevin.getInstance.eventManager.callEvent(jumpEvent);
+        KevinClient.eventManager.callEvent(jumpEvent);
         if (jumpEvent.isCancelled()) return;
 
         this.motionY = (double)jumpEvent.getMotion();
@@ -2055,7 +2055,7 @@ public abstract class EntityLivingBase extends Entity
             this.jumpTicks = 0;
         }
 
-        if (Objects.requireNonNull(Kevin.getInstance.moduleManager.getModule("AirJump")).getToggle() && isJumping && this.jumpTicks == 0) {
+        if (Objects.requireNonNull(KevinClient.moduleManager.getModule("AirJump")).getToggle() && isJumping && this.jumpTicks == 0) {
             this.jump();
             this.jumpTicks = 10;
         }

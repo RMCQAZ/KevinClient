@@ -2,7 +2,7 @@ package net.minecraft.client.renderer.tileentity;
 
 import java.util.Calendar;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.render.Chams;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -37,7 +37,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
 
     public void renderTileEntityAt(TileEntityChest te, double x, double y, double z, float partialTicks, int destroyStage)
     {
-        final Chams chams = (Chams) Kevin.getInstance.moduleManager.getModule("Chams");
+        final Chams chams = (Chams) KevinClient.moduleManager.getModule("Chams");
 
         if (chams.getToggle() && chams.getChestsValue().get()) {
             GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);

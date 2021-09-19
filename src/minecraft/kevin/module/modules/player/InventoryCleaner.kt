@@ -1,7 +1,7 @@
 package kevin.module.modules.player
 
 import kevin.event.*
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.combat.AutoArmor
 import kevin.utils.*
@@ -10,7 +10,6 @@ import net.minecraft.client.gui.inventory.GuiInventory
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.init.Blocks
 import net.minecraft.item.*
-import net.minecraft.network.Packet
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
 import net.minecraft.network.play.client.C0DPacketCloseWindow
 import net.minecraft.network.play.client.C16PacketClientStatus
@@ -64,7 +63,7 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
              mc.currentScreen !is GuiInventory && invOpenValue.get() ||
             noMoveValue.get() && MovementUtils.isMoving ||
             thePlayer.openContainer != null && thePlayer.openContainer!!.windowId != 0
-            || (Kevin.getInstance.moduleManager.getModule("AutoArmor") as AutoArmor).isLocked)
+            || (KevinClient.moduleManager.getModule("AutoArmor") as AutoArmor).isLocked)
             return
 
         if (sortValue.get())

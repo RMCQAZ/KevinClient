@@ -1,7 +1,7 @@
 package kevin.module.modules.movement
 
 import kevin.event.*
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.utils.MovementUtils
 import net.minecraft.network.play.server.S12PacketEntityVelocity
@@ -56,7 +56,7 @@ class Speed : Module("Speed","Allows you to move faster.", category = ModuleCate
                 if (!MovementUtils.isMoving) return
                 if (mc.thePlayer.isInWater || mc.thePlayer.isInLava || mc.thePlayer.isOnLadder || mc.thePlayer.isInWeb) return
                 if (mc.thePlayer.onGround) {
-                    val strafe = Kevin.getInstance.moduleManager.getModule("Strafe") as Strafe
+                    val strafe = KevinClient.moduleManager.getModule("Strafe") as Strafe
                     if (strafe.getToggle() && strafe.allDirectionsJumpValue.get()) {
                         val yaw = mc.thePlayer.rotationYaw
                         mc.thePlayer.rotationYaw = strafe.getMoveYaw()

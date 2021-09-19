@@ -4,12 +4,10 @@ import kevin.event.EventTarget
 import kevin.event.JumpEvent
 import kevin.event.StrafeEvent
 import kevin.event.UpdateEvent
-import kevin.main.Kevin
 import kevin.module.BooleanValue
 import kevin.module.FloatValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
-import kevin.utils.MovementUtils
 import org.lwjgl.input.Keyboard
 import kotlin.math.cos
 import kotlin.math.sin

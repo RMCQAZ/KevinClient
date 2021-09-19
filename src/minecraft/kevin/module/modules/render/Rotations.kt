@@ -3,7 +3,7 @@ package kevin.module.modules.render
 import kevin.event.EventTarget
 import kevin.event.PacketEvent
 import kevin.event.Render3DEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
@@ -46,10 +46,10 @@ class Rotations : Module("Rotations", description = "Allows you to see server-si
         }
     }
 
-    private fun getState(module: String) = Kevin.getInstance.moduleManager.getModule(module)!!.getToggle()
+    private fun getState(module: String) = KevinClient.moduleManager.getModule(module)!!.getToggle()
 
     private fun shouldRotate(): Boolean {
-        val killAura = Kevin.getInstance.moduleManager.getModule("KillAura") as KillAura
+        val killAura = KevinClient.moduleManager.getModule("KillAura") as KillAura
         return (getState("KillAura") && killAura.target != null)
                 || getState("Scaffold") || getState("Breaker") || getState("Nuker")/**getState(Tower::class.java) ||
                 getState(BowAimbot::class.java) ||

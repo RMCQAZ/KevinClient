@@ -10,7 +10,7 @@ import kevin.event.MoveEvent;
 import kevin.event.StepConfirmEvent;
 import kevin.event.StepEvent;
 import kevin.event.StrafeEvent;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.combat.HitBox;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
@@ -404,7 +404,7 @@ public abstract class Entity implements ICommandSender
      */
     public void setAngles(float yaw, float pitch)
     {
-        if (Objects.requireNonNull(Kevin.getInstance.moduleManager.getModule("NoPitchLimit")).getToggle()) {
+        if (Objects.requireNonNull(KevinClient.moduleManager.getModule("NoPitchLimit")).getToggle()) {
             float f = this.rotationPitch;
             float f1 = this.rotationYaw;
             this.rotationYaw = (float) ((double) this.rotationYaw + (double) yaw * 0.15D);
@@ -627,7 +627,7 @@ public abstract class Entity implements ICommandSender
 
         if (this instanceof EntityPlayer){
             MoveEvent moveEvent = new MoveEvent(x, y, z);
-            Kevin.getInstance.eventManager.callEvent(moveEvent);
+            KevinClient.eventManager.callEvent(moveEvent);
 
             if (moveEvent.isCancelled())
                 return;
@@ -762,7 +762,7 @@ public abstract class Entity implements ICommandSender
             if (this.stepHeight > 0.0F && flag1 && (d3 != x || d5 != z))
             {
                 StepEvent stepEvent = new StepEvent(this.stepHeight);
-                Kevin.getInstance.eventManager.callEvent(stepEvent);
+                KevinClient.eventManager.callEvent(stepEvent);
                 double d11 = x;
                 double d7 = y;
                 double d8 = z;
@@ -853,7 +853,7 @@ public abstract class Entity implements ICommandSender
                     z = d8;
                     this.setEntityBoundingBox(axisalignedbb3);
                 } else {
-                    Kevin.getInstance.eventManager.callEvent(new StepConfirmEvent());
+                    KevinClient.eventManager.callEvent(new StepConfirmEvent());
                 }
             }
 
@@ -1271,7 +1271,7 @@ public abstract class Entity implements ICommandSender
         if (this == Minecraft.getMinecraft().thePlayer) {
 
             final StrafeEvent strafeEvent = new StrafeEvent(strafe, forward, friction);
-            Kevin.getInstance.eventManager.callEvent(strafeEvent);
+            KevinClient.eventManager.callEvent(strafeEvent);
 
             if (strafeEvent.isCancelled())
                 return;
@@ -2089,7 +2089,7 @@ public abstract class Entity implements ICommandSender
 
     public float getCollisionBorderSize()
     {
-        final HitBox hitBox = (HitBox) Kevin.getInstance.moduleManager.getModule("HitBox");
+        final HitBox hitBox = (HitBox) KevinClient.moduleManager.getModule("HitBox");
 
         if (Objects.requireNonNull(hitBox).getToggle()) return 0.1F + hitBox.getSizeValue().get();
 

@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.Module;
 import kevin.module.Value;
 
@@ -28,13 +28,14 @@ public class ModulesConfig extends FileConfig {
         final Iterator<Map.Entry<String, JsonElement>> entryIterator = jsonElement.getAsJsonObject().entrySet().iterator();
         while(entryIterator.hasNext()) {
             final Map.Entry<String, JsonElement> entry = entryIterator.next();
-            final Module module = Kevin.getInstance.moduleManager.getModule(entry.getKey());
+            final Module module = KevinClient.moduleManager.getModule(entry.getKey());
 
             if(module != null) {
                 final JsonObject jsonModule = (JsonObject) entry.getValue();
 
                 module.toggle(jsonModule.get("State").getAsBoolean());
                 module.setKeyBind(jsonModule.get("KeyBind").getAsInt());
+                module.setArray(jsonModule.get("Hide").getAsBoolean());
                 for(final Value moduleValue : module.getValues()) {
                     final JsonElement element = jsonModule.get(moduleValue.getName());
 
@@ -48,10 +49,11 @@ public class ModulesConfig extends FileConfig {
     protected void saveConfig() throws IOException {
         final JsonObject jsonObject = new JsonObject();
 
-        for (final Module module : Kevin.getInstance.moduleManager.getModules()) {
+        for (final Module module : KevinClient.moduleManager.getModules()) {
             final JsonObject jsonMod = new JsonObject();
             jsonMod.addProperty("State", module.getToggle());
             jsonMod.addProperty("KeyBind", module.getKeyBind());
+            jsonMod.addProperty("Hide", module.getArray());
             module.getValues().forEach(value -> jsonMod.add(value.getName(), value.toJson()));
             jsonObject.add(module.getName(), jsonMod);
         }

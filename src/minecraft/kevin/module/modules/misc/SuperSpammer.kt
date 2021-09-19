@@ -5,7 +5,7 @@ import kevin.event.UpdateEvent
 
 //import kevin.event.UpdateState
 
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.utils.MSTimer
 import kevin.utils.RandomUtils
@@ -30,7 +30,7 @@ class SuperSpammer : Module("SuperSpammer","Spams the chat with given messages."
     private val fileSuffix = ".txt"
     private var modeListArray = modeList.toTypedArray()
     init {
-        val files = Kevin.getInstance.fileManager.spammerDir
+        val files = KevinClient.fileManager.spammerDir
         val spammerFiles = files.listFiles(FileFilter { it.name.endsWith(fileSuffix) })
         if (spammerFiles != null) for (i in spammerFiles) modeList.add(i.name.split(".txt")[0])
         modeListArray = modeList.toTypedArray()
@@ -53,7 +53,7 @@ class SuperSpammer : Module("SuperSpammer","Spams the chat with given messages."
         }
     }
 
-    private val messageValue = TextValue("SingleMessage", Kevin.getInstance.name + " Client | Jiege")
+    private val messageValue = TextValue("SingleMessage", KevinClient.name + " Client | Jiege")
     private val switchMessage1 = TextValue("SwitchMessageFirst","https://space.bilibili.com/1372772553 Liquid_Bounce-杰哥")
     private val switchMessage2 = TextValue("SwitchMessageSecond","Liquid_Bounce-杰哥 https://space.bilibili.com/1372772553")
 
@@ -151,7 +151,7 @@ class SuperSpammer : Module("SuperSpammer","Spams the chat with given messages."
                     "说句实话" -> spammerList = shuoJuShiHuaList
                     "invincible" -> spammerList = invincibleList
                     else -> {
-                        val files = Kevin.getInstance.fileManager.spammerDir.listFiles()!!
+                        val files = KevinClient.fileManager.spammerDir.listFiles()!!
                         var file: File? = null
                         for (i in files){
                             if (mode == i.name.split(".txt")[0]) file = i
@@ -164,7 +164,7 @@ class SuperSpammer : Module("SuperSpammer","Spams the chat with given messages."
                     lastMode = mode
                 }
                 if (spammerList.isNotEmpty()) mc.thePlayer.sendChatMessage(if (customNoRandomV.get()) "$start${spammerList[sentencesNumber]}" else "$first${spammerList[sentencesNumber]}$last")
-                if (sentencesNumber < spammerList.size - 1) sentencesNumber += 1 else if (autoDisableV.get()) Kevin.getInstance.moduleManager.getModule(this.getName())?.toggle() else sentencesNumber = 0
+                if (sentencesNumber < spammerList.size - 1) sentencesNumber += 1 else if (autoDisableV.get()) KevinClient.moduleManager.getModule(this.getName())?.toggle() else sentencesNumber = 0
             }
             msTimer.reset()
             delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())

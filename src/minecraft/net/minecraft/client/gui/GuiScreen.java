@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.stream.GuiTwitchUserMode;
 import net.minecraft.client.renderer.GlStateManager;
@@ -275,7 +275,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
      */
     protected void handleComponentHover(IChatComponent component, int x, int y)
     {
-        if (!(component == null || component.getChatStyle().getChatClickEvent() == null || !Kevin.getInstance.moduleManager.getModule("ComponentOnHover").getToggle())) {
+        if (!(component == null || component.getChatStyle().getChatClickEvent() == null || !KevinClient.moduleManager.getModule("ComponentOnHover").getToggle())) {
             final ChatStyle chatStyle = component.getChatStyle();
             final ClickEvent clickEvent = chatStyle.getChatClickEvent();
             final HoverEvent hoverEvent = chatStyle.getChatHoverEvent();

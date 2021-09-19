@@ -4,7 +4,7 @@ import kevin.hud.element.Border
 import kevin.hud.element.Element
 import kevin.hud.element.ElementInfo
 import kevin.hud.element.Side
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.FloatValue
 import kevin.module.IntegerValue
 import kevin.module.ListValue
@@ -93,7 +93,7 @@ class Armor(x: Double = -8.0, y: Double = 57.0, scale: Float = 1F,
             else if (showDamageMode.get().equals("percentage",true)) "$damagePercentage%"
             else if (showDamageMode.get().equals("all",true)) "${maxDamage-itemDamage}/$maxDamage $damagePercentage%" else ""
 
-            if (Kevin.getInstance.fontManager.font35!!.getStringWidth(damageText) > damageTextMaxLong) damageTextMaxLong = Kevin.getInstance.fontManager.font35!!.getStringWidth(damageText)
+            if (KevinClient.fontManager.font35!!.getStringWidth(damageText) > damageTextMaxLong) damageTextMaxLong = KevinClient.fontManager.font35!!.getStringWidth(damageText)
 
             val color = if (showDamageRainbow) 0
             else if (showDamageColorMode.get().equals("custom",true)) Color(armorDamageCustomRed.get(),armorDamageCustomGreen.get(),armorDamageCustomBlue.get()).rgb else {
@@ -106,7 +106,7 @@ class Armor(x: Double = -8.0, y: Double = 57.0, scale: Float = 1F,
             }
 
             FontManager.RainbowFontShader.begin(showDamageRainbow,if (rainbowX.get() == 0.0F) 0.0F else 1.0F / rainbowX.get(), if (rainbowY.get() == 0.0F) 0.0F else 1.0F / rainbowY.get(),System.currentTimeMillis() % 10000 / 10000F).use {
-                Kevin.getInstance.fontManager.font35!!.drawStringWithShadow(damageText,x+20F,y+6F,color)
+                KevinClient.fontManager.font35!!.drawStringWithShadow(damageText,x+20F,y+6F,color)
             }
 
             y -= 18

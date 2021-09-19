@@ -8,7 +8,7 @@ import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication
 import com.thealtening.AltService
 import kevin.command.commands.LoginUtils
 import kevin.file.FileManager
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.utils.FontManager
 import kevin.utils.MSTimer
 import kevin.utils.RenderUtils
@@ -41,7 +41,7 @@ object AltManager : GuiScreen() {
     }
     private val altList = CopyOnWriteArrayList<Alt>()
     private var chose:Int? = null
-    private val file = Kevin.getInstance.fileManager.altsFile
+    private val file = KevinClient.fileManager.altsFile
     private var guiMainMenu:GuiMainMenu? = null
     private var stateMessage = "Idle..."
     private var startY = 0F
@@ -95,11 +95,11 @@ object AltManager : GuiScreen() {
         drawDefaultBackground()
         RenderUtils.drawRect(0F,37.5F,this.width.toFloat(),this.height-37.5F,Color(0,0,0,125).rgb)
         FontManager.RainbowFontShader.begin(true,-0.00314514F,0.00314514F,System.currentTimeMillis() % 10000 / 10000F).use {
-            Kevin.getInstance.fontManager.font40!!.drawString("AltManager",this.width/2F-Kevin.getInstance.fontManager.font40!!.getStringWidth("AltManager")/2F,5F,0)
+            KevinClient.fontManager.font40!!.drawString("AltManager",this.width/2F-KevinClient.fontManager.font40!!.getStringWidth("AltManager")/2F,5F,0)
         }
-        var stateX = this.width/2F-Kevin.getInstance.fontManager.font35!!.getStringWidth(stateMessage)/2F
-        if (stateMessage.startsWith("§")) stateX += Kevin.getInstance.fontManager.font35!!.getStringWidth("§c")/2F
-        Kevin.getInstance.fontManager.font35!!.drawString(stateMessage,stateX,10F+Kevin.getInstance.fontManager.font40!!.fontHeight,Color.lightGray.rgb)
+        var stateX = this.width/2F-KevinClient.fontManager.font35!!.getStringWidth(stateMessage)/2F
+        if (stateMessage.startsWith("§")) stateX += KevinClient.fontManager.font35!!.getStringWidth("§c")/2F
+        KevinClient.fontManager.font35!!.drawString(stateMessage,stateX,10F+KevinClient.fontManager.font40!!.fontHeight,Color.lightGray.rgb)
         var yO = 1F - startY
         var c = 0
         glEnable(GL_SCISSOR_TEST)
@@ -230,23 +230,23 @@ object AltManager : GuiScreen() {
     }
     data class Alt(var name:String,var password:String,var inGameName: String){
 
-        fun getHeight() = 1 + Kevin.getInstance.fontManager.font35!!.fontHeight*.8F + Kevin.getInstance.fontManager.font35!!.fontHeight*.6F + 2F
+        fun getHeight() = 1 + KevinClient.fontManager.font35!!.fontHeight*.8F + KevinClient.fontManager.font35!!.fontHeight*.6F + 2F
 
         fun drawAlt(x: Float,x2: Float,y: Float,chose: Boolean): Float{
             var y2 = y + 1
             glPushMatrix()
             glScaled(.8,.8,.8)
-            val fx1 = x + (x2-x)/2F - Kevin.getInstance.fontManager.font35!!.getStringWidth(inGameName)*.8F/2F
-            Kevin.getInstance.fontManager.font35!!.drawString(inGameName,fx1/.8F,y2/.8F,if (chose) Color(0,111,255).rgb else Color.white.rgb)
+            val fx1 = x + (x2-x)/2F - KevinClient.fontManager.font35!!.getStringWidth(inGameName)*.8F/2F
+            KevinClient.fontManager.font35!!.drawString(inGameName,fx1/.8F,y2/.8F,if (chose) Color(0,111,255).rgb else Color.white.rgb)
             glPopMatrix()
-            y2 += Kevin.getInstance.fontManager.font35!!.fontHeight*.8F
+            y2 += KevinClient.fontManager.font35!!.fontHeight*.8F
             glPushMatrix()
             glScaled(.6,.6,.6)
             val nameAndPassword = if (password.isEmpty()) name else "$name:******${password.removeRange(0..2)}"
-            val fx2 = x + (x2-x)/2F - Kevin.getInstance.fontManager.font35!!.getStringWidth(nameAndPassword)*.6F/2F
-            Kevin.getInstance.fontManager.font35!!.drawString(nameAndPassword,fx2/.6F,y2/.6F,Color.lightGray.rgb)
+            val fx2 = x + (x2-x)/2F - KevinClient.fontManager.font35!!.getStringWidth(nameAndPassword)*.6F/2F
+            KevinClient.fontManager.font35!!.drawString(nameAndPassword,fx2/.6F,y2/.6F,Color.lightGray.rgb)
             glPopMatrix()
-            y2 += Kevin.getInstance.fontManager.font35!!.fontHeight*.6F
+            y2 += KevinClient.fontManager.font35!!.fontHeight*.6F
             if (chose){
                 RenderUtils.drawBorder(x,y,x2,y2,2F,Color.white.rgb)
             }else{
@@ -287,27 +287,27 @@ object AltManager : GuiScreen() {
         override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
             drawDefaultBackground()
             FontManager.RainbowFontShader.begin(true,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
-                Kevin.getInstance.fontManager.font40!!.drawString(title,this.width/2-Kevin.getInstance.fontManager.font40!!.getStringWidth(title)/2F,8F,0)
+                KevinClient.fontManager.font40!!.drawString(title,this.width/2-KevinClient.fontManager.font40!!.getStringWidth(title)/2F,8F,0)
             }
             nameText.drawTextBox()
             passwordText.drawTextBox()
             nameAndPasswordText.drawTextBox()
             val nameAndPassword = "Use Name And Password"
-            Kevin.getInstance.fontManager.font35!!.drawString(nameAndPassword,this.width/2-Kevin.getInstance.fontManager.font35!!.getStringWidth(nameAndPassword)/2F,60F-Kevin.getInstance.fontManager.font35!!.fontHeight-4F,Color(0,255,0).rgb)
+            KevinClient.fontManager.font35!!.drawString(nameAndPassword,this.width/2-KevinClient.fontManager.font35!!.getStringWidth(nameAndPassword)/2F,60F-KevinClient.fontManager.font35!!.fontHeight-4F,Color(0,255,0).rgb)
             val namePassword = "Use Name:Password"
-            Kevin.getInstance.fontManager.font35!!.drawString(namePassword,this.width/2-Kevin.getInstance.fontManager.font35!!.getStringWidth(namePassword)/2F,125F-Kevin.getInstance.fontManager.font35!!.fontHeight-4F,Color(0,255,0).rgb)
+            KevinClient.fontManager.font35!!.drawString(namePassword,this.width/2-KevinClient.fontManager.font35!!.getStringWidth(namePassword)/2F,125F-KevinClient.fontManager.font35!!.fontHeight-4F,Color(0,255,0).rgb)
             val nameStr = "Name:"
             val passwordStr = "Password:"
-            Kevin.getInstance.fontManager.font40!!.drawString(nameStr,this.width/2-Kevin.getInstance.fontManager.font40!!.getStringWidth(nameStr)-80F,60F+(10-Kevin.getInstance.fontManager.font40!!.fontHeight/2),Color(0,111,255).rgb)
-            Kevin.getInstance.fontManager.font40!!.drawString(passwordStr,this.width/2-Kevin.getInstance.fontManager.font40!!.getStringWidth(passwordStr)-80F,85F+(10-Kevin.getInstance.fontManager.font40!!.fontHeight/2),Color(0,111,255).rgb)
+            KevinClient.fontManager.font40!!.drawString(nameStr,this.width/2-KevinClient.fontManager.font40!!.getStringWidth(nameStr)-80F,60F+(10-KevinClient.fontManager.font40!!.fontHeight/2),Color(0,111,255).rgb)
+            KevinClient.fontManager.font40!!.drawString(passwordStr,this.width/2-KevinClient.fontManager.font40!!.getStringWidth(passwordStr)-80F,85F+(10-KevinClient.fontManager.font40!!.fontHeight/2),Color(0,111,255).rgb)
             nameText.xPosition = this.width/2-75
             passwordText.xPosition = this.width/2-75
             nameAndPasswordText.xPosition = this.width/2-75
             buttonDone.xPosition = this.width/2-75
             buttonDone.yPosition = this.height/4*3-25
-            var messageX = this.width/2-Kevin.getInstance.fontManager.font35!!.getStringWidth(message)/2F
-            if (message.startsWith("§")) messageX += +Kevin.getInstance.fontManager.font35!!.getStringWidth("§c")/2F
-            Kevin.getInstance.fontManager.font35!!.drawString(message,messageX,this.height/4F*3F+21F+Kevin.getInstance.fontManager.font35!!.fontHeight,Color.lightGray.rgb)
+            var messageX = this.width/2-KevinClient.fontManager.font35!!.getStringWidth(message)/2F
+            if (message.startsWith("§")) messageX += +KevinClient.fontManager.font35!!.getStringWidth("§c")/2F
+            KevinClient.fontManager.font35!!.drawString(message,messageX,this.height/4F*3F+21F+KevinClient.fontManager.font35!!.fontHeight,Color.lightGray.rgb)
             buttonDone.enabled = (nameText.text!=""||(nameAndPasswordText.text.contains(":")&&!nameAndPasswordText.text.startsWith(":")))&&message!="Checking..."
             super.drawScreen(mouseX, mouseY, partialTicks)
         }

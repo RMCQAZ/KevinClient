@@ -2,7 +2,7 @@ package kevin.utils
 
 import com.google.gson.*
 import kevin.event.TextEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.texture.TextureUtil
@@ -38,7 +38,7 @@ class FontManager : MinecraftInstance(){
         fontBold180 = GameFontRenderer(getFont("JetBrainsMono-Bold.ttf",180))
         try {
             CUSTOM_FONT_RENDERERS.clear()
-            val fontsFile = File(Kevin.getInstance.fileManager.fontsDir, "fonts.json")
+            val fontsFile = File(KevinClient.fileManager.fontsDir, "fonts.json")
             if (fontsFile.exists()) {
                 val jsonElement = JsonParser().parse(BufferedReader(FileReader(fontsFile)))
                 if (jsonElement is JsonNull) return
@@ -194,7 +194,7 @@ class FontManager : MinecraftInstance(){
             var currentText = text
 
             val event = TextEvent(currentText)
-            Kevin.getInstance.eventManager.callEvent(event)
+            KevinClient.eventManager.callEvent(event)
 
             currentText = event.text ?: return 0
 
@@ -342,7 +342,7 @@ class FontManager : MinecraftInstance(){
             var currentText = text
 
             val event = TextEvent(currentText)
-            Kevin.getInstance.eventManager.callEvent(event)
+            KevinClient.eventManager.callEvent(event)
             currentText = event.text ?: return 0
 
             return if (currentText.contains("§")) {

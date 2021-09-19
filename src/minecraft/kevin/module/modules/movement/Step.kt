@@ -1,7 +1,7 @@
 package kevin.module.modules.movement
 
 import kevin.event.*
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.*
 import kevin.utils.BlockUtils.collideBlock
 import kevin.utils.MSTimer
@@ -161,13 +161,13 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
         val thePlayer = mc.thePlayer ?: return
 
         // Phase should disable step
-        if (Kevin.getInstance.moduleManager.getModule("Phase")!!.getToggle()) {
+        if (KevinClient.moduleManager.getModule("Phase")!!.getToggle()) {
             event.stepHeight = 0F
             return
         }
 
         // Some fly modes should disable step
-        val fly = Kevin.getInstance.moduleManager.getModule("Fly") as Fly
+        val fly = KevinClient.moduleManager.getModule("Fly") as Fly
         if (fly.getToggle()) {
             val flyMode = fly.mode.get()
 

@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import kevin.module.modules.render.TrueSight;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -333,7 +333,7 @@ public class WorldClient extends World
             blockpos$mutableblockpos.set(k, l, i1);
             IBlockState iblockstate = this.getBlockState(blockpos$mutableblockpos);
             iblockstate.getBlock().randomDisplayTick(this, blockpos$mutableblockpos, iblockstate, random);
-            final TrueSight trueSight = (TrueSight) Kevin.getInstance.moduleManager.getModule("TrueSight");
+            final TrueSight trueSight = (TrueSight) KevinClient.moduleManager.getModule("TrueSight");
             if (trueSight.getToggle() && trueSight.getBarriersValue().get()) flag = true;
             if (flag && iblockstate.getBlock() == Blocks.barrier)
             {

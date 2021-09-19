@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.Map.Entry;
 
 import kevin.event.EntityMovementEvent;
-import kevin.main.Kevin;
+import kevin.main.KevinClient;
 import net.minecraft.block.Block;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
@@ -620,7 +620,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
         if (entity != null)
         {
-            Kevin.getInstance.eventManager.callEvent(new EntityMovementEvent(entity));
+            KevinClient.eventManager.callEvent(new EntityMovementEvent(entity));
             entity.serverPosX += packetIn.func_149062_c();
             entity.serverPosY += packetIn.func_149061_d();
             entity.serverPosZ += packetIn.func_149064_e();

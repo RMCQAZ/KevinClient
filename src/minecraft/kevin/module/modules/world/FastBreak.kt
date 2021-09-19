@@ -2,7 +2,7 @@ package kevin.module.modules.world
 
 import kevin.event.EventTarget
 import kevin.event.UpdateEvent
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.FloatValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
@@ -18,8 +18,8 @@ class FastBreak : Module("FastBreak", "Allows you to break blocks faster.", cate
         if (mc.playerController.curBlockDamageMP > breakDamage.get())
             mc.playerController.curBlockDamageMP = 1F
 
-        val breaker = Kevin.getInstance.moduleManager.getModule("Breaker") as Breaker
-        val nuker = Kevin.getInstance.moduleManager.getModule("Nuker") as Nuker
+        val breaker = KevinClient.moduleManager.getModule("Breaker") as Breaker
+        val nuker = KevinClient.moduleManager.getModule("Nuker") as Nuker
 
         if (breaker.currentDamage > breakDamage.get())
             breaker.currentDamage = 1F

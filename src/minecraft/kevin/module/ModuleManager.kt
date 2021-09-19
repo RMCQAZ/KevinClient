@@ -3,7 +3,7 @@ package kevin.module
 import kevin.event.EventTarget
 import kevin.event.KeyEvent
 import kevin.event.Listenable
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import kevin.module.modules.*
 import kevin.module.modules.combat.*
 import kevin.module.modules.exploit.*
@@ -137,11 +137,13 @@ class ModuleManager : Listenable {
             ChestStealer(),
             FastBreak(),
             FastPlace(),
+            LightningDetector,
             NoSlowBreak(),
             Nuker(),
             Scaffold(),
             TeleportUse(),
-            Timer()
+            Timer(),
+            World
         )
 
         modules.add(Targets())
@@ -152,8 +154,8 @@ class ModuleManager : Listenable {
         modules.addAll(playerList!!)
         modules.addAll(renderList!!)
         modules.addAll(worldList!!)
-        modules.forEach { Kevin.getInstance.eventManager.registerListener(it) }
-        Kevin.getInstance.eventManager.registerListener(this)
+        modules.forEach { KevinClient.eventManager.registerListener(it) }
+        KevinClient.eventManager.registerListener(this)
     }
 
     fun getModules(): ArrayList<Module>{

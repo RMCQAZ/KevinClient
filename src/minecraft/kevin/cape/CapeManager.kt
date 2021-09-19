@@ -3,7 +3,7 @@ package kevin.cape
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kevin.file.FileManager
-import kevin.main.Kevin
+import kevin.main.KevinClient
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.renderer.GlStateManager
@@ -17,13 +17,13 @@ import java.nio.charset.StandardCharsets
 import javax.imageio.ImageIO
 
 class CapeManager : GuiScreen() {
-    private val saveFile = File(Kevin.getInstance.fileManager.capesDir,"cape.json")
+    private val saveFile = File(KevinClient.fileManager.capesDir,"cape.json")
     private val capes = mutableListOf<Cape>()
     var nowCape:Cape?= null
 
     fun load(){
         capes.clear()
-        for(file in Kevin.getInstance.fileManager.capesDir.listFiles()){
+        for(file in KevinClient.fileManager.capesDir.listFiles()){
             if(file.isFile&&!file.name.equals(saveFile.name)){
                 try {
                     val args=file.name.split(".").toTypedArray()
@@ -55,9 +55,9 @@ class CapeManager : GuiScreen() {
     override fun onGuiClosed() = save()
     override fun doesGuiPauseGame() = false
     override fun initGui() {
-        this.buttonList.add(GuiButton(0, 0, 0, Kevin.getInstance.fontManager.font40!!.getStringWidth("< QUIT")+10, 20, "< QUIT"))
-        this.buttonList.add(GuiButton(1, (width*0.3).toInt(), (height*0.5).toInt(), Kevin.getInstance.fontManager.font40!!.getStringWidth("<-")+10, 20, "<-"))
-        this.buttonList.add(GuiButton(2, (width*0.7).toInt(), (height*0.5).toInt(), Kevin.getInstance.fontManager.font40!!.getStringWidth("->")+10, 20, "->"))
+        this.buttonList.add(GuiButton(0, 0, 0, KevinClient.fontManager.font40!!.getStringWidth("< QUIT")+10, 20, "< QUIT"))
+        this.buttonList.add(GuiButton(1, (width*0.3).toInt(), (height*0.5).toInt(), KevinClient.fontManager.font40!!.getStringWidth("<-")+10, 20, "<-"))
+        this.buttonList.add(GuiButton(2, (width*0.7).toInt(), (height*0.5).toInt(), KevinClient.fontManager.font40!!.getStringWidth("->")+10, 20, "->"))
     }
 
     override fun actionPerformed(p_actionPerformed_1_: GuiButton) {
@@ -85,9 +85,9 @@ class CapeManager : GuiScreen() {
     override fun drawScreen(p_drawScreen_1_: Int, p_drawScreen_2_: Int, p_drawScreen_3_: Float) {
 
         GL11.glPushMatrix()
-        Kevin.getInstance.fontManager.font40!!.drawCenteredString(if(nowCape==null){ "§cNONE" }else{ "§a${nowCape!!.name}" },width*0.50f,height*0.23f, -1, false)
+        KevinClient.fontManager.font40!!.drawCenteredString(if(nowCape==null){ "§cNONE" }else{ "§a${nowCape!!.name}" },width*0.50f,height*0.23f, -1, false)
         GL11.glScalef(2f,2f,2f)
-        Kevin.getInstance.fontManager.font40!!.drawCenteredString("Cape Manager",width*0.25f,height*0.03f, -1, false)
+        KevinClient.fontManager.font40!!.drawCenteredString("Cape Manager",width*0.25f,height*0.03f, -1, false)
         GL11.glPopMatrix()
 
         super.drawScreen(p_drawScreen_1_, p_drawScreen_2_, p_drawScreen_3_)

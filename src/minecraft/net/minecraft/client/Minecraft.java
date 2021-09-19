@@ -10,8 +10,7 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import kevin.event.*;
-import kevin.main.Kevin;
-import kevin.module.modules.exploit.AbortBreaking;
+import kevin.main.KevinClient;
 import kevin.module.modules.world.FastPlace;
 import kevin.utils.CPSCounter;
 import kevin.utils.MiniMapRegister;
@@ -545,7 +544,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.gameSettings.saveOptions();
         }
 
-        Kevin.getInstance.run();
+        KevinClient.INSTANCE.run();
 
         this.renderGlobal.makeEntityOutlineShader();
     }
@@ -936,7 +935,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     public void displayGuiScreen(GuiScreen guiScreenIn)
     {
-        if (Kevin.getInstance.eventManager != null) Kevin.getInstance.eventManager.callEvent(new ScreenEvent(currentScreen));
+        if (KevinClient.eventManager != null) KevinClient.eventManager.callEvent(new ScreenEvent(currentScreen));
 
         if (this.currentScreen != null)
         {
@@ -1007,7 +1006,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             //this.stream.shutdownStream();
             logger.info("Stopping!");
 
-            Kevin.getInstance.stop();
+            KevinClient.INSTANCE.stop();
 
             try
             {
@@ -1464,21 +1463,21 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.leftClickCounter = 0;
         }
 
-        if (this.leftClickCounter <= 0 && (!this.thePlayer.isUsingItem() || Kevin.getInstance.moduleManager.getModule("MultiActions").getToggle()))
+        if (this.leftClickCounter <= 0 && (!this.thePlayer.isUsingItem() || KevinClient.moduleManager.getModule("MultiActions").getToggle()))
         {
             if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
                 BlockPos blockpos = this.objectMouseOver.getBlockPos();
 
                 if (this.leftClickCounter == 0)
-                    Kevin.getInstance.eventManager.callEvent(new ClickBlockEvent(blockpos,this.objectMouseOver.sideHit));
+                    KevinClient.eventManager.callEvent(new ClickBlockEvent(blockpos,this.objectMouseOver.sideHit));
 
                 if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air && this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit))
                 {
                     this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
                     this.thePlayer.swingItem();
                 }
-            } else if (!Kevin.getInstance.moduleManager.getModule("AbortBreaking").getToggle()){
+            } else if (!KevinClient.moduleManager.getModule("AbortBreaking").getToggle()){
                 this.playerController.resetBlockRemoving();
             }
         }
@@ -1488,7 +1487,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         CPSCounter.registerClick(CPSCounter.MouseButton.LEFT);
 
-        if (Kevin.getInstance.moduleManager.getModule("AutoClicker").getToggle()) leftClickCounter = 0;
+        if (KevinClient.moduleManager.getModule("AutoClicker").getToggle()) leftClickCounter = 0;
         if (this.leftClickCounter <= 0)
         {
             this.thePlayer.swingItem();
@@ -1540,7 +1539,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.rightClickDelayTimer = 4;
             CPSCounter.registerClick(CPSCounter.MouseButton.RIGHT);
 
-            final FastPlace fastPlace = (FastPlace) Kevin.getInstance.moduleManager.getModule("FastPlace");
+            final FastPlace fastPlace = (FastPlace) KevinClient.moduleManager.getModule("FastPlace");
 
             if (fastPlace.getToggle()) rightClickDelayTimer = fastPlace.getSpeedValue().get();
 
@@ -1712,7 +1711,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     public void runTick() throws IOException
     {
-        Kevin.getInstance.eventManager.callEvent(new TickEvent());
+        KevinClient.eventManager.callEvent(new TickEvent());
 
         if (this.rightClickDelayTimer > 0)
         {
@@ -1907,7 +1906,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 if (Keyboard.getEventKeyState())
                 {
 
-                    Kevin.getInstance.eventManager.callEvent(new KeyEvent(k));
+                    KevinClient.eventManager.callEvent(new KeyEvent(k));
 
                     if (k == 62 && this.entityRenderer != null)
                     {
@@ -2333,7 +2332,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         if (theWorld != null) {
             MiniMapRegister.INSTANCE.unloadAllChunks();
         }
-        Kevin.getInstance.eventManager.callEvent(new WorldEvent(worldClientIn));
+        KevinClient.eventManager.callEvent(new WorldEvent(worldClientIn));
         if (worldClientIn == null)
         {
             NetHandlerPlayClient nethandlerplayclient = this.getNetHandler();
