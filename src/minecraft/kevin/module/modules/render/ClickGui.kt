@@ -14,6 +14,7 @@ import kevin.utils.RenderUtils
 import kevin.utils.RenderUtils.glColor
 import net.minecraft.client.audio.PositionedSoundRecord
 import net.minecraft.client.gui.GuiScreen
+import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.network.play.server.S2EPacketCloseWindow
 import net.minecraft.util.MathHelper
@@ -1719,6 +1720,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                             val p1y =
                                 (startY.toFloat() + yO + KevinClient.fontManager.font35!!.fontHeight * 0.65F / 2) / .65
                             val p23x = (endX.toFloat() - 5F) / .65
+                            GlStateManager.disableCull()
                             glEnable(GL_BLEND)
                             glDisable(GL_TEXTURE_2D)
                             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -2302,6 +2304,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                                     glDisable(GL_SCISSOR_TEST)
                                     return
                                 }
+                                GlStateManager.disableCull()
                                 glEnable(GL_BLEND)
                                 glDisable(GL_TEXTURE_2D)
                                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)

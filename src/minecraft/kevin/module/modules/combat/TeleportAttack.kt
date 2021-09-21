@@ -91,8 +91,9 @@ class TeleportAttack : Module("TeleportAttack","Attack the target over a long di
 
     private fun doTeleportAura(){
         val targets=ArrayList<EntityLivingBase>()
+        val entityList = mc.theWorld!!.loadedEntityList.toList()
         try {
-            for(entity in mc.theWorld!!.loadedEntityList){
+            for(entity in entityList){
                 if(entity is EntityLivingBase && EntityUtils.isSelected(entity,true)
                     &&mc.thePlayer!!.getDistanceToEntity(entity)<distV.get()){
                     targets.add(entity)

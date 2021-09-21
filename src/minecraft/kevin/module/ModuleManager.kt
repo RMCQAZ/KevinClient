@@ -60,12 +60,16 @@ class ModuleManager : Listenable {
         miscList = arrayListOf(
             AntiBot(),
             AutoCommand(),
+            AutoDisable,
+            AutoL(),
             ComponentOnHover(),
+            Crosshair,
             NameProtect(),
             NoRotateSet(),
             ResourcePackSpoof(),
             SuperSpammer(),
-            Teams()
+            Teams(),
+            Translator
         )
         movementList = arrayListOf(
             AirJump(),
@@ -86,6 +90,7 @@ class ModuleManager : Listenable {
             Sprint(),
             Step(),
             Strafe(),
+            TargetStrafe,
             WallClimb(),
             WaterSpeed()
         )

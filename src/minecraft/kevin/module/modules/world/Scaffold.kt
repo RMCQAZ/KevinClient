@@ -14,9 +14,11 @@ import net.minecraft.client.settings.GameSettings
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
+import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.client.C09PacketHeldItemChange
 import net.minecraft.network.play.client.C0APacketAnimation
 import net.minecraft.network.play.client.C0BPacketEntityAction
+import net.minecraft.stats.StatList
 import net.minecraft.util.BlockPos
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.MathHelper.wrapAngleTo180_float
@@ -24,10 +26,31 @@ import net.minecraft.util.MovingObjectPosition
 import net.minecraft.util.Vec3
 import org.lwjgl.opengl.GL11
 import java.awt.Color
+import java.util.*
 import kotlin.math.*
 
 class Scaffold : Module("Scaffold", "Automatically places blocks beneath your feet.", category = ModuleCategory.WORLD) {
-    private val modeValue = ListValue("Mode", arrayOf("Normal", "Rewinside", "Expand"), "Normal")
+    //private val modeValue = ListValue("Mode", arrayOf("Normal", "Expand"), "Normal")
+    private val towerModeValue = ListValue(
+        "TowerMode",
+        arrayOf("Jump", "Motion", "ConstantMotion", "MotionTP", "Packet", "Teleport", "AAC3.3.9", "AAC3.6.4"),
+        "Jump"
+    )
+
+    //private val matrixValue = BooleanValue("TowerMatrix", false)
+    private val towerNoMoveValue = BooleanValue("TowerNoMove",false)
+
+    // ConstantMotion
+    private val constantMotionValue = FloatValue("TowerConstantMotion", 0.42f, 0.1f, 1f)
+    private val constantMotionJumpGroundValue = FloatValue("TowerConstantMotionJumpGround", 0.79f, 0.76f, 1f)
+
+    // Teleport
+    private val teleportHeightValue = FloatValue("TowerTeleportHeight", 1.15f, 0.1f, 5f)
+    private val teleportDelayValue = IntegerValue("TowerTeleportDelay", 0, 0, 20)
+    private val teleportGroundValue = BooleanValue("TowerTeleportGround", true)
+    private val teleportNoMotionValue = BooleanValue("TowerTeleportNoMotion", false)
+
+    private val towerFakeJump = BooleanValue("TowerFakeJump",true)
 
     // Delay
     private val maxDelayValue: IntegerValue = object : IntegerValue("MaxDelay", 0, 0, 1000) {
@@ -65,7 +88,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     private val edgeDistanceValue = FloatValue("EagleEdgeDistance", 0f, 0f, 0.5f)
 
     // Expand
-    private val expandLengthValue = IntegerValue("ExpandLength", 1, 1, 6)
+    private val expandLengthValue = IntegerValue("ExpandLength", 0, 0, 6)
 
     // Rotation Options
     private val strafeMode = ListValue("Strafe", arrayOf("Off", "AAC"), "Off")
@@ -114,7 +137,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
             }
         }
     }
-    //Jump Check
+    //跳跃检测
     private val jumpCheckValue = BooleanValue("JumpCheck",false)
 
     // Zitter
@@ -130,6 +153,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
 
     // Safety
     private val sameYValue = BooleanValue("SameY", false)
+    private val sameYJumpUp = BooleanValue("SameYJumpUp", false)
     private val safeWalkValue = BooleanValue("SafeWalk", true)
     private val airSafeValue = BooleanValue("AirSafe", false)
 
@@ -177,6 +201,110 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
         facesBlock = false
     }
 
+    private fun fakeJump() {
+        if(!towerFakeJump.get()) return
+        mc.thePlayer!!.isAirBorne = true
+        mc.thePlayer!!.triggerAchievement(StatList.jumpStat)
+    }
+
+    private var jumpGround = 0.0
+    private val timer = TickTimer()
+
+    /**
+     * Move player
+     */
+    private fun move() {
+        val thePlayer = mc.thePlayer ?: return
+
+        if (towerNoMoveValue.get()){
+            mc.thePlayer.motionX = .0
+            mc.thePlayer.motionZ = .0
+        }
+
+        when (towerModeValue.get().lowercase(Locale.getDefault())) {
+            "motion" -> if (thePlayer.onGround) {
+                fakeJump()
+                thePlayer.motionY = 0.42
+            } else if (thePlayer.motionY < 0.1) {
+                thePlayer.motionY = -0.3
+            }
+            "motiontp" -> if (thePlayer.onGround) {
+                fakeJump()
+                thePlayer.motionY = 0.42
+            } else if (thePlayer.motionY < 0.23) {
+                thePlayer.setPosition(thePlayer.posX, truncate(thePlayer.posY), thePlayer.posZ)
+            }
+            "packet" -> if (thePlayer.onGround && timer.hasTimePassed(2)) {
+                fakeJump()
+                mc.netHandler.addToSendQueue(
+                    C03PacketPlayer.C04PacketPlayerPosition(
+                        thePlayer.posX,
+                        thePlayer.posY + 0.42, thePlayer.posZ, false
+                    )
+                )
+                mc.netHandler.addToSendQueue(
+                    C03PacketPlayer.C04PacketPlayerPosition(
+                        thePlayer.posX,
+                        thePlayer.posY + 0.753, thePlayer.posZ, false
+                    )
+                )
+                thePlayer.setPosition(thePlayer.posX, thePlayer.posY + 1.0, thePlayer.posZ)
+                timer.reset()
+            }
+            "teleport" -> {
+                if (teleportNoMotionValue.get()) {
+                    thePlayer.motionY = 0.0
+                }
+                if ((thePlayer.onGround || !teleportGroundValue.get()) && timer.hasTimePassed(teleportDelayValue.get())) {
+                    fakeJump()
+                    thePlayer.setPositionAndUpdate(
+                        thePlayer.posX,
+                        thePlayer.posY + teleportHeightValue.get(),
+                        thePlayer.posZ
+                    )
+                    timer.reset()
+                }
+            }
+            "constantmotion" -> {
+                if (thePlayer.onGround) {
+                    fakeJump()
+                    jumpGround = thePlayer.posY
+                    thePlayer.motionY = constantMotionValue.get().toDouble()
+                }
+                if (thePlayer.posY > jumpGround + constantMotionJumpGroundValue.get()) {
+                    fakeJump()
+                    thePlayer.setPosition(
+                        thePlayer.posX,
+                        truncate(thePlayer.posY),
+                        thePlayer.posZ
+                    )
+                    thePlayer.motionY = constantMotionValue.get().toDouble()
+                    jumpGround = thePlayer.posY
+                }
+            }
+            "aac3.3.9" -> {
+                if (thePlayer.onGround) {
+                    fakeJump()
+                    thePlayer.motionY = 0.4001
+                }
+                mc.timer.timerSpeed = 1f
+                if (thePlayer.motionY < 0) {
+                    thePlayer.motionY -= 0.00000945
+                    mc.timer.timerSpeed = 1.6f
+                }
+            }
+            "aac3.6.4" -> if (thePlayer.ticksExisted % 4 == 1) {
+                thePlayer.motionY = 0.4195464
+                thePlayer.setPosition(thePlayer.posX - 0.035, thePlayer.posY, thePlayer.posZ)
+            } else if (thePlayer.ticksExisted % 4 == 0) {
+                thePlayer.motionY = -0.5
+                thePlayer.setPosition(thePlayer.posX + 0.035, thePlayer.posY, thePlayer.posZ)
+            }
+        }
+    }
+
+    private fun sameY(): Boolean = sameYValue.get() && (!sameYJumpUp.get()||!mc.gameSettings.keyBindJump.isKeyDown)
+
 // UPDATE EVENTS
 
     /** @param */
@@ -186,9 +314,11 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
 
         //if (event.eventState == UpdateState.OnUpdate) return
 
+        if (!sameY()) launchY = mc.thePlayer!!.posY.toInt()
+
         mc.timer.timerSpeed = timerValue.get()
         shouldGoDown =
-            downValue.get() && !sameYValue.get() && GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) && blocksAmount > 1
+            downValue.get() && !sameY() && GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) && blocksAmount > 1
         if (shouldGoDown) {
             mc.gameSettings.keyBindSneak.pressed = false
         }
@@ -197,12 +327,6 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
             mc.thePlayer!!.motionZ = mc.thePlayer!!.motionZ * slowSpeed.get()
         }
         if (mc.thePlayer!!.onGround) {
-            when (modeValue.get().toLowerCase()) {
-                "rewinside" -> {
-                    MovementUtils.strafe(0.2F)
-                    mc.thePlayer!!.motionY = 0.0
-                }
-            }
             when (zitterMode.get().toLowerCase()) {
                 "off" -> return
                 "smooth" -> {
@@ -361,6 +485,16 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
         )
             place()
 
+        if (eventState == EventState.PRE) {
+            timer.update()
+            val update = if (!autoBlockValue.get().equals("Off", ignoreCase = true)) {
+                InventoryUtils.findAutoBlockBlock() != -1 || mc.thePlayer.heldItem != null && mc.thePlayer.heldItem!!.item is ItemBlock
+            } else {
+                mc.thePlayer.heldItem != null && mc.thePlayer.heldItem!!.item is ItemBlock
+            }
+            if (update&&mc.gameSettings.keyBindJump.isKeyDown) move()
+        }
+
         // Update and search for a new block
         if (eventState == EventState.PRE && strafeMode.get().equals("Off", true))
             update()
@@ -368,6 +502,11 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
         // Reset placeable delay
         if (targetPlace == null && placeDelay.get())
             delayTimer.reset()
+    }
+
+    @EventTarget
+    fun onJump(event: JumpEvent) {
+        if (!(towerModeValue equal "Jump")&&mc.gameSettings.keyBindJump.isKeyDown) event.cancelEvent()
     }
 
     fun update() {
@@ -378,7 +517,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
             ) InventoryUtils.findAutoBlockBlock() == -1 && !isHeldItemBlock else !isHeldItemBlock
         )
             return
-        findBlock(modeValue.get().equals("expand", true))
+        findBlock(expandLengthValue.get()!=0&&!(jumpCheckValue.get()&&mc.gameSettings.keyBindJump.isKeyDown))
     }
 
     private fun setRotation(rotation: Rotation) {
@@ -400,7 +539,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
             )
             else BlockPos(mc.thePlayer!!.posX, mc.thePlayer!!.posY - 0.6, mc.thePlayer!!.posZ).down())
             else
-                (if (sameYValue.get() && launchY <= mc.thePlayer!!.posY) BlockPos(
+                (if (sameY() && launchY <= mc.thePlayer!!.posY) BlockPos(
                     mc.thePlayer!!.posX,
                     launchY - 1.0,
                     mc.thePlayer!!.posZ
@@ -412,7 +551,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
         if (!expand && (!isReplaceable(blockPosition) || search(blockPosition, !shouldGoDown)))
             return
 
-        if (expand && !(jumpCheckValue.get()&&mc.gameSettings.keyBindJump.isKeyDown)) {
+        if (expand) {
             for (i in 0 until expandLengthValue.get()) {
                 if (search(
                         blockPosition.add(
@@ -432,17 +571,11 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
                     return
             }
         } else if (searchValue.get()) {
-            if (!(jumpCheckValue.get() && mc.gameSettings.keyBindJump.isKeyDown)) {
-                for (x in -1..1) {
-                    for (z in -1..1) {
-                        if (search(blockPosition.add(x, 0, z), !shouldGoDown)) {
-                            return
-                        }
+            for (x in -1..1) {
+                for (z in -1..1) {
+                    if (search(blockPosition.add(x, 0, z), !shouldGoDown)) {
+                        return
                     }
-                }
-            }else{
-                if(search(blockPosition.add(0, 0, 0), !shouldGoDown)){
-                    return
                 }
             }
         }
@@ -455,7 +588,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
             return
         }
 
-        if (!delayTimer.hasTimePassed(delay) || sameYValue.get() && launchY - 1 != targetPlace!!.vec3.yCoord.toInt())
+        if (!delayTimer.hasTimePassed(delay) || sameY() && launchY - 1 != targetPlace!!.vec3.yCoord.toInt())
             return
 
         var itemStack: ItemStack? = mc.thePlayer!!.heldItem
@@ -587,14 +720,14 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
         if (!markValue.get()) return
-        for (i in 0 until if (modeValue.get().equals("Expand", true)) expandLengthValue.get() + 1 else 2) {
+        for (i in 0 until if (expandLengthValue.get()!=0) expandLengthValue.get() + 1 else 2) {
             val blockPos = BlockPos(
                 mc.thePlayer!!.posX + when (mc.thePlayer!!.horizontalFacing) {
                     EnumFacing.WEST -> -i.toDouble()
                     EnumFacing.EAST -> i.toDouble()
                     else -> 0.0
                 },
-                if (sameYValue.get() && launchY <= mc.thePlayer!!.posY) launchY - 1.0 else mc.thePlayer!!.posY - (if (mc.thePlayer!!.posY == mc.thePlayer!!.posY + 0.5) 0.0 else 1.0) - if (shouldGoDown) 1.0 else 0.0,
+                if (sameY() && launchY <= mc.thePlayer!!.posY) launchY - 1.0 else mc.thePlayer!!.posY - (if (mc.thePlayer!!.posY == mc.thePlayer!!.posY + 0.5) 0.0 else 1.0) - if (shouldGoDown) 1.0 else 0.0,
                 mc.thePlayer!!.posZ + when (mc.thePlayer!!.horizontalFacing) {
                     EnumFacing.NORTH -> -i.toDouble()
                     EnumFacing.SOUTH -> i.toDouble()
@@ -768,5 +901,5 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
             return amount
         }
     override val tag: String
-        get() = modeValue.get()
+        get() = if (!(towerModeValue equal "Jump")&&mc.gameSettings.keyBindJump.isKeyDown) "Tower" else if (mc.gameSettings.keyBindJump.isKeyDown) "JumpUp" else if (expandLengthValue.get()!=0) "Expand" else "Normal"
 }

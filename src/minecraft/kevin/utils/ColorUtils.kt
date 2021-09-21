@@ -75,6 +75,20 @@ object ColorUtils {
         return character.toInt() != 167 && character.toInt() >= 32 && character.toInt() != 127
     }
 
+    @JvmStatic
+    fun reAlpha(color: Color,alpha: Int): Color{
+        return Color(color.red,color.green,color.blue,alpha)
+    }
+
+    @JvmStatic
+    fun slowlyRainbow(time: Long, count: Int, qd: Float, sq: Float): Color {
+        val color = Color(Color.HSBtoRGB((time.toFloat() + count * -3000000f) / 2 / 1.0E9f, qd, sq))
+        return Color(color.red / 255.0f * 1, color.green / 255.0f * 1, color.blue / 255.0f * 1, color.alpha / 255.0f)
+    }
+
+    @JvmStatic
+    fun rainbowWithAlpha(alpha: Int) = reAlpha(rainbow(),alpha)
+
     private val COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]")
 
     @JvmField

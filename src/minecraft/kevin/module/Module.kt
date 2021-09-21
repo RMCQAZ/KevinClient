@@ -36,6 +36,8 @@ open class Module(name: String, description: String = "", keyBind: Int = Keyboar
         enable = false
     }
 
+    var autoDisable = false to ""
+
     open fun getName(): String {
         return name!!
     }

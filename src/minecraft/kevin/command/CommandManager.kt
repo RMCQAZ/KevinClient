@@ -2,6 +2,7 @@ package kevin.command
 
 import kevin.command.commands.*
 import kevin.main.KevinClient
+import kevin.module.modules.misc.AutoDisable
 import kevin.utils.ChatUtils
 
 class CommandManager {
@@ -33,6 +34,8 @@ class CommandManager {
         commands[arrayOf("config")] = ConfigCommand()
 
         commands[arrayOf("hide")] = HideCommand()
+
+        commands[arrayOf("AutoDisable")] = AutoDisable
     }
 
     fun execCommand(message: String): Boolean{

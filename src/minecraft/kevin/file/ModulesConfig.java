@@ -7,10 +7,12 @@ import com.google.gson.JsonParser;
 import kevin.main.KevinClient;
 import kevin.module.Module;
 import kevin.module.Value;
+import kotlin.Pair;
 
 import java.io.*;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 public class ModulesConfig extends FileConfig {
 
@@ -25,21 +27,20 @@ public class ModulesConfig extends FileConfig {
         if(jsonElement instanceof JsonNull)
             return;
 
-        final Iterator<Map.Entry<String, JsonElement>> entryIterator = jsonElement.getAsJsonObject().entrySet().iterator();
-        while(entryIterator.hasNext()) {
-            final Map.Entry<String, JsonElement> entry = entryIterator.next();
+        for (Map.Entry<String, JsonElement> entry : jsonElement.getAsJsonObject().entrySet()) {
             final Module module = KevinClient.moduleManager.getModule(entry.getKey());
 
-            if(module != null) {
+            if (module != null) {
                 final JsonObject jsonModule = (JsonObject) entry.getValue();
 
                 module.toggle(jsonModule.get("State").getAsBoolean());
                 module.setKeyBind(jsonModule.get("KeyBind").getAsInt());
-                module.setArray(jsonModule.get("Hide").getAsBoolean());
-                for(final Value moduleValue : module.getValues()) {
+                if (jsonModule.get("Hide")!=null) module.setArray(!jsonModule.get("Hide").getAsBoolean());
+                if (jsonModule.get("AutoDisable")!=null) module.setAutoDisable(new Pair<>(!Objects.equals(jsonModule.get("AutoDisable").getAsString(), "Disable"), Objects.equals(jsonModule.get("AutoDisable").getAsString(), "Disable") ? "" : jsonModule.get("AutoDisable").getAsString()));
+                for (final Value moduleValue : module.getValues()) {
                     final JsonElement element = jsonModule.get(moduleValue.getName());
 
-                    if(element != null) moduleValue.fromJson(element);
+                    if (element != null) moduleValue.fromJson(element);
                 }
             }
         }
@@ -53,7 +54,8 @@ public class ModulesConfig extends FileConfig {
             final JsonObject jsonMod = new JsonObject();
             jsonMod.addProperty("State", module.getToggle());
             jsonMod.addProperty("KeyBind", module.getKeyBind());
-            jsonMod.addProperty("Hide", module.getArray());
+            jsonMod.addProperty("Hide", !module.getArray());
+            jsonMod.addProperty("AutoDisable", module.getAutoDisable().getFirst() ? module.getAutoDisable().getSecond() : "Disable");
             module.getValues().forEach(value -> jsonMod.add(value.getName(), value.toJson()));
             jsonObject.add(module.getName(), jsonMod);
         }

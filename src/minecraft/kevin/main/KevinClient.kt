@@ -18,7 +18,7 @@ import org.lwjgl.opengl.Display
 
 object KevinClient {
     var name = "Kevin"
-    var version = "b1.2"
+    var version = "b1.3"
 
     lateinit var moduleManager: ModuleManager
     lateinit var fileManager: FileManager

@@ -110,7 +110,7 @@ class AntiVoid : Module("AntiVoid","Automatically setbacks you after falling a c
                 }
             }
         }
-        if(modeValue.get().toLowerCase() == "minemora-blink" && !KevinClient.moduleManager.getModule("Fly")!!.getToggle()){
+        if(modeValue.get().toLowerCase() == "minemora-blink" && !KevinClient.moduleManager.getModule("Fly")!!.getToggle() && !KevinClient.moduleManager.getModule("HighJump")!!.getToggle()){
             if(!blink){
                 if(canBlink && thePlayer.fallDistance - lastFound > maxDistanceWithoutGround.get()){
                     posX=mc.thePlayer!!.posX

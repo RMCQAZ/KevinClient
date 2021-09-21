@@ -89,6 +89,16 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
             if (chestStealer.chestItems.size > 27) "BigChest" else "Chest"
         }else "Inv"
 
+        if ((mode=="Chest"&&chestStealer.chestItems.size!=27)||(mode=="BigChest"&&chestStealer.chestItems.size!=54)) {
+            RenderHelper.disableStandardItemLighting()
+            GlStateManager.enableAlpha()
+            GlStateManager.disableBlend()
+            GlStateManager.disableLighting()
+            GlStateManager.disableCull()
+            GL11.glPopMatrix()
+            return
+        }
+
         when(mode){
             "Inv" -> {
                 drawItems(9, 17, 6)

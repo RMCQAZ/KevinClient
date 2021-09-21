@@ -18,5 +18,6 @@ class HelpCommand : ICommand {
         ChatUtils.message("§a.config <save/load> <Name> §9Load/Save config.")
         ChatUtils.message("§a.skin <Set/Clear/List/Reload/Mode> <Value> §9Change your skin.")
         ChatUtils.message("§a.hide <ModuleName> §9Hide a module.")
+        ChatUtils.message("§a.AutoDisable <ModuleName> <add/remove> <World/SetBack/All> §9Add/Remove a module to AutoDisable List.")
     }
 }

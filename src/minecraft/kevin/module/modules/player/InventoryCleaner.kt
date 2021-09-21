@@ -38,6 +38,9 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
     private val sortValue = BooleanValue("Sort", true)
     private val itemDelayValue = IntegerValue("ItemDelay", 0, 0, 5000)
 
+    private val maxBlocks = IntegerValue("MaxBlocks",256,64,2304)
+    private val maxBuckets = IntegerValue("MaxBuckets",2,0,36)
+
     private val items = arrayOf("None", "Ignore", "Sword", "Bow", "Pickaxe", "Axe", "Food", "Block", "Water", "Gapple", "Pearl")
     private val sortSlot1Value = ListValue("SortSlot-1", items, "Sword")
     private val sortSlot2Value = ListValue("SortSlot-2", items, "Bow")
@@ -70,8 +73,23 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
             sortHotbar()
 
         while (InventoryUtils.CLICK_TIMER.hasTimePassed(delay)) {
+            //blocks
+            var blocks = 0
+            mc.thePlayer.inventory.mainInventory
+                .filter { it!=null&&it.item is ItemBlock }
+                .forEach { blocks+=it.stackSize }
+            //buckets
+            var buckets = 0
+            mc.thePlayer.inventory.mainInventory
+                .filter { it!=null&&it.item is ItemBucket }
+                .forEach { buckets+=it.stackSize }
+
             val garbageItems = items(9, if (hotbarValue.get()) 45 else 36)
-                .filter { !isUseful(it.value, it.key) }
+                .filter {
+                    !isUseful(it.value, it.key)
+                            ||(it.value.item is ItemBlock&&blocks > maxBlocks.get())
+                            ||(it.value.item is ItemBucket&&buckets > maxBuckets.get())
+                }
                 .keys
                 .toMutableList()
 
