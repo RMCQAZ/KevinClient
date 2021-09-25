@@ -6,7 +6,6 @@ import kevin.module.BooleanValue
 import kevin.module.FloatValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
-import kevin.module.modules.combat.KillAura
 import kevin.utils.MovementUtils
 import kevin.utils.RotationUtils
 import net.minecraft.entity.EntityLivingBase
@@ -44,14 +43,14 @@ object TargetStrafe : Module("TargetStrafe","Strafe around your target.", catego
 
     @EventTarget
     fun strafe(event: MoveEvent) {
-        val target = (KevinClient.moduleManager.getModule("Killaura") as KillAura).target
+        val target = KevinClient.combatManager.target
         if (canStrafe(target))
             setSpeed(event, MovementUtils.speed.toDouble(), RotationUtils.getRotationsEntity(target).yaw, direction.toDouble(), if (mc.thePlayer.getDistanceToEntity(target) <= radius.get()) 0.0 else 1.0)
     }
 
     @EventTarget
     fun onMove(event: MoveEvent) {
-        if (safewalk.get() && mc.thePlayer.onGround && canStrafe((KevinClient.moduleManager.getModule("Killaura") as KillAura).target))
+        if (safewalk.get() && mc.thePlayer.onGround && canStrafe(KevinClient.combatManager.target))
             event.isSafeWalk = true
     }
 
@@ -87,7 +86,7 @@ object TargetStrafe : Module("TargetStrafe","Strafe around your target.", catego
 
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
-        val target = (KevinClient.moduleManager.getModule("Killaura") as KillAura).target
+        val target = KevinClient.combatManager.target
         if (canStrafe(target) && render.get()) {
             target?:return
             GL11.glPushMatrix()

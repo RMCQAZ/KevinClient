@@ -139,6 +139,8 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     }
     //跳跃检测
     private val jumpCheckValue = BooleanValue("JumpCheck",false)
+    //向下检测
+    private val downCheckValue = BooleanValue("DownCheck",true)
 
     // Zitter
     private val zitterMode = ListValue("Zitter", arrayOf("Off", "Teleport", "Smooth"), "Off")
@@ -517,7 +519,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
             ) InventoryUtils.findAutoBlockBlock() == -1 && !isHeldItemBlock else !isHeldItemBlock
         )
             return
-        findBlock(expandLengthValue.get()!=0&&!(jumpCheckValue.get()&&mc.gameSettings.keyBindJump.isKeyDown))
+        findBlock(expandLengthValue.get()!=0&&!(jumpCheckValue.get()&&mc.gameSettings.keyBindJump.isKeyDown)&&!(downCheckValue.get()&&shouldGoDown))
     }
 
     private fun setRotation(rotation: Rotation) {
@@ -901,5 +903,5 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
             return amount
         }
     override val tag: String
-        get() = if (!(towerModeValue equal "Jump")&&mc.gameSettings.keyBindJump.isKeyDown) "Tower" else if (mc.gameSettings.keyBindJump.isKeyDown) "JumpUp" else if (expandLengthValue.get()!=0) "Expand" else "Normal"
+        get() = if (!(towerModeValue equal "Jump")&&mc.gameSettings.keyBindJump.isKeyDown) "Tower" else if (mc.gameSettings.keyBindJump.isKeyDown) "JumpUp" else if (shouldGoDown) "Down" else if (expandLengthValue.get()!=0) "Expand" else "Normal"
 }

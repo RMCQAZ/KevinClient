@@ -4,6 +4,7 @@ import net.minecraft.block.Block
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.multiplayer.WorldClient
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.network.INetHandler
 import net.minecraft.network.Packet
 import net.minecraft.util.AxisAlignedBB
@@ -75,3 +76,5 @@ class UpdateEvent(/**val eventState: UpdateState**/) : Event()
 class WorldEvent(val worldClient: WorldClient?) : Event()
 
 class ClickWindowEvent(val windowId: Int, val slotId: Int, val mouseButtonClicked: Int, val mode: Int) : CancellableEvent()
+
+class EntityKilledEvent(val targetEntity: EntityLivingBase) : Event()

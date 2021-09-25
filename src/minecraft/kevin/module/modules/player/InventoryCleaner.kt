@@ -38,10 +38,11 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
     private val sortValue = BooleanValue("Sort", true)
     private val itemDelayValue = IntegerValue("ItemDelay", 0, 0, 5000)
 
-    private val maxBlocks = IntegerValue("MaxBlocks",256,64,2304)
+    private val maxBlocks = IntegerValue("MaxBlocks",4,1,36)
     private val maxBuckets = IntegerValue("MaxBuckets",2,0,36)
+    private val maxThrowableItems = IntegerValue("MaxThrowableItems",0,0,36)
 
-    private val items = arrayOf("None", "Ignore", "Sword", "Bow", "Pickaxe", "Axe", "Food", "Block", "Water", "Gapple", "Pearl")
+    private val items = arrayOf("None", "Ignore", "Sword", "Bow", "Pickaxe", "Axe", "Food", "Block", "Water", "Gapple", "Pearl", "Throwable")
     private val sortSlot1Value = ListValue("SortSlot-1", items, "Sword")
     private val sortSlot2Value = ListValue("SortSlot-2", items, "Bow")
     private val sortSlot3Value = ListValue("SortSlot-3", items, "Pickaxe")
@@ -73,16 +74,6 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
             sortHotbar()
 
         while (InventoryUtils.CLICK_TIMER.hasTimePassed(delay)) {
-            //blocks
-            var blocks = 0
-            mc.thePlayer.inventory.mainInventory
-                .filter { it!=null&&it.item is ItemBlock }
-                .forEach { blocks+=it.stackSize }
-            //buckets
-            var buckets = 0
-            mc.thePlayer.inventory.mainInventory
-                .filter { it!=null&&it.item is ItemBucket }
-                .forEach { buckets+=it.stackSize }
 
             val garbageItems = items(9, if (hotbarValue.get()) 45 else 36)
                 .filter {
@@ -114,11 +105,39 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
         }
     }
 
+    //blocks
+    private val blocks: Int
+    get() {
+        var blocks = 0
+        mc.thePlayer.inventory.mainInventory
+            .filter { it!=null&&it.item!=null&&it.item is ItemBlock }
+            .forEach { _ -> blocks+=1 }
+        return blocks
+    }
+    //buckets
+    private val buckets: Int
+    get() {
+        var buckets = 0
+        mc.thePlayer.inventory.mainInventory
+            .filter { it!=null&&it.item!=null&&it.item is ItemBucket }
+            .forEach { _ -> buckets+=1 }
+        return buckets
+    }
+    //Throwable items
+    private val throwables: Int
+    get() {
+        var throwables = 0
+        mc.thePlayer.inventory.mainInventory
+            .filter { it!=null&&it.item!=null&&(it.item is ItemSnowball||it.item is ItemEgg) }
+            .forEach { _ -> throwables+=1 }
+        return throwables
+    }
+
     fun isUseful(itemStack: ItemStack, slot: Int): Boolean {
         return try {
             val item = itemStack.item
 
-            if (item is ItemBoat) return true
+            //if (item is ItemBoat) return true
 
             if (item is ItemSword || item is ItemTool) {
                 val thePlayer = mc.thePlayer ?: return true
@@ -168,10 +187,10 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
             } else if (itemStack.unlocalizedName == "item.compass") {
                 items(0, 45).none { (_, stack) -> itemStack != stack && stack.unlocalizedName == "item.compass" }
             } else item is ItemFood || itemStack.unlocalizedName == "item.arrow" ||
-                    item is ItemBlock && item?.block !is BlockBush ||
+                    ((item is ItemBlock && item.block !is BlockBush)&&(blocks<=maxBlocks.get()||!this.getToggle())) ||
                     item is ItemBed || itemStack.unlocalizedName == "item.diamond" || itemStack.unlocalizedName == "item.ingotIron" ||
-                    item is ItemPotion || item is ItemEnderPearl || item is ItemEnchantedBook || item is ItemBucket || itemStack.unlocalizedName == "item.stick" ||
-                    ignoreVehiclesValue.get() && (item is ItemBoat || item is ItemMinecart)
+                    item is ItemPotion || item is ItemEnderPearl || item is ItemEnchantedBook || (item is ItemBucket&&(buckets<=maxBuckets.get()||!this.getToggle())) || itemStack.unlocalizedName == "item.stick" ||
+                    ignoreVehiclesValue.get() && (item is ItemBoat || item is ItemMinecart) || ((item is ItemSnowball||item is ItemEgg)&&(throwables<=maxThrowableItems.get()||!this.getToggle()))
         } catch (ex: Exception) {
             true
         }
@@ -287,6 +306,20 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
 
                         if (item is ItemBlock && !InventoryUtils.BLOCK_BLACKLIST.contains(item.block) &&
                             !type(index).equals("Block", ignoreCase = true)) {
+                            val replaceCurr = ItemUtils.isStackEmpty(slotStack)
+
+                            return if (replaceCurr) index else null
+                        }
+                    }
+                }
+            }
+
+            "throwable" -> {
+                thePlayer.inventory.mainInventory.forEachIndexed { index, stack ->
+                    if (stack != null) {
+                        val item = stack.item
+
+                        if ((item is ItemSnowball||item is ItemEgg) && !type(index).equals("Throwable", ignoreCase = true)) {
                             val replaceCurr = ItemUtils.isStackEmpty(slotStack)
 
                             return if (replaceCurr) index else null

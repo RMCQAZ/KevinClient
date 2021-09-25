@@ -43,16 +43,23 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
     private val rotationsValue = BooleanValue("Rotations", true)
     private val surroundingsValue = BooleanValue("Surroundings", true)
     private val noHitValue = BooleanValue("NoHit", false)
+    private val bypassValue = BooleanValue("Bypass",false)
 
 
     /**
      * VALUES
      */
 
+    override fun onDisable() {
+        pos = null
+        oldPos = null
+    }
+
     private var pos: BlockPos? = null
     private var oldPos: BlockPos? = null
     private var blockHitDelay = 0
     private val switchTimer = MSTimer()
+    private var isRealBlock = false
     var currentDamage = 0F
 
     @EventTarget
@@ -133,7 +140,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
 
         when {
             // Destory block
-            actionValue.get().equals("destroy", true) || surroundings -> {
+            actionValue.get().equals("destroy", true) || surroundings || !isRealBlock -> {
                 // Auto Tool
                 val autoTool = KevinClient.moduleManager.getModule("AutoTool") as AutoTool
                 if (autoTool.getToggle())
@@ -246,6 +253,15 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
                     nearestBlockDistance = distance
                     nearestBlock = blockPos
                 }
+            }
+        }
+
+        isRealBlock=true
+        if(bypassValue.get()){
+            val upBlock = nearestBlock?.up() ?: return nearestBlock
+            if(getBlock(upBlock)!=Blocks.air){
+                isRealBlock=false
+                return upBlock
             }
         }
 

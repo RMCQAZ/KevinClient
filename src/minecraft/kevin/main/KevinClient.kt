@@ -13,12 +13,13 @@ import kevin.module.ModuleManager
 import kevin.module.modules.render.ClickGui.ClickGUI
 import kevin.module.modules.render.ClickGui.NewClickGui
 import kevin.skin.SkinManager
+import kevin.utils.CombatManager
 import kevin.utils.FontManager
 import org.lwjgl.opengl.Display
 
 object KevinClient {
     var name = "Kevin"
-    var version = "b1.3"
+    var version = "b1.31"
 
     lateinit var moduleManager: ModuleManager
     lateinit var fileManager: FileManager
@@ -29,6 +30,7 @@ object KevinClient {
     lateinit var newClickGui: NewClickGui
     lateinit var hud: HUD
     lateinit var capeManager: CapeManager
+    lateinit var combatManager: CombatManager
 
     var cStart = "§l§7[§l§9Kevin§l§7]"
 
@@ -53,6 +55,7 @@ object KevinClient {
         SkinManager.load()
         ImageManager.load()
         ConfigManager.load()
+        combatManager = CombatManager()
     }
 
     fun stop() {
