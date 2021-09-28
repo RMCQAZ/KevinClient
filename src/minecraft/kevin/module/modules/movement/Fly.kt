@@ -144,7 +144,7 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
     }
 
     override fun onDisable() {
-        mc.thePlayer.capabilities.isFlying = isFlying
+        mc.thePlayer.capabilities.isFlying = isFlying&&(mc.playerController.isSpectator||mc.playerController.isInCreativeMode)
         when(mode.get()){
             "Creative" -> mc.thePlayer.capabilities.allowFlying = mc.playerController.isInCreativeMode || mc.playerController.isSpectatorMode
             "Vanilla" -> {
