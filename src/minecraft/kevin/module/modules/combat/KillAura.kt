@@ -3,6 +3,7 @@ package kevin.module.modules.combat
 import kevin.event.*
 import kevin.main.KevinClient
 import kevin.module.*
+import kevin.module.modules.exploit.TP
 import kevin.module.modules.misc.Teams
 import kevin.utils.*
 import net.minecraft.client.gui.inventory.GuiContainer
@@ -676,7 +677,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
      */
     private val cancelRun: Boolean
         inline get() = mc.thePlayer!!.isSpectator || !isAlive(mc.thePlayer!!)
-                || KevinClient.moduleManager.getModule("Blink")!!.getToggle() || KevinClient.moduleManager.getModule("FreeCam")!!.getToggle()
+                || KevinClient.moduleManager.getModule("Blink")!!.getToggle() || KevinClient.moduleManager.getModule("FreeCam")!!.getToggle() || (KevinClient.moduleManager.getModule("TP")!!.getToggle()&&(KevinClient.moduleManager.getModule("TP") as TP).mode.get().equals("AAC",true))
 
     /**
      * Check if [entity] is alive

@@ -1,5 +1,8 @@
 package kevin.module.modules.render
 
+import jdk.nashorn.api.scripting.JSObject
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory
+import jdk.nashorn.api.scripting.ScriptUtils
 import kevin.event.EventTarget
 import kevin.event.UpdateEvent
 import kevin.main.KevinClient
@@ -8,11 +11,13 @@ import kevin.module.ListValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
 import kevin.module.modules.combat.KillAura
+import kevin.utils.MinecraftInstance
 import kevin.utils.RotationUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.AbstractClientPlayer
 import net.minecraft.client.model.ModelBase
 import net.minecraft.client.model.ModelRenderer
+import net.minecraft.client.model.TextureOffset
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms
 import net.minecraft.client.renderer.entity.RenderManager
@@ -26,12 +31,247 @@ import net.minecraft.item.ItemSword
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import java.awt.image.BufferedImage
+import java.io.File
+import java.util.*
+import java.util.function.Function
 import javax.imageio.ImageIO
+import javax.script.Invocable
+import javax.script.ScriptEngine
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.math.cos
 
 object Renderer : Module("Renderer","Allows you to modify some renderings.",category = ModuleCategory.RENDER) {
     val noArmor = BooleanValue("NoArmor",false)
-    private val playerModel = ListValue("PlayerModel", arrayOf("Fox","Snow_Fox","Player"),"Player")
+    val noRightArm = BooleanValue("NoRightArm",false)
+    private var playerModel = ListValue("PlayerModel", arrayOf("Fox","Snow_Fox","Player"),"Player")
+    private val renderers = HashMap<String,RendererLivingEntity<AbstractClientPlayer>>()
+    private val models = HashMap<String,ModelBase>()
+    private val layers = HashMap<String,ArrayList<LayerRenderer<AbstractClientPlayer>>>()
+    lateinit var renderManager: RenderManager
+
+    fun load(){
+        val files = KevinClient.fileManager.playerModels.listFiles()
+        if (files.isNullOrEmpty()) return
+        val pngs = files.filter { it.isFile&&it.name.endsWith(".png",true) }
+        val jss = files.filter { it.isFile&&it.name.endsWith(".js",true) }
+        if (pngs.isEmpty()||jss.isEmpty()) return
+        val list = arrayListOf("Fox","Snow_Fox","Player")
+        pngs.forEach {
+            val name = it.name.replace(".png","",true)
+            val jsFile = jss.find { file -> file.name.replace(".js","",true) == name }
+            if (jsFile != null && (name!="Fox"&&name!="Snow_Fox"&&name!="Player")) {
+                try {
+                    val js = JSFile(jsFile)
+                    texturesList[name] = Texture(name,ImageIO.read(it))
+                    models[name] = ModelFromFile(js)
+                    renderers[name] = RenderFromFile(js,name, renderManager)
+                    list.add(name)
+                } catch (e: Throwable) {
+                    Minecraft.logger.error("[Renderer] Failed to load model $name",e)
+                }
+            }
+        }
+        playerModel = ListValue("PlayerModel", list.toTypedArray(),"Player")
+    }
+
+    class JSFile(val jsFile: File) : MinecraftInstance(){
+        private val scriptEngine = NashornScriptEngineFactory().scriptEngine
+        private val jsText = jsFile.readText()
+        val inv:Invocable
+        var setLivingAnimations = false
+        var getRandomModelBox = false
+        var setRotationAngles = false
+        var setTextureOffset = false
+        var setModelAttributes = false
+        var getTextureOffset = false
+        var render = false
+        init {
+            scriptEngine.put("mc",mc)
+            scriptEngine.put("kevinClient",KevinClient)
+            scriptEngine.put("Main",RegisterRender())
+            scriptEngine.put("addLayer",AddLayer())
+            scriptEngine.eval(jsText)
+            inv = scriptEngine as Invocable
+        }
+        inner class AddLayer : Function<JSObject, Unit> {
+            override fun apply(scriptObject: JSObject) {
+                val name = jsFile.name.replace(".js","",true)
+                val layerRenderer = LayerFromFile(name,
+                    LayerJSFile(File(KevinClient.fileManager.playerModels,"${scriptObject.getMember("name")}.js"))
+                )
+                if (layers[name] == null) {
+                    layers[name] = arrayListOf(layerRenderer)
+                } else layers[name]!!.add(layerRenderer)
+            }
+        }
+        inner class RegisterRender : Function<JSObject, Unit> {
+            override fun apply(scriptObject: JSObject) {
+                setLivingAnimations = try { scriptObject.getMember("setLivingAnimations") as Boolean } catch (e:Throwable) {false}
+                getRandomModelBox = try { scriptObject.getMember("getRandomModelBox") as Boolean } catch (e:Throwable) {false}
+                setRotationAngles = try { scriptObject.getMember("setRotationAngles") as Boolean } catch (e:Throwable) {false}
+                setTextureOffset = try { scriptObject.getMember("setTextureOffset") as Boolean } catch (e:Throwable) {false}
+                setModelAttributes = try { scriptObject.getMember("setModelAttributes") as Boolean } catch (e:Throwable) {false}
+                getTextureOffset = try { scriptObject.getMember("getTextureOffset") as Boolean } catch (e:Throwable) {false}
+                render = try { scriptObject.getMember("render") as Boolean } catch (e:Throwable) {false}
+            }
+        }
+    }
+
+    class LayerJSFile(jsFile: File):MinecraftInstance(){
+        private val scriptEngine = NashornScriptEngineFactory().scriptEngine
+        private val jsText = jsFile.readText()
+        val inv:Invocable
+        var shouldCombineTextures = false
+        init {
+            scriptEngine.put("mc",mc)
+            scriptEngine.put("kevinClient",KevinClient)
+            scriptEngine.eval(jsText)
+            inv = scriptEngine as Invocable
+            shouldCombineTextures = try {
+                scriptEngine.get("shouldCombineTextures") as Boolean
+            } catch (e:Throwable){
+                false
+            }
+        }
+    }
+
+    class LayerFromFile(val name: String,private val jsFile: LayerJSFile) : LayerRenderer<AbstractClientPlayer>{
+        override fun doRenderLayer(
+            entitylivingbaseIn: AbstractClientPlayer?,
+            p_177141_2_: Float,
+            p_177141_3_: Float,
+            partialTicks: Float,
+            p_177141_5_: Float,
+            p_177141_6_: Float,
+            p_177141_7_: Float,
+            scale: Float
+        ) {
+            try {
+                jsFile.inv.invokeFunction("doRenderLayer",entitylivingbaseIn,p_177141_2_,p_177141_3_,partialTicks,p_177141_5_,p_177141_6_,p_177141_7_,scale)
+            } catch (e: Throwable) {
+                Minecraft.logger.error("[Render] Error in Layer $name",e)
+            }
+        }
+
+        override fun shouldCombineTextures() = jsFile.shouldCombineTextures
+    }
+
+    class ModelFromFile(private val jsFile: JSFile) : ModelBase() {
+        private fun error(message:String,e:Throwable) {
+            Minecraft.logger.error("[Renderer] Error in '$message' !", e)
+        }
+
+        override fun setTextureOffset(partName: String?, x: Int, y: Int) {
+            val s = if (jsFile.setTextureOffset) {
+                try {
+                    jsFile.inv.invokeFunction("setTextureOffset",partName,x,y) as Boolean
+                }catch (e:Throwable){
+                    error("SetTextureOffset",e)
+                    true
+                }
+            } else true
+            if (s) super.setTextureOffset(partName, x, y)
+        }
+
+        override fun setModelAttributes(model: ModelBase?) {
+            val s = if (jsFile.setModelAttributes) {
+                try {
+                    jsFile.inv.invokeFunction("setModelAttributes",model) as Boolean
+                }catch (e:Throwable){
+                    error("SetModelAttributes",e)
+                    true
+                }
+            } else true
+            if (s) super.setModelAttributes(model)
+        }
+
+        override fun getTextureOffset(partName: String?): TextureOffset {
+            if (jsFile.getTextureOffset){
+                try {
+                    return jsFile.inv.invokeFunction("getTextureOffset",partName) as TextureOffset
+                } catch (e:Throwable){
+                    error("GetTextureOffset",e)
+                }
+            }
+            return super.getTextureOffset(partName)
+        }
+
+        override fun render(
+            entityIn: Entity?,
+            p_78088_2_: Float,
+            p_78088_3_: Float,
+            p_78088_4_: Float,
+            p_78088_5_: Float,
+            p_78088_6_: Float,
+            scale: Float
+        ) {
+            if (jsFile.render) {
+                try {
+                    jsFile.inv.invokeFunction("render",entityIn,p_78088_2_,p_78088_3_,p_78088_4_,p_78088_5_,p_78088_6_,scale)
+                }catch (e: Throwable){
+                    error("Render",e)
+                }
+            }
+        }
+
+        override fun setRotationAngles(
+            limbSwing: Float,
+            limbSwingAmount: Float,
+            ageInTicks: Float,
+            netHeadYaw: Float,
+            headPitch: Float,
+            scaleFactor: Float,
+            entityIn: Entity?
+        ) {
+            if (jsFile.setRotationAngles) {
+                try {
+                    jsFile.inv.invokeFunction("setRotationAngles",limbSwing,limbSwingAmount,ageInTicks,netHeadYaw,headPitch,scaleFactor,entityIn)
+                }catch (e: Throwable){
+                    error("SetRotationAngles",e)
+                }
+            }
+        }
+
+        override fun setLivingAnimations(
+            entitylivingbaseIn: EntityLivingBase?,
+            p_78086_2_: Float,
+            p_78086_3_: Float,
+            partialTickTime: Float
+        ) {
+            if (jsFile.setLivingAnimations){
+                try {
+                    jsFile.inv.invokeFunction("setLivingAnimations",entitylivingbaseIn,p_78086_2_,p_78086_3_,partialTickTime)
+                } catch (e:Throwable){
+                    error("SetLivingAnimations",e)
+                }
+            }
+        }
+
+        override fun getRandomModelBox(rand: Random?): ModelRenderer {
+            if (jsFile.getRandomModelBox) {
+                try {
+                    return jsFile.inv.invokeFunction("getRandomModelBox",rand) as ModelRenderer
+                } catch (e:Throwable){
+                    error("GetRandomModelBox",e)
+                }
+            }
+            return super.getRandomModelBox(rand)
+        }
+    }
+
+    class RenderFromFile(val jsFile: JSFile,val name: String,renderManager: RenderManager) : RendererLivingEntity<AbstractClientPlayer>(
+        renderManager,
+        models[name]!!,
+        1F
+    ) {
+        init {
+            layers[name]!!.forEach { this.addLayer(it) }
+        }
+        override fun getEntityTexture(entity: AbstractClientPlayer): ResourceLocation {
+            return texturesList[name]!!.resource
+        }
+    }
 
     @EventTarget(true)
     fun onUpdate(event: UpdateEvent){
@@ -46,13 +286,17 @@ object Renderer : Module("Renderer","Allows you to modify some renderings.",cate
             "Fox" -> {
                 resourceLocation = if (mc.thePlayer.isPlayerSleeping) texturesList["Fox_Sleep"]!!.resource else texturesList["Fox"]!!.resource
                 fox = true
+                renderer = null
             }
             "Snow_Fox" -> {
                 resourceLocation = if (mc.thePlayer.isPlayerSleeping) texturesList["Snow_Fox_Sleep"]!!.resource else texturesList["Snow_Fox"]!!.resource
                 fox = true
+                renderer = null
             }
             else -> {
                 fox = false
+                val modelMode = playerModel.get()
+                renderer = if (modelMode != "Player") renderers[modelMode] else null
             }
         }
     }
@@ -63,6 +307,7 @@ object Renderer : Module("Renderer","Allows you to modify some renderings.",cate
 
     private var resourceLocation: ResourceLocation? = null
     var fox = false
+    var renderer: RendererLivingEntity<AbstractClientPlayer>? = null
     private val texturesList = HashMap<String,Texture>()
     override val tag: String
         get() = playerModel.get()

@@ -12,6 +12,7 @@ import kevin.hud.HUD.Companion.createDefault
 import kevin.module.ModuleManager
 import kevin.module.modules.render.ClickGui.ClickGUI
 import kevin.module.modules.render.ClickGui.NewClickGui
+import kevin.module.modules.render.Renderer
 import kevin.skin.SkinManager
 import kevin.utils.CombatManager
 import kevin.utils.FontManager
@@ -19,7 +20,7 @@ import org.lwjgl.opengl.Display
 
 object KevinClient {
     var name = "Kevin"
-    var version = "b1.31"
+    var version = "b1.35"
 
     lateinit var moduleManager: ModuleManager
     lateinit var fileManager: FileManager
@@ -42,11 +43,12 @@ object KevinClient {
         fontManager = FontManager()
         fontManager.loadFonts()
         Display.setTitle("$name $version | Minecraft 1.8.9")
+        fileManager.load()
+        Renderer.load()
         moduleManager.load()
         fileManager.loadConfig(fileManager.modulesConfig)
         hud = createDefault()
         fileManager.loadConfig(fileManager.hudConfig)
-        fileManager.load()
         commandManager.load()
         clickGUI = ClickGUI()
         newClickGui = NewClickGui()

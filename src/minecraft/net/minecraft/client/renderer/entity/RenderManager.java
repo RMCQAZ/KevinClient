@@ -210,6 +210,7 @@ public class RenderManager
         this.skinMap.put("slim", new RenderPlayer(this, true));
         PlayerItemsLayer.register(this.skinMap);
         this.renderFox = new Renderer.RenderFox(this);
+        Renderer.INSTANCE.setRenderManager(this);
 
         if (Reflector.RenderingRegistry_loadEntityRenderers.exists())
         {
@@ -248,12 +249,19 @@ public class RenderManager
         return (Render<T>) render;
     }
 
+    public RenderPlayer getPlayerRender(AbstractClientPlayer entityIn){
+        String s = entityIn.getSkinType();
+        RenderPlayer renderplayer = this.skinMap.get(s);
+        return renderplayer != null ? renderplayer : this.playerRenderer;
+    }
+
     public <T extends Entity> Render<T> getEntityRenderObject(Entity entityIn)
     {
         if (entityIn instanceof AbstractClientPlayer)
         {
-            if (Renderer.INSTANCE.getFox()&&entityIn== Minecraft.getMinecraft().thePlayer){
-                return (Render<T>)renderFox;
+            if (entityIn==Minecraft.getMinecraft().thePlayer){
+                if (Renderer.INSTANCE.getRenderer()!=null) return (Render<T>)Renderer.INSTANCE.getRenderer();
+                if (Renderer.INSTANCE.getFox()) return (Render<T>) renderFox;
             }
             String s = ((AbstractClientPlayer)entityIn).getSkinType();
             RenderPlayer renderplayer = this.skinMap.get(s);

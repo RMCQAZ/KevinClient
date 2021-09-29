@@ -181,7 +181,7 @@ public class ItemRenderer
     {
         this.mc.getTextureManager().bindTexture(clientPlayer.getLocationSkin());
         Render<AbstractClientPlayer> render = this.renderManager.getEntityRenderObject(this.mc.thePlayer);
-        if (Renderer.INSTANCE.getFox()&&Renderer.INSTANCE.getToggle()) return;
+        if ((Renderer.INSTANCE.getFox()||Renderer.INSTANCE.getRenderer()!=null)&&Renderer.INSTANCE.getToggle()) return;
         RenderPlayer renderplayer = (RenderPlayer)render;
 
         if (!clientPlayer.isInvisible())
@@ -262,13 +262,11 @@ public class ItemRenderer
         GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.scale(1.0F, 1.0F, 1.0F);
         GlStateManager.translate(5.6F, 0.0F, 0.0F);
-        Render<AbstractClientPlayer> render = this.renderManager.getEntityRenderObject(this.mc.thePlayer);
-        if (!Renderer.INSTANCE.getFox()){
-            GlStateManager.disableCull();
-            RenderPlayer renderplayer = (RenderPlayer)render;
-            renderplayer.renderRightArm(this.mc.thePlayer);
-            GlStateManager.enableCull();
-        }
+        if (Renderer.INSTANCE.getNoRightArm().get()) return;
+        RenderPlayer render = this.renderManager.getPlayerRender(this.mc.thePlayer);
+        GlStateManager.disableCull();
+        render.renderRightArm(this.mc.thePlayer);
+        GlStateManager.enableCull();
     }
 
     /**
