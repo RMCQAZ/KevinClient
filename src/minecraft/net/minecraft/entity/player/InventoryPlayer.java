@@ -1,6 +1,9 @@
 package net.minecraft.entity.player;
 
 import java.util.concurrent.Callable;
+
+import kevin.main.KevinClient;
+import kevin.module.modules.player.AutoTool;
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -690,6 +693,10 @@ public class InventoryPlayer implements IInventory
         else
         {
             ItemStack itemstack = this.getStackInSlot(this.currentItem);
+            AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+            if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=this.currentItem){
+                itemstack = this.getStackInSlot(autoTool.getNowSlot());
+            }
             return itemstack != null ? itemstack.canHarvestBlock(blockIn) : false;
         }
     }

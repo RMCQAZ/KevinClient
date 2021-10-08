@@ -9,11 +9,13 @@ import java.util.UUID;
 
 import kevin.main.KevinClient;
 import kevin.module.Module;
+import kevin.module.modules.player.AutoTool;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.server.CommandBlockLogic;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -907,10 +909,19 @@ public abstract class EntityPlayer extends EntityLivingBase
     {
         float f = this.inventory.getStrVsBlock(p_180471_1_);
 
+        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem){
+            f = this.inventory.getStackInSlot(autoTool.getNowSlot()).getStrVsBlock(p_180471_1_);
+        }
+
         if (f > 1.0F)
         {
             int i = EnchantmentHelper.getEfficiencyModifier(this);
             ItemStack itemstack = this.inventory.getCurrentItem();
+
+            if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem){
+                itemstack = this.inventory.getStackInSlot(autoTool.getNowSlot());
+            }
 
             if (i > 0 && itemstack != null)
             {

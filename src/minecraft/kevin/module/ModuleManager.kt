@@ -31,6 +31,7 @@ class ModuleManager : Listenable {
             AutoArmor(),
             AutoClicker(),
             AutoWeapon(),
+            BowAura(),
             Criticals(),
             HitBox(),
             KillAura(),
@@ -184,5 +185,15 @@ class ModuleManager : Listenable {
 
     override fun handleEvents(): Boolean {
         return true
+    }
+
+    fun registerModule(module: Module) {
+        modules += module
+        KevinClient.eventManager.registerListener(module)
+    }
+
+    fun unregisterModule(module: Module) {
+        modules.remove(module)
+        KevinClient.eventManager.unregisterListener(module)
     }
 }

@@ -3,6 +3,7 @@ package net.minecraft.client.multiplayer;
 import kevin.event.AttackEvent;
 import kevin.event.ClickWindowEvent;
 import kevin.main.KevinClient;
+import kevin.module.modules.player.AutoTool;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -156,8 +157,13 @@ public class PlayerControllerMP
                 }
             }
         }
+        ItemStack heldItem = this.mc.thePlayer.getHeldItem();
+        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=mc.thePlayer.inventory.currentItem){
+            heldItem = mc.thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
+        }
 
-        if (this.currentGameType.isCreative() && this.mc.thePlayer.getHeldItem() != null && this.mc.thePlayer.getHeldItem().getItem() instanceof ItemSword)
+        if (this.currentGameType.isCreative() && /*this.mc.thePlayer.getHeldItem()*/heldItem != null && /*this.mc.thePlayer.getHeldItem()*/heldItem.getItem() instanceof ItemSword)
         {
             return false;
         }
@@ -186,6 +192,9 @@ public class PlayerControllerMP
                 if (!this.currentGameType.isCreative())
                 {
                     ItemStack itemstack1 = this.mc.thePlayer.getCurrentEquippedItem();
+                    if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=mc.thePlayer.inventory.currentItem) {
+                        itemstack1 = mc.thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
+                    }
 
                     if (itemstack1 != null)
                     {

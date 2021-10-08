@@ -1,5 +1,7 @@
 package net.minecraft.server.management;
 
+import kevin.main.KevinClient;
+import kevin.module.modules.player.AutoTool;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.material.Material;
@@ -268,7 +270,13 @@ public class ItemInWorldManager
      */
     public boolean tryHarvestBlock(BlockPos pos)
     {
-        if (this.gameType.isCreative() && this.thisPlayerMP.getHeldItem() != null && this.thisPlayerMP.getHeldItem().getItem() instanceof ItemSword)
+        ItemStack heldItem = this.thisPlayerMP.getHeldItem();
+        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=this.thisPlayerMP.inventory.currentItem){
+            heldItem = this.thisPlayerMP.inventory.getStackInSlot(autoTool.getNowSlot());
+        }
+
+        if (this.gameType.isCreative() && /*this.thisPlayerMP.getHeldItem()*/heldItem != null && /*this.thisPlayerMP.getHeldItem()*/heldItem.getItem() instanceof ItemSword)
         {
             return false;
         }
