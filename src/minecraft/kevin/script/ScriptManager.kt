@@ -26,7 +26,7 @@ object ScriptManager : ICommand {
         val files = dir.listFiles() ?: return
         Minecraft.logger.info("[ScriptManager] Loading scripts...")
         val time = System.currentTimeMillis()
-        KevinClient.fileManager.saveConfig(KevinClient.fileManager.modulesConfig)
+        //KevinClient.fileManager.saveConfig(KevinClient.fileManager.modulesConfig)
         scripts.forEach { script ->
             script.registeredModules.forEach {
                 if (it in KevinClient.moduleManager.getModules()) KevinClient.moduleManager.unregisterModule(it)
