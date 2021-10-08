@@ -47,6 +47,7 @@ object KevinClient {
         fileManager.load()
         Renderer.load()
         moduleManager.load()
+        ScriptManager.load()
         fileManager.loadConfig(fileManager.modulesConfig)
         hud = createDefault()
         fileManager.loadConfig(fileManager.hudConfig)
@@ -59,7 +60,6 @@ object KevinClient {
         ImageManager.load()
         ConfigManager.load()
         combatManager = CombatManager()
-        ScriptManager.load()
     }
 
     fun stop() {
