@@ -2,6 +2,7 @@ package kevin.command
 
 import kevin.command.commands.*
 import kevin.main.KevinClient
+import kevin.module.modules.misc.AdminDetector
 import kevin.module.modules.misc.AutoDisable
 import kevin.script.ScriptManager
 import kevin.utils.ChatUtils
@@ -36,9 +37,11 @@ class CommandManager {
 
         commands[arrayOf("hide")] = HideCommand()
 
-        commands[arrayOf("AutoDisable")] = AutoDisable
+        commands[arrayOf("AutoDisableSet")] = AutoDisable
 
         commands[arrayOf("ReloadScripts","ReloadScript")] = ScriptManager
+
+        commands[arrayOf("Admin")] = AdminDetector
     }
 
     fun execCommand(message: String): Boolean{

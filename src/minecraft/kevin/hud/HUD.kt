@@ -70,6 +70,7 @@ open class HUD : MinecraftInstance()  {
                     println("Something went wrong while drawing ${it.name} element in HUD. $ex")
                 }
 
+                GL11.glEnable(GL11.GL_BLEND)
                 GL11.glColor4f(1F,1F,1F,1F)
                 GL11.glPopMatrix()
             }

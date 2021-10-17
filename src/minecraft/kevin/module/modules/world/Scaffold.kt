@@ -714,6 +714,9 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
                 info, scaledResolution.scaledWidth / 2.toFloat(),
                 scaledResolution.scaledHeight / 2 + 7.toFloat(), Color.WHITE.rgb
             )
+
+            GlStateManager.enableBlend()
+
             GL11.glPopMatrix()
         }
     }

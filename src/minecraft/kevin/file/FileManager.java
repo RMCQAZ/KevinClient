@@ -25,6 +25,7 @@ public class FileManager extends MinecraftInstance {
     public final FileConfig modulesConfig = new ModulesConfig(new File(dir, "modules.json"));
     public final FileConfig hudConfig = new HudConfig(new File(dir, "hud.json"));
     public final File altsFile = new File(dir,"accounts.json");
+    public final File adminNamesFile = new File(dir,"AdminNames.txt");
 
     public void load(){
         if (!dir.exists()) dir.mkdir();

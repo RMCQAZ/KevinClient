@@ -60,6 +60,7 @@ class ModuleManager : Listenable {
             VehicleOneHit()
         )
         miscList = arrayListOf(
+            AdminDetector,
             AntiBot(),
             AutoCommand(),
             AutoDisable,

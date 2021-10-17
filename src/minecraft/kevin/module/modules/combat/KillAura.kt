@@ -65,7 +65,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
     private val keepSprintValue = BooleanValue("KeepSprint", true)
 
     // AutoBlock
-    private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Packet", "AfterTick"), "Packet")
+    private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Packet", "AfterTick", "Keep"), "Packet")
     private val interactAutoBlockValue = BooleanValue("InteractAutoBlock", true)
     private val blockRate = IntegerValue("BlockRate", 100, 1, 100)
 
@@ -156,6 +156,10 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
 
         updateTarget()
     }
+
+    //Keep AutoBlock
+    private val keepAutoBlock: Boolean
+    get() = autoBlockValue equal "Keep"
 
     /**
      * Disable kill aura module
@@ -515,7 +519,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         // Stop blocking
         val thePlayer = mc.thePlayer!!
 
-        if (thePlayer.isBlocking || blockingStatus)
+        if ((thePlayer.isBlocking || blockingStatus)&&!keepAutoBlock)
             stopBlocking()
 
         // Call attack event
@@ -554,7 +558,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         }
 
         // Start blocking after attack
-        if (autoBlockValue.get().equals("Packet", true) && (thePlayer.isBlocking || canBlock))
+        if ((autoBlockValue.get().equals("Packet", true)||keepAutoBlock) && (thePlayer.isBlocking || canBlock))
             startBlocking(entity, interactAutoBlockValue.get())
     }
 
