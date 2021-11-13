@@ -9,7 +9,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class Speed : Module("Speed","Allows you to move faster.", category = ModuleCategory.MOVEMENT) {
-    private val mode = ListValue("Mode", arrayOf("AAC5Long","AAC5Fast","YPort","AutoJump"),"AAC5Long")
+    private val mode = ListValue("Mode", arrayOf("AAC5Long","AAC5Fast","YPort","AutoJump","VerusYPort"),"AAC5Long")
     private val keepSprint = BooleanValue("KeepSprint",false)
     private val antiKnockback = BooleanValue("AntiKnockBack",false)
     private val antiKnockbackLong = FloatValue("AntiKnockBackLong",0F,0.00F,1.00F)
@@ -24,6 +24,22 @@ class Speed : Module("Speed","Allows you to move faster.", category = ModuleCate
         mc.timer.timerSpeed = 1F
         mc.thePlayer.speedInAir = 0.02F
         jumps = 0
+    }
+
+    @EventTarget
+    fun onMove(event: MoveEvent){
+        if (mode equal "VerusYPort"&&!mc.thePlayer.isInWeb && !mc.thePlayer.isInLava && !mc.thePlayer.isInWater && !mc.thePlayer.isOnLadder && mc.thePlayer.ridingEntity == null) {
+            if (MovementUtils.isMoving) {
+                mc.gameSettings.keyBindJump.pressed = false
+                if (mc.thePlayer.onGround) {
+                    mc.thePlayer.jump()
+                    mc.thePlayer.motionY = 0.0
+                    MovementUtils.strafe(0.61F)
+                    event.y = 0.41999998688698
+                }
+                MovementUtils.strafe()
+            }
+        }
     }
 
     @EventTarget

@@ -9,6 +9,8 @@ import kevin.utils.BlockUtils.collideBlock
 import kevin.utils.TickTimer
 import net.minecraft.block.BlockLiquid
 import net.minecraft.client.Minecraft
+import net.minecraft.client.settings.GameSettings
+import net.minecraft.init.Blocks
 import net.minecraft.network.Packet
 import net.minecraft.network.play.INetHandlerPlayServer
 import net.minecraft.network.play.client.C03PacketPlayer
@@ -16,10 +18,31 @@ import net.minecraft.util.*
 
 class NoFall : Module("NoFall","Prevents you from taking fall damage.", category = ModuleCategory.PLAYER) {
     @JvmField
-    val modeValue = ListValue("Mode", arrayOf("SpoofGround", "NoGround", "Packet", "AAC", "LAAC", "AAC3.3.11", "AAC3.3.15", "Spartan", "CubeCraft", "Hypixel", "C03->C04"), "SpoofGround")
+    val modeValue = ListValue("Mode", arrayOf("SpoofGround", "NoGround", "Packet", "AAC", "LAAC", "AAC3.3.11", "AAC3.3.15", "Spartan", "CubeCraft", "Hypixel", "C03->C04", "Verus"), "SpoofGround")
     private val spartanTimer = TickTimer()
     private var currentState = 0
     private var jumped = false
+
+    @EventTarget fun onBB(event: BlockBBEvent){
+        if (modeValue equal "Verus") {
+            if (mc.thePlayer.fallDistance>2.6&&
+                !KevinClient.moduleManager.getModule("FreeCam")!!.getToggle()&&
+                !KevinClient.moduleManager.getModule("Fly")!!.getToggle()&&
+                !(collideBlock(mc.thePlayer!!.entityBoundingBox, fun(block: Any?) = block is BlockLiquid) || collideBlock(AxisAlignedBB(mc.thePlayer!!.entityBoundingBox.maxX, mc.thePlayer!!.entityBoundingBox.maxY, mc.thePlayer!!.entityBoundingBox.maxZ, mc.thePlayer!!.entityBoundingBox.minX, mc.thePlayer!!.entityBoundingBox.minY - 0.01, mc.thePlayer!!.entityBoundingBox.minZ), fun(block: Any?) = block is BlockLiquid))){
+                if (event.block== Blocks.air&&
+                    event.y < mc.thePlayer!!.posY&&
+                    mc.thePlayer.getDistance(event.x.toDouble(),event.y.toDouble(),event.z.toDouble()) < 1.5) event.boundingBox =
+                    AxisAlignedBB(
+                        event.x.toDouble(),
+                        event.y.toDouble(),
+                        event.z.toDouble(),
+                        event.x + 1.0,
+                        (mc.thePlayer.posY/0.125).toInt()*0.125,
+                        event.z + 1.0
+                    )
+            }
+        }
+    }
 
     @EventTarget(ignoreCondition = true)
     fun onUpdate(event: UpdateEvent?) {
