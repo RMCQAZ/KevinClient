@@ -16,7 +16,7 @@ class AutoRespawn : Module("AutoRespawn", "Automatically respawns you after dyin
     fun onUpdate(event: UpdateEvent) {
         val thePlayer = mc.thePlayer
 
-        if (thePlayer == null || KevinClient.moduleManager.getModule("Ghost")!!.getToggle())
+        if (thePlayer == null || KevinClient.moduleManager.getModule("Ghost")!!.state)
             return
 
         if (if (instantValue.get()) thePlayer.health == 0F || thePlayer.isDead else (mc.currentScreen)is GuiGameOver

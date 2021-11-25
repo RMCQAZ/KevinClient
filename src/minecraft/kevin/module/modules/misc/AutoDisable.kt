@@ -44,7 +44,7 @@ object AutoDisable : Module("AutoDisable","Auto disable modules.(Use Command .Au
     private fun add(module: Module,mode: String){
         module.autoDisable = true to mode.lowercase(Locale.getDefault())
         ChatUtils.messageWithStart("§aModule successfully added to list.")
-        if (!this.getToggle()) ChatUtils.messageWithStart("§eDon't forget to open AutoDisable module!")
+        if (!this.state) ChatUtils.messageWithStart("§eDon't forget to open AutoDisable module!")
         KevinClient.fileManager.saveConfig(KevinClient.fileManager.modulesConfig)
     }
     private fun remove(module: Module) {
@@ -58,20 +58,20 @@ object AutoDisable : Module("AutoDisable","Auto disable modules.(Use Command .Au
     private val notification = BooleanValue("Notification",true)
     @EventTarget fun onWorld(event: WorldEvent){
         KevinClient.moduleManager.getModules()
-            .filter { it.autoDisable.first&&(it.autoDisable.second=="world"||it.autoDisable.second=="all")&&it.getToggle() }
+            .filter { it.autoDisable.first&&(it.autoDisable.second=="world"||it.autoDisable.second=="all")&&it.state }
             .forEach {
-                it.toggle(false)
-                if (notification.get()) KevinClient.hud.addNotification(Notification("Auto disabled module ${it.getName()}."),"AutoDisable")
+                it.state = false
+                if (notification.get()) KevinClient.hud.addNotification(Notification("Auto disabled module ${it.name}."),"AutoDisable")
             }
         timer.reset()
     }
     @EventTarget fun onPacket(event: PacketEvent) {
         if (event.packet !is S08PacketPlayerPosLook || !timer.hasTimePassed(3000)) return
         KevinClient.moduleManager.getModules()
-            .filter { it.autoDisable.first&&(it.autoDisable.second=="setback"||it.autoDisable.second=="all")&&it.getToggle() }
+            .filter { it.autoDisable.first&&(it.autoDisable.second=="setback"||it.autoDisable.second=="all")&&it.state }
             .forEach {
-                it.toggle(false)
-                if (notification.get()) KevinClient.hud.addNotification(Notification("Auto disabled module ${it.getName()}."),"AutoDisable")
+                it.state = false
+                if (notification.get()) KevinClient.hud.addNotification(Notification("Auto disabled module ${it.name}."),"AutoDisable")
             }
     }
 }

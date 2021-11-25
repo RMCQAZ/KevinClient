@@ -124,7 +124,7 @@ class FastUse : Module("FastUse", "Allows you to use items faster.", category = 
 
         if (thePlayer == null || event == null)
             return
-        if (!getToggle() || !thePlayer.isUsingItem || !noMoveValue.get())
+        if (!state || !thePlayer.isUsingItem || !noMoveValue.get())
             return
 
         val usingItem = thePlayer.itemInUse!!.item

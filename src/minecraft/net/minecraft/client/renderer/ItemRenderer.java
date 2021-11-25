@@ -181,7 +181,7 @@ public class ItemRenderer
     {
         this.mc.getTextureManager().bindTexture(clientPlayer.getLocationSkin());
         Render<AbstractClientPlayer> render = this.renderManager.getEntityRenderObject(this.mc.thePlayer);
-        if ((Renderer.INSTANCE.getFox()||Renderer.INSTANCE.getRenderer()!=null)&&Renderer.INSTANCE.getToggle()) return;
+        if ((Renderer.INSTANCE.getFox()||Renderer.INSTANCE.getRenderer()!=null)&&Renderer.INSTANCE.getState()) return;
         RenderPlayer renderplayer = (RenderPlayer)render;
 
         if (!clientPlayer.isInvisible())
@@ -311,7 +311,7 @@ public class ItemRenderer
      */
     private void transformFirstPersonItem(float equipProgress, float swingProgress)
     {
-        if (animations != null && animations.getToggle() && !animations.getOnlyOnBlock().get()){
+        if (animations != null && animations.getState() && !animations.getOnlyOnBlock().get()){
             doItemRenderGLTranslate();
             GlStateManager.translate(0.0F, equipProgress * -0.6F, 0.0F);
             GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
@@ -424,7 +424,7 @@ public class ItemRenderer
                             break;
 
                         case BLOCK:
-                            if(animations.getToggle()){
+                            if(animations.getState()){
                                 GL11.glTranslated(animations.getTranslateX().get(), animations.getTranslateY().get(), animations.getTranslateZ().get());
                                 switch (animations.getAnimations().get()) {
                                     case "Akrien": {
@@ -575,7 +575,7 @@ public class ItemRenderer
     }
 
     private void doItemRenderGLTranslate(){
-        if(animations.getToggle()) {
+        if(animations.getState()) {
             GlStateManager.translate(animations.getItemPosX().get(), animations.getItemPosY().get(), animations.getItemPosZ().get());
         }else{
             GlStateManager.translate(0.56F, -0.52F, -0.71999997F);
@@ -583,7 +583,7 @@ public class ItemRenderer
     }
 
     private void doItemRenderGLScale(){
-        if(animations.getToggle()) {
+        if(animations.getState()) {
             GlStateManager.scale(animations.getItemScale().get(), animations.getItemScale().get(), animations.getItemScale().get());
         }else{
             GlStateManager.scale(0.4F, 0.4F, 0.4F);
@@ -838,7 +838,7 @@ public class ItemRenderer
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         float f = 1.0F;
-        if(antiBlind.getToggle() && antiBlind.getFireEffect().get()){
+        if(antiBlind.getState() && antiBlind.getFireEffect().get()){
             GlStateManager.color(1.0F, 1.0F, 1.0F, 0.3F);
             f = 0.7F;
         }else{

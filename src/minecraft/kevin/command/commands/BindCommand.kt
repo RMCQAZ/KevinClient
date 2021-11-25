@@ -20,8 +20,8 @@ class BindCommand : ICommand {
             return
         }
         val key = Keyboard.getKeyIndex(args[1].toUpperCase())
-        module.setKeyBind(key)
-        ChatUtils.messageWithStart("§9Bound module §b§l${module.getName()}§9 to key §a§l${Keyboard.getKeyName(key)}§3.")
+        module.keyBind = key
+        ChatUtils.messageWithStart("§9Bound module §b§l${module.name}§9 to key §a§l${Keyboard.getKeyName(key)}§3.")
         Minecraft.getMinecraft().soundHandler.playSound(
             PositionedSoundRecord.create(
             ResourceLocation("random.anvil_use"),

@@ -236,7 +236,7 @@ public class EnchantmentHelper
         {
             ItemStack heldItem = p_151384_0_.getHeldItem();
             AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-            if (autoTool.getToggle()&&p_151384_0_==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+            if (autoTool.getState()&&p_151384_0_==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
                 heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
             }
             applyEnchantmentModifier(ENCHANTMENT_ITERATOR_HURT, heldItem);
@@ -257,7 +257,7 @@ public class EnchantmentHelper
         {
             ItemStack heldItem = p_151385_0_.getHeldItem();
             AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-            if (autoTool.getToggle()&&p_151385_0_==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+            if (autoTool.getState()&&p_151385_0_==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
                 heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
             }
             applyEnchantmentModifier(ENCHANTMENT_ITERATOR_DAMAGE, heldItem);
@@ -271,7 +271,7 @@ public class EnchantmentHelper
     {
         ItemStack heldItem = player.getHeldItem();
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+        if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
         return getEnchantmentLevel(Enchantment.knockback.effectId, heldItem);
@@ -284,7 +284,7 @@ public class EnchantmentHelper
     {
         ItemStack heldItem = player.getHeldItem();
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+        if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
         return getEnchantmentLevel(Enchantment.fireAspect.effectId, heldItem);
@@ -313,7 +313,7 @@ public class EnchantmentHelper
     {
         ItemStack heldItem = player.getHeldItem();
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+        if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
         return getEnchantmentLevel(Enchantment.efficiency.effectId, heldItem);
@@ -326,7 +326,7 @@ public class EnchantmentHelper
     {
         ItemStack heldItem = player.getHeldItem();
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+        if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
         return getEnchantmentLevel(Enchantment.silkTouch.effectId, heldItem) > 0;
@@ -339,7 +339,7 @@ public class EnchantmentHelper
     {
         ItemStack heldItem = player.getHeldItem();
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+        if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
         return getEnchantmentLevel(Enchantment.fortune.effectId, heldItem);
@@ -352,7 +352,7 @@ public class EnchantmentHelper
     {
         ItemStack heldItem = player.getHeldItem();
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+        if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
         return getEnchantmentLevel(Enchantment.luckOfTheSea.effectId, heldItem);
@@ -365,7 +365,7 @@ public class EnchantmentHelper
     {
         ItemStack heldItem = player.getHeldItem();
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+        if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
         return getEnchantmentLevel(Enchantment.lure.effectId, heldItem);
@@ -378,7 +378,7 @@ public class EnchantmentHelper
     {
         ItemStack heldItem = player.getHeldItem();
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
+        if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
         return getEnchantmentLevel(Enchantment.looting.effectId, heldItem);

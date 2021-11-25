@@ -24,10 +24,11 @@ class NoFall : Module("NoFall","Prevents you from taking fall damage.", category
     private var jumped = false
 
     @EventTarget fun onBB(event: BlockBBEvent){
+        if(mc.thePlayer==null) return
         if (modeValue equal "Verus") {
             if (mc.thePlayer.fallDistance>2.6&&
-                !KevinClient.moduleManager.getModule("FreeCam")!!.getToggle()&&
-                !KevinClient.moduleManager.getModule("Fly")!!.getToggle()&&
+                !KevinClient.moduleManager.getModule("FreeCam")!!.state&&
+                !KevinClient.moduleManager.getModule("Fly")!!.state&&
                 !(collideBlock(mc.thePlayer!!.entityBoundingBox, fun(block: Any?) = block is BlockLiquid) || collideBlock(AxisAlignedBB(mc.thePlayer!!.entityBoundingBox.maxX, mc.thePlayer!!.entityBoundingBox.maxY, mc.thePlayer!!.entityBoundingBox.maxZ, mc.thePlayer!!.entityBoundingBox.minX, mc.thePlayer!!.entityBoundingBox.minY - 0.01, mc.thePlayer!!.entityBoundingBox.minZ), fun(block: Any?) = block is BlockLiquid))){
                 if (event.block== Blocks.air&&
                     event.y < mc.thePlayer!!.posY&&
@@ -55,7 +56,7 @@ class NoFall : Module("NoFall","Prevents you from taking fall damage.", category
         if (mc.thePlayer!!.motionY > 0)
             jumped = true
 
-        if (!this.getToggle() || KevinClient.moduleManager.getModule("FreeCam")!!.getToggle())
+        if (!this.state || KevinClient.moduleManager.getModule("FreeCam")!!.state)
             return
 
         if (collideBlock(mc.thePlayer!!.entityBoundingBox, fun(block: Any?) = block is BlockLiquid) ||

@@ -694,7 +694,7 @@ public class InventoryPlayer implements IInventory
         {
             ItemStack itemstack = this.getStackInSlot(this.currentItem);
             AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-            if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=this.currentItem){
+            if (autoTool.getState()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=this.currentItem){
                 itemstack = this.getStackInSlot(autoTool.getNowSlot());
             }
             return itemstack != null ? itemstack.canHarvestBlock(blockIn) : false;

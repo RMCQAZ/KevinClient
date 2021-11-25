@@ -22,7 +22,7 @@ class CommandManager {
         commands[arrayOf("binds")] = BindsCommand()
 
         val modulesCommand = arrayListOf<String>()
-        for (m in KevinClient.moduleManager.getModules()) modulesCommand.add(m.getName())
+        for (m in KevinClient.moduleManager.getModules()) modulesCommand.add(m.name)
         commands[modulesCommand.toTypedArray()] = ValueCommand()
 
         commands[arrayOf("say")] = SayCommand()

@@ -33,7 +33,7 @@ public class ModulesConfig extends FileConfig {
             if (module != null) {
                 final JsonObject jsonModule = (JsonObject) entry.getValue();
 
-                module.toggle(jsonModule.get("State").getAsBoolean());
+                module.setState(jsonModule.get("State").getAsBoolean());
                 module.setKeyBind(jsonModule.get("KeyBind").getAsInt());
                 if (jsonModule.get("Hide")!=null) module.setArray(!jsonModule.get("Hide").getAsBoolean());
                 if (jsonModule.get("AutoDisable")!=null) module.setAutoDisable(new Pair<>(!Objects.equals(jsonModule.get("AutoDisable").getAsString(), "Disable"), Objects.equals(jsonModule.get("AutoDisable").getAsString(), "Disable") ? "" : jsonModule.get("AutoDisable").getAsString()));
@@ -52,7 +52,7 @@ public class ModulesConfig extends FileConfig {
 
         for (final Module module : KevinClient.moduleManager.getModules()) {
             final JsonObject jsonMod = new JsonObject();
-            jsonMod.addProperty("State", module.getToggle());
+            jsonMod.addProperty("State", module.getState());
             jsonMod.addProperty("KeyBind", module.getKeyBind());
             jsonMod.addProperty("Hide", !module.getArray());
             jsonMod.addProperty("AutoDisable", module.getAutoDisable().getFirst() ? module.getAutoDisable().getSecond() : "Disable");

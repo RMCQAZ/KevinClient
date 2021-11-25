@@ -111,7 +111,7 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
             if (thePlayer.motionY > 0)
                 jumped = true
 
-            if (!getToggle())
+            if (!state)
                 return
 
             if (collideBlock(thePlayer.entityBoundingBox, fun(block:Block?):Boolean {return block is BlockLiquid}) || collideBlock(AxisAlignedBB(thePlayer.entityBoundingBox.maxX, thePlayer.entityBoundingBox.maxY, thePlayer.entityBoundingBox.maxZ, thePlayer.entityBoundingBox.minX, thePlayer.entityBoundingBox.minY - 0.01, thePlayer.entityBoundingBox.minZ), fun(block:Block?):Boolean {return block is BlockLiquid})) return
@@ -161,14 +161,14 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
         val thePlayer = mc.thePlayer ?: return
 
         // Phase should disable step
-        if (KevinClient.moduleManager.getModule("Phase")!!.getToggle()) {
+        if (KevinClient.moduleManager.getModule("Phase")!!.state) {
             event.stepHeight = 0F
             return
         }
 
         // Some fly modes should disable step
         val fly = KevinClient.moduleManager.getModule("Fly") as Fly
-        if (fly.getToggle()) {
+        if (fly.state) {
             val flyMode = fly.mode.get()
 
             if (flyMode.equals("Hypixel", ignoreCase = true) ||

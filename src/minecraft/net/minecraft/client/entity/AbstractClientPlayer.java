@@ -163,7 +163,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     {
         final NoFOV fovModule = (NoFOV) KevinClient.moduleManager.getModule("NoFOV");
 
-        if (Objects.requireNonNull(fovModule).getToggle()) {
+        if (Objects.requireNonNull(fovModule).getState()) {
             float newFOV = fovModule.getFovValue().get();
 
             if (!this.isUsingItem()) {

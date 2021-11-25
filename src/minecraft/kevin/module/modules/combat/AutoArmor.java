@@ -108,7 +108,7 @@ public class AutoArmor extends Module {
     }
 
     public boolean isLocked() {
-        return this.getToggle() && locked;
+        return this.getState() && locked;
     }
 
     /**

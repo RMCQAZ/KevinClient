@@ -2,6 +2,9 @@ package net.minecraft.client.renderer;
 
 import java.util.BitSet;
 import java.util.List;
+
+import kevin.main.KevinClient;
+import kevin.module.modules.render.XRay;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -88,6 +91,9 @@ public class BlockModelRenderer
 
     public boolean renderModelAmbientOcclusion(IBlockAccess blockAccessIn, IBakedModel modelIn, Block blockIn, BlockPos blockPosIn, WorldRenderer worldRendererIn, boolean checkSides)
     {
+        XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        if (xRay.getState()&&!xRay.getXrayBlocks().contains(blockIn)) return false;
+
         IBlockState iblockstate = blockAccessIn.getBlockState(blockPosIn);
         return this.renderModelSmooth(blockAccessIn, modelIn, iblockstate, blockPosIn, worldRendererIn, checkSides);
     }
@@ -130,6 +136,9 @@ public class BlockModelRenderer
 
     public boolean renderModelStandard(IBlockAccess blockAccessIn, IBakedModel modelIn, Block blockIn, BlockPos blockPosIn, WorldRenderer worldRendererIn, boolean checkSides)
     {
+        XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        if (xRay.getState()&&!xRay.getXrayBlocks().contains(blockIn)) return false;
+
         IBlockState iblockstate = blockAccessIn.getBlockState(blockPosIn);
         return this.renderModelFlat(blockAccessIn, modelIn, iblockstate, blockPosIn, worldRendererIn, checkSides);
     }

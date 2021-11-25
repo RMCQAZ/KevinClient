@@ -105,7 +105,7 @@ public abstract class GuiContainer extends GuiScreen
         try {
             Minecraft mc=Minecraft.getMinecraft();
             GuiScreen guiScreen=mc.currentScreen;
-            if(chestStealer.getToggle()&&chestStealer.getSilentValue().get()&&guiScreen instanceof GuiChest){
+            if(chestStealer.getState()&&chestStealer.getSilentValue().get()&&guiScreen instanceof GuiChest){
                 //mouse focus
                 mc.setIngameFocus();
                 mc.currentScreen=guiScreen;

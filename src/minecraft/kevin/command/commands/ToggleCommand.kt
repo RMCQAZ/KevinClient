@@ -15,39 +15,24 @@ class ToggleCommand : ICommand {
             return
         }
         for (module in KevinClient.moduleManager.getModules()){
-            if (module.getName().equals(args[0],ignoreCase = true)){
+            if (module.name.equals(args[0],ignoreCase = true)){
                 if (args.size > 1){
-                    val hud = KevinClient.hud
                     if (args[1].equals("on",ignoreCase = true)){
-                        module.toggle(true)
-                        hud.addNotification(Notification("Enabled ${module.getName()}"))
-                        Minecraft.getMinecraft().soundHandler.playSound(
-                            PositionedSoundRecord.create(
-                                ResourceLocation("gui.button.press"),
-                                1f
-                            )
-                        )
-                        ChatUtils.message("${KevinClient.cStart} §aEnable §e${module.getName()} §9Module")
+                        module.state = true
+                        ChatUtils.message("${KevinClient.cStart} §aEnable §e${module.name} §9Module")
                         return
                     }else if (args[1].equals("off",ignoreCase = true)){
-                        module.toggle(false)
-                        hud.addNotification(Notification("Disabled ${module.getName()}"))
-                        Minecraft.getMinecraft().soundHandler.playSound(
-                            PositionedSoundRecord.create(
-                                ResourceLocation("gui.button.press"),
-                                0.6114514191981f
-                            )
-                        )
-                        ChatUtils.message("${KevinClient.cStart} §cDisable §e${module.getName()} §9Module")
+                        module.state = false
+                        ChatUtils.message("${KevinClient.cStart} §cDisable §e${module.name} §9Module")
                         return
                     }else {
                         module.toggle()
-                        ChatUtils.message("${KevinClient.cStart} §9${if (module.getToggle()) "§aEnable" else "§cDisable"} §e${module.getName()} §9Module")
+                        ChatUtils.message("${KevinClient.cStart} §9${if (module.state) "§aEnable" else "§cDisable"} §e${module.name} §9Module")
                         return
                     }
                 }else{
                     module.toggle()
-                    ChatUtils.message("${KevinClient.cStart} §9${if (module.getToggle()) "§aEnable" else "§cDisable"} §e${module.getName()} §9Module")
+                    ChatUtils.message("${KevinClient.cStart} §9${if (module.state) "§aEnable" else "§cDisable"} §e${module.name} §9Module")
                     return
                 }
             }

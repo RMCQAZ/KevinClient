@@ -7,6 +7,6 @@ import org.lwjgl.input.Keyboard
 class HudDesigner : Module("HudDesigner","HUD designer.",Keyboard.KEY_RCONTROL,category = ModuleCategory.RENDER) {
     override fun onEnable() {
         mc.displayGuiScreen(GuiHudDesigner())
-        toggle(false)
+        state = false
     }
 }

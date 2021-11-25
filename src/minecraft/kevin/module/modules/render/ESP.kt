@@ -2,7 +2,9 @@ package kevin.module.modules.render
 
 import kevin.event.EventTarget
 import kevin.event.Render3DEvent
+import kevin.main.KevinClient
 import kevin.module.*
+import kevin.module.modules.misc.KillerDetector
 import kevin.utils.ColorUtils
 import kevin.utils.ColorUtils.rainbow
 import kevin.utils.EntityUtils
@@ -211,6 +213,9 @@ class ESP : Module("ESP", "Allows you to see targets through walls.", category =
         run {
             if (entity.hurtTime > 0)
                     return Color.RED
+            val killerDetector = KevinClient.moduleManager.getModule("KillerDetector") as KillerDetector
+            if (killerDetector.state&&entity==killerDetector.killer)
+                return Color.RED
                 if (entity is EntityPlayer && entity.isClientFriend())
                     return Color.BLUE
 

@@ -7,8 +7,6 @@ import java.util.*
 
 abstract class Value<T>(val name: String, protected var value: T) {
 
-    var isSupported = true
-
     fun set(newValue: T) {
         if (newValue == value)
             return

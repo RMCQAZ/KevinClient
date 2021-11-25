@@ -219,7 +219,7 @@ public abstract class BlockLiquid extends Block
     {
         final NoSlow noSlow = (NoSlow) KevinClient.moduleManager.getModule("NoSlow");
 
-        if (noSlow.getToggle() && noSlow.getLiquidPushValue().get()) {
+        if (noSlow.getState() && noSlow.getLiquidPushValue().get()) {
             return (new Vec3(0.0D, 0.0D, 0.0D));
         }
         return motion.add(this.getFlowVector(worldIn, pos));

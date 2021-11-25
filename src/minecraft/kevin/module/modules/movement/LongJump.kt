@@ -63,7 +63,7 @@ class LongJump : Module("LongJump", "Allows you to jump further.", category = Mo
                     if (msTimer.hasTimePassed(300)){
                         mc.thePlayer!!.motionX = .0
                         mc.thePlayer!!.motionZ = .0
-                        toggle(false)
+                        state = false
                     }
                 }
             }
@@ -177,7 +177,7 @@ class LongJump : Module("LongJump", "Allows you to jump further.", category = Mo
         canBoost = true
         teleported = false
 
-        if (getToggle()) {
+        if (state) {
             when (modeValue.get().toLowerCase()) {
                 "mineplex" -> event.motion = event.motion * 4.08f
                 "mineplex2" -> {

@@ -52,7 +52,7 @@ class ScriptModule(name: String, description: String, category: ModuleCategory, 
                 else throw e
             }
         } catch (throwable: Throwable) {
-            Minecraft.logger.error("[ScriptAPI] Exception in module '${getName()}'!", throwable)
+            Minecraft.logger.error("[ScriptAPI] Exception in module '${name}'!", throwable)
         }
     }
 

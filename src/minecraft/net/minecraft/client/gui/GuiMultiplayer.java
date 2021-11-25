@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import kevin.file.ImageManager;
+import kevin.via.ViaButton;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
@@ -103,6 +104,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
         this.buttonList.add(new GuiButton(8, this.width / 2 + 4, this.height - 28, 70, 20, I18n.format("selectServer.refresh")));
         this.buttonList.add(new GuiButton(0, this.width / 2 + 4 + 76, this.height - 28, 75, 20, I18n.format("gui.cancel")));
         this.buttonList.add(this.saveServerIcon = new GuiButton(32,5,5,90,20,"SaveServerIcon: " + (ImageManager.INSTANCE.getSaveServerIcon() ? "On" : "Off")));
+        this.buttonList.add(new ViaButton(this.width));
         this.selectServer(this.serverListSelector.func_148193_k());
     }
 

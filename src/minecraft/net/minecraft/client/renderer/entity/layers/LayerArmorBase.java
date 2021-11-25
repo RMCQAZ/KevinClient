@@ -112,7 +112,7 @@ public abstract class LayerArmorBase<T extends ModelBase> implements LayerRender
             }
 
             Renderer renderer =(Renderer) KevinClient.moduleManager.getModule("Renderer");
-            if (renderer.getToggle()) this.alpha = renderer.getNoArmor().get() ? 0F : 1F;
+            if (renderer.getState()) this.alpha = renderer.getNoArmor().get() ? 0F : 1F;
 
             switch (itemarmor.getArmorMaterial())
             {

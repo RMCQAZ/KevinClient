@@ -281,7 +281,7 @@ object Renderer : Module("Renderer","Allows you to modify some renderings.",cate
             texturesList["Snow_Fox"] = Texture("Snow_Fox",ImageIO.read(javaClass.getResourceAsStream("/resources/entity/fox/snow_fox.png")))
             texturesList["Snow_Fox_Sleep"] = Texture("Snow_Fox_Sleep",ImageIO.read(javaClass.getResourceAsStream("/resources/entity/fox/snow_fox_sleep.png")))
         }
-        if (!getToggle()) return
+        if (!state) return
         when(playerModel.get()){
             "Fox" -> {
                 resourceLocation = if (mc.thePlayer.isPlayerSleeping) texturesList["Fox_Sleep"]!!.resource else texturesList["Fox"]!!.resource
@@ -483,7 +483,7 @@ object Renderer : Module("Renderer","Allows you to modify some renderings.",cate
             }
 
             val killAura = KevinClient.moduleManager.getModule("Killaura") as KillAura
-            if (killAura.getToggle()&&killAura.target!=null){
+            if (killAura.state&&killAura.target!=null){
                 head.rotateAngleX = RotationUtils.serverRotation.pitch / (180f / Math.PI.toFloat())
             }
 

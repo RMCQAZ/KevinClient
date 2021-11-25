@@ -1463,7 +1463,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.leftClickCounter = 0;
         }
 
-        if (this.leftClickCounter <= 0 && (!this.thePlayer.isUsingItem() || KevinClient.moduleManager.getModule("MultiActions").getToggle()))
+        if (this.leftClickCounter <= 0 && (!this.thePlayer.isUsingItem() || KevinClient.moduleManager.getModule("MultiActions").getState()))
         {
             if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
@@ -1477,7 +1477,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
                     this.thePlayer.swingItem();
                 }
-            } else if (!KevinClient.moduleManager.getModule("AbortBreaking").getToggle()){
+            } else if (!KevinClient.moduleManager.getModule("AbortBreaking").getState()){
                 this.playerController.resetBlockRemoving();
             }
         }
@@ -1487,7 +1487,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         CPSCounter.registerClick(CPSCounter.MouseButton.LEFT);
 
-        if (KevinClient.moduleManager.getModule("AutoClicker").getToggle()) leftClickCounter = 0;
+        if (KevinClient.moduleManager.getModule("AutoClicker").getState()) leftClickCounter = 0;
         if (this.leftClickCounter <= 0)
         {
             this.thePlayer.swingItem();
@@ -1541,7 +1541,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
             final FastPlace fastPlace = (FastPlace) KevinClient.moduleManager.getModule("FastPlace");
 
-            if (fastPlace.getToggle()) rightClickDelayTimer = fastPlace.getSpeedValue().get();
+            if (fastPlace.getState()) rightClickDelayTimer = fastPlace.getSpeedValue().get();
 
             boolean flag = true;
             ItemStack itemstack = this.thePlayer.inventory.getCurrentItem();

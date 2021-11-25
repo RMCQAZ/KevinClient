@@ -39,7 +39,7 @@ object EntityUtils : MinecraftInstance() {
 
                         if (entity.isSpectator) return false
                         val teams = KevinClient.moduleManager.getModule("Teams") as Teams
-                        return !teams.getToggle() || !teams.isInYourTeam(entity)
+                        return !teams.state || !teams.isInYourTeam(entity)
                     }
                     return true
                 }

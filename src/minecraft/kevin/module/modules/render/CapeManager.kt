@@ -8,6 +8,6 @@ import org.lwjgl.input.Keyboard
 class CapeManager : Module("CapeManager","Cape manager.",Keyboard.KEY_RMENU,category = ModuleCategory.RENDER) {
     override fun onEnable() {
         mc.displayGuiScreen(KevinClient.capeManager)
-        toggle(false)
+        state = false
     }
 }

@@ -334,7 +334,7 @@ public class WorldClient extends World
             IBlockState iblockstate = this.getBlockState(blockpos$mutableblockpos);
             iblockstate.getBlock().randomDisplayTick(this, blockpos$mutableblockpos, iblockstate, random);
             final TrueSight trueSight = (TrueSight) KevinClient.moduleManager.getModule("TrueSight");
-            if (trueSight.getToggle() && trueSight.getBarriersValue().get()) flag = true;
+            if (trueSight.getState() && trueSight.getBarriersValue().get()) flag = true;
             if (flag && iblockstate.getBlock() == Blocks.barrier)
             {
                 this.spawnParticle(EnumParticleTypes.BARRIER, (double)((float)k + 0.5F), (double)((float)l + 0.5F), (double)((float)i1 + 0.5F), 0.0D, 0.0D, 0.0D, new int[0]);

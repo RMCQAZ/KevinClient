@@ -16,10 +16,13 @@ import net.minecraft.util.Timer;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public final class RenderUtils extends MinecraftInstance{
+    private static final Map<Integer, Boolean> glCapMap = new HashMap<>();
     private static final int[] DISPLAY_LISTS_2D = new int[4];
 
     static {
@@ -579,5 +582,45 @@ public final class RenderUtils extends MinecraftInstance{
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_DEPTH_TEST);
         if (outline) glDisable(GL_LINE_SMOOTH);
+    }
+
+    /**
+     * GL CAP MANAGER
+     * <p>
+     * TODO: Remove gl cap manager and replace by something better
+     */
+
+    public static void resetCaps() {
+        glCapMap.forEach(RenderUtils::setGlState);
+    }
+
+    public static void enableGlCap(final int cap) {
+        setGlCap(cap, true);
+    }
+
+    public static void enableGlCap(final int... caps) {
+        for (final int cap : caps)
+            setGlCap(cap, true);
+    }
+
+    public static void disableGlCap(final int cap) {
+        setGlCap(cap, true);
+    }
+
+    public static void disableGlCap(final int... caps) {
+        for (final int cap : caps)
+            setGlCap(cap, false);
+    }
+
+    public static void setGlCap(final int cap, final boolean state) {
+        glCapMap.put(cap, glGetBoolean(cap));
+        setGlState(cap, state);
+    }
+
+    public static void setGlState(final int cap, final boolean state) {
+        if (state)
+            glEnable(cap);
+        else
+            glDisable(cap);
     }
 }

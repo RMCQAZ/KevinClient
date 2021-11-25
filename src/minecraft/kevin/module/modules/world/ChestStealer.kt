@@ -138,7 +138,7 @@ class ChestStealer : Module("ChestStealer", description = "Automatically steals 
 
                         val stack = slot.stack
 
-                        if (stack != null && (!onlyItemsValue.get() || stack.item !is ItemBlock) && (!inventoryCleaner.getToggle() || inventoryCleaner.isUseful(stack, -1)))
+                        if (stack != null && (!onlyItemsValue.get() || stack.item !is ItemBlock) && (!inventoryCleaner.state || inventoryCleaner.isUseful(stack, -1)))
                             items.add(slot)
                     }
 
@@ -176,7 +176,7 @@ class ChestStealer : Module("ChestStealer", description = "Automatically steals 
     }
 
     private inline fun shouldTake(stack: ItemStack?, inventoryCleaner: InventoryCleaner): Boolean {
-        return stack != null && !ItemUtils.isStackEmpty(stack) && (!onlyItemsValue.get() || stack.item !is ItemBlock) && (!inventoryCleaner.getToggle() || inventoryCleaner.isUseful(stack, -1))
+        return stack != null && !ItemUtils.isStackEmpty(stack) && (!onlyItemsValue.get() || stack.item !is ItemBlock) && (!inventoryCleaner.state || inventoryCleaner.isUseful(stack, -1))
     }
 
     private fun move(screen: GuiChest, slot: Slot) {

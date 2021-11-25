@@ -72,7 +72,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
         if (noHitValue.get()) {
             val killAura = KevinClient.moduleManager.getModule("KillAura") as KillAura
 
-            if (killAura.getToggle() && killAura.target != null)
+            if (killAura.state && killAura.target != null)
                 return
         }
 
@@ -143,7 +143,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
             actionValue.get().equals("destroy", true) || surroundings || !isRealBlock -> {
                 // Auto Tool
                 val autoTool = KevinClient.moduleManager.getModule("AutoTool") as AutoTool
-                if (autoTool.getToggle())
+                if (autoTool.state)
                     autoTool.switchSlot(currentPos)
 
                 // Break block

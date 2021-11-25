@@ -275,7 +275,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
      */
     protected void handleComponentHover(IChatComponent component, int x, int y)
     {
-        if (!(component == null || component.getChatStyle().getChatClickEvent() == null || !KevinClient.moduleManager.getModule("ComponentOnHover").getToggle())) {
+        if (!(component == null || component.getChatStyle().getChatClickEvent() == null || !KevinClient.moduleManager.getModule("ComponentOnHover").getState())) {
             final ChatStyle chatStyle = component.getChatStyle();
             final ClickEvent clickEvent = chatStyle.getChatClickEvent();
             final HoverEvent hoverEvent = chatStyle.getChatHoverEvent();

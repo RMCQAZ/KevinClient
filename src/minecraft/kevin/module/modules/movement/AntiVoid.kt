@@ -110,7 +110,7 @@ class AntiVoid : Module("AntiVoid","Automatically setbacks you after falling a c
                 }
             }
         }
-        if(modeValue.get().toLowerCase() == "minemora-blink" && !KevinClient.moduleManager.getModule("Fly")!!.getToggle() && !KevinClient.moduleManager.getModule("HighJump")!!.getToggle()){
+        if(modeValue.get().toLowerCase() == "minemora-blink" && !KevinClient.moduleManager.getModule("Fly")!!.state && !KevinClient.moduleManager.getModule("HighJump")!!.state){
             if(!blink){
                 if(canBlink && thePlayer.fallDistance - lastFound > maxDistanceWithoutGround.get()){
                     posX=mc.thePlayer!!.posX
@@ -136,7 +136,7 @@ class AntiVoid : Module("AntiVoid","Automatically setbacks you after falling a c
                     mc.thePlayer!!.motionZ=motionZ
 
                     if(autoScaffold.get()){
-                        KevinClient.moduleManager.getModule("Scaffold")?.toggle(true)
+                        KevinClient.moduleManager.getModule("Scaffold")?.state = true
                         scaffoldOn = true
                     }
 
@@ -153,7 +153,7 @@ class AntiVoid : Module("AntiVoid","Automatically setbacks you after falling a c
             }
             if(scaffoldOn){
                 if(mc.thePlayer!!.onGround || mc.thePlayer!!.isOnLadder || mc.thePlayer!!.isInWater || mc.thePlayer!!.isInWeb || mc.thePlayer!!.fallDistance > 10){
-                    KevinClient.moduleManager.getModule("Scaffold")?.toggle(false)
+                    KevinClient.moduleManager.getModule("Scaffold")?.state = false
                     scaffoldOn = false
                 }
             }

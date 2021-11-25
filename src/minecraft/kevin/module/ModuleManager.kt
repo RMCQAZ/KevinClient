@@ -66,6 +66,9 @@ class ModuleManager : Listenable {
             AutoDisable,
             AutoL(),
             ComponentOnHover(),
+            Diastimeter(),
+            HideAndSeekHack,
+            KillerDetector(),
             NameProtect(),
             NoRotateSet(),
             ResourcePackSpoof(),
@@ -82,6 +85,7 @@ class ModuleManager : Listenable {
             HighJump(),
             InvMove(),
             KeepSprint(),
+            LiquidWalk(),
             LongJump(),
             NoClip(),
             NoSlow(),
@@ -138,7 +142,9 @@ class ModuleManager : Listenable {
             StorageESP(),
             TNTESP(),
             Tracers(),
-            TrueSight()
+            Trajectories(),
+            TrueSight(),
+            XRay()
         )
         worldList = arrayListOf(
             Breaker(),
@@ -172,7 +178,7 @@ class ModuleManager : Listenable {
 
     fun getModule(name: String): Module?{
         for (module in modules){
-            if (module.getName().equals(name,ignoreCase = true))return module
+            if (module.name.equals(name,ignoreCase = true))return module
         }
         return null
     }
@@ -180,7 +186,7 @@ class ModuleManager : Listenable {
     @EventTarget
     fun onKey(key: KeyEvent){
         for (module in modules){
-            if (module.getKeyBind() == key.key) module.toggle()
+            if (module.keyBind == key.key) module.toggle()
         }
     }
 

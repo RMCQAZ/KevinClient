@@ -17,11 +17,14 @@ import kevin.script.ScriptManager
 import kevin.skin.SkinManager
 import kevin.utils.CombatManager
 import kevin.utils.FontManager
+import kevin.via.ViaVersion
 import org.lwjgl.opengl.Display
 
 object KevinClient {
     var name = "Kevin"
-    var version = "b1.65"
+    var version = "b1.7"
+
+    var isStarting = true
 
     lateinit var moduleManager: ModuleManager
     lateinit var fileManager: FileManager
@@ -60,6 +63,8 @@ object KevinClient {
         ImageManager.load()
         ConfigManager.load()
         combatManager = CombatManager()
+        ViaVersion.start()
+        isStarting = false
     }
 
     fun stop() {

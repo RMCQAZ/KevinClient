@@ -910,7 +910,7 @@ public abstract class EntityPlayer extends EntityLivingBase
         float f = this.inventory.getStrVsBlock(p_180471_1_);
 
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem){
+        if (autoTool.getState()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem){
             f = this.inventory.getStackInSlot(autoTool.getNowSlot()).getStrVsBlock(p_180471_1_);
         }
 
@@ -919,7 +919,7 @@ public abstract class EntityPlayer extends EntityLivingBase
             int i = EnchantmentHelper.getEfficiencyModifier(this);
             ItemStack itemstack = this.inventory.getCurrentItem();
 
-            if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem){
+            if (autoTool.getState()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem){
                 itemstack = this.inventory.getStackInSlot(autoTool.getNowSlot());
             }
 
@@ -1382,7 +1382,7 @@ public abstract class EntityPlayer extends EntityLivingBase
                         {
                             targetEntity.addVelocity((double)(-MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F), 0.1D, (double)(MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F));
                             Module keepSprint = KevinClient.moduleManager.getModule("KeepSprint");
-                            boolean keep = keepSprint!=null&&keepSprint.getToggle();
+                            boolean keep = keepSprint!=null&&keepSprint.getState();
                             if (!keep){
                                 this.motionX *= 0.6D;
                                 this.motionZ *= 0.6D;

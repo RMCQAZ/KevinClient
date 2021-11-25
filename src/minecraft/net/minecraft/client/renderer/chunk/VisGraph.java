@@ -5,6 +5,9 @@ import java.util.BitSet;
 import java.util.EnumSet;
 import java.util.Queue;
 import java.util.Set;
+
+import kevin.main.KevinClient;
+import kevin.module.modules.render.XRay;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IntegerCache;
@@ -20,6 +23,9 @@ public class VisGraph
 
     public void func_178606_a(BlockPos pos)
     {
+        XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Simple")) return;
+
         this.field_178612_d.set(getIndex(pos), true);
         --this.field_178611_f;
     }

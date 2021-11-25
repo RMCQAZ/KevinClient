@@ -45,7 +45,7 @@ class StorageESP : Module("StorageESP", "Allows you to see chests, dispensers, e
 
                 if (mc.gameSettings.ofFastRender){
                     ChatUtils.messageWithStart("§cTurn off fastrender!!")
-                    toggle(false)
+                    state = false
                     return
                 }
 

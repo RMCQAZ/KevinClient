@@ -26,7 +26,7 @@ class HighJump : Module("HighJump", "Allows you to jump higher.", category = Mod
     private val waitTimeValue = IntegerValue("WaitTime",1,0,5)
     private val flyValue = BooleanValue("Fly",false)
 
-    private var state = 1
+    private var jumpState = 1
     private var fly = false
     private var flyState = 0
     private var timer = -1
@@ -40,7 +40,7 @@ class HighJump : Module("HighJump", "Allows you to jump higher.", category = Mod
         when(modeValue.get()){
             "Timer" -> {
                 mc.timer.timerSpeed = 1F
-                state = 1
+                jumpState = 1
                 fly = false
                 flyState = 0
             }
@@ -54,16 +54,16 @@ class HighJump : Module("HighJump", "Allows you to jump higher.", category = Mod
         if (modeValue equal "Timer"){
             if(mc.thePlayer!!.onGround){
                 if (fly) {
-                    toggle(false)
+                    state = false
                     return
                 }
                 mc.timer.timerSpeed = timerValue.get()
                 mc.thePlayer!!.jump()
-                state = 2
+                jumpState = 2
             } else {
-                if(state == 2) {
+                if(jumpState == 2) {
                     mc.timer.timerSpeed = 1F
-                    if (!flyValue.get()) toggle(false)
+                    if (!flyValue.get()) state = false
                     if (!timerlock) {
                         timerlock = true
                         timer = 0
@@ -74,8 +74,8 @@ class HighJump : Module("HighJump", "Allows you to jump higher.", category = Mod
                     timer = -1
                 }
 
-                if (state != 2){
-                    state = 2
+                if (jumpState != 2){
+                    jumpState = 2
                 }
             }
             if (timer != -1)

@@ -9,6 +9,7 @@ import kevin.main.KevinClient;
 import kevin.module.modules.combat.Criticals;
 import kevin.module.modules.exploit.GhostHand;
 import kevin.module.modules.player.NoFall;
+import kevin.module.modules.render.XRay;
 import kevin.module.modules.world.NoSlowBreak;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -470,6 +471,9 @@ public class Block
 
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
+        XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Simple")) return xRay.getXrayBlocks().contains(this);
+
         if (side == EnumFacing.DOWN && this.minY > 0.0D)
         {
             return true;
@@ -554,7 +558,7 @@ public class Block
     {
         final GhostHand ghostHand = (GhostHand) KevinClient.moduleManager.getModule("GhostHand");
 
-        return !Objects.requireNonNull(ghostHand).getToggle() || ghostHand.getBlockValue().get() == Block.getIdFromBlock(this);
+        return !Objects.requireNonNull(ghostHand).getState() || ghostHand.getBlockValue().get() == Block.getIdFromBlock(this);
     }
 
     /**
@@ -633,7 +637,7 @@ public class Block
         // NoSlowBreak
         final NoSlowBreak noSlowBreak = (NoSlowBreak) KevinClient.moduleManager.getModule("NoSlowBreak");
 
-        if (Objects.requireNonNull(noSlowBreak).getToggle()) {
+        if (Objects.requireNonNull(noSlowBreak).getState()) {
             if (noSlowBreak.getWaterValue().get() && playerIn.isInsideOfMaterial(Material.water) &&
                     !EnchantmentHelper.getAquaAffinityModifier(playerIn)) {
                 ret *= 5.0F;
@@ -646,8 +650,8 @@ public class Block
             final NoFall noFall = (NoFall) KevinClient.moduleManager.getModule("NoFall");
             final Criticals criticals = (Criticals) KevinClient.moduleManager.getModule("Criticals");
 
-            if (Objects.requireNonNull(noFall).getToggle() && noFall.modeValue.get().equalsIgnoreCase("NoGround") ||
-                    Objects.requireNonNull(criticals).getToggle() && criticals.getModeValue().get().equalsIgnoreCase("NoGround")) {
+            if (Objects.requireNonNull(noFall).getState() && noFall.modeValue.get().equalsIgnoreCase("NoGround") ||
+                    Objects.requireNonNull(criticals).getState() && criticals.getModeValue().get().equalsIgnoreCase("NoGround")) {
                 ret /= 5F;
             }
         }
@@ -909,6 +913,10 @@ public class Block
 
     public EnumWorldBlockLayer getBlockLayer()
     {
+        final XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Translucent"))
+            return EnumWorldBlockLayer.TRANSLUCENT;
+
         return EnumWorldBlockLayer.SOLID;
     }
 
@@ -1180,6 +1188,7 @@ public class Block
      */
     public float getAmbientOcclusionLightValue()
     {
+        if (KevinClient.moduleManager.getModule("XRay").getState()) return 1F;
         return this.isBlockNormalCube() ? 0.2F : 1.0F;
     }
 

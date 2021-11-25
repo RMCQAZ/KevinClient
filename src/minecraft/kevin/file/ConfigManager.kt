@@ -31,10 +31,10 @@ object ConfigManager {
         val modulesConfig = JsonObject()
         KevinClient.moduleManager.getModules().forEach {
             val jsonMod = JsonObject()
-            jsonMod.addProperty("State", it.getToggle())
-            jsonMod.addProperty("KeyBind", it.getKeyBind())
+            jsonMod.addProperty("State", it.state)
+            jsonMod.addProperty("KeyBind", it.keyBind)
             it.values.forEach(Consumer { value: Value<*> -> jsonMod.add(value.name, value.toJson())})
-            modulesConfig.add(it.getName(), jsonMod)
+            modulesConfig.add(it.name, jsonMod)
         }
         val printWriter = PrintWriter(FileWriter(file))
         printWriter.println(FileManager.PRETTY_GSON.toJson(modulesConfig))
@@ -63,8 +63,8 @@ object ConfigManager {
                     val module = KevinClient.moduleManager.getModule(key)
                     if (module != null) {
                         val jsonModule = value as JsonObject
-                        module.toggle(jsonModule["State"].asBoolean)
-                        module.setKeyBind(jsonModule["KeyBind"].asInt)
+                        module.state = jsonModule["State"].asBoolean
+                        module.keyBind = jsonModule["KeyBind"].asInt
                         for (moduleValue in module.values) {
                             val element = jsonModule[moduleValue.name]
                             if (element != null) moduleValue.fromJson(element)

@@ -125,6 +125,6 @@ object TargetStrafe : Module("TargetStrafe","Strafe around your target.", catego
     }
 
     private fun canStrafe(target: EntityLivingBase?): Boolean {
-        return this.getToggle() && target != null && (!space.get() || mc.thePlayer.movementInput.jump) && (!onlySpeed.get() || KevinClient.moduleManager.getModule("Speed")!!.getToggle())
+        return this.state && target != null && (!space.get() || mc.thePlayer.movementInput.jump) && (!onlySpeed.get() || KevinClient.moduleManager.getModule("Speed")!!.state)
     }
 }

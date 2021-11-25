@@ -135,7 +135,7 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
 
                     // Reduce Y
                     if (thePlayer.hurtResistantTime > 0 && aacPushYReducerValue.get()
-                        && !KevinClient.moduleManager.getModule("Speed")!!.getToggle())
+                        && !KevinClient.moduleManager.getModule("Speed")!!.state)
                         thePlayer.motionY -= 0.014999993
                 }
 

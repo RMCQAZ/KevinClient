@@ -2,6 +2,9 @@ package net.minecraft.network;
 
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.viaversion.viaversion.api.connection.UserConnection;
+import com.viaversion.viaversion.connection.UserConnectionImpl;
+import com.viaversion.viaversion.protocol.ProtocolPipelineImpl;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelException;
@@ -38,6 +41,10 @@ import kevin.event.PacketEvent;
 
 import kevin.main.KevinClient;
 import kevin.utils.PacketUtils;
+import kevin.via.CommonTransformer;
+import kevin.via.DecodeHandler;
+import kevin.via.EncodeHandler;
+import kevin.via.ViaVersion;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.CryptManager;
@@ -393,6 +400,16 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
                 }
 
                 p_initChannel_1_.pipeline().addLast("timeout", new ReadTimeoutHandler(30)).addLast("splitter", new MessageDeserializer2()).addLast("decoder", new MessageDeserializer(EnumPacketDirection.CLIENTBOUND)).addLast("prepender", new MessageSerializer2()).addLast("encoder", new MessageSerializer(EnumPacketDirection.SERVERBOUND)).addLast("packet_handler", networkmanager);
+
+                if (p_initChannel_1_ instanceof SocketChannel && ViaVersion.INSTANCE.getNowVersion() != ViaVersion.getCLIENT_VERSION()) {
+
+                    UserConnection user = new UserConnectionImpl(p_initChannel_1_, true);
+                    new ProtocolPipelineImpl(user);
+
+                    p_initChannel_1_.pipeline()
+                            .addBefore("encoder", CommonTransformer.HANDLER_ENCODER_NAME, new EncodeHandler(user))
+                            .addBefore("decoder", CommonTransformer.HANDLER_DECODER_NAME, new DecodeHandler(user));
+                }
             }
         }).channel(oclass).connect(address, serverPort).syncUninterruptibly();
         return networkmanager;

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import kevin.main.KevinClient;
 import kevin.module.modules.render.StorageESP;
+import kevin.module.modules.render.XRay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -116,6 +117,9 @@ public class TileEntityRendererDispatcher
 
     public void renderTileEntity(TileEntity tileentityIn, float partialTicks, int destroyStage)
     {
+        XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Simple")&&!xRay.getXrayBlocks().contains(tileentityIn.getBlockType())) return;
+
         if (tileentityIn.getDistanceSq(this.entityX, this.entityY, this.entityZ) < tileentityIn.getMaxRenderDistanceSquared())
         {
             boolean flag = true;
@@ -128,7 +132,7 @@ public class TileEntityRendererDispatcher
             if (flag)
             {
                 StorageESP storageESP = (StorageESP) KevinClient.moduleManager.getModule("StorageESP");
-                if (!storageESP.getToggle()) RenderHelper.enableStandardItemLighting();
+                if (!storageESP.getState()) RenderHelper.enableStandardItemLighting();
                 int i = this.worldObj.getCombinedLight(tileentityIn.getPos(), 0);
                 int j = i % 65536;
                 int k = i / 65536;

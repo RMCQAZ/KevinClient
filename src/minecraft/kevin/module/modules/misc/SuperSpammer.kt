@@ -164,7 +164,7 @@ class SuperSpammer : Module("SuperSpammer","Spams the chat with given messages."
                     lastMode = mode
                 }
                 if (spammerList.isNotEmpty()) mc.thePlayer.sendChatMessage(if (customNoRandomV.get()) "$start${spammerList[sentencesNumber]}" else "$first${spammerList[sentencesNumber]}$last")
-                if (sentencesNumber < spammerList.size - 1) sentencesNumber += 1 else if (autoDisableV.get()) KevinClient.moduleManager.getModule(this.getName())?.toggle() else sentencesNumber = 0
+                if (sentencesNumber < spammerList.size - 1) sentencesNumber += 1 else if (autoDisableV.get()) KevinClient.moduleManager.getModule(this.name)?.toggle() else sentencesNumber = 0
             }
             msTimer.reset()
             delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())

@@ -4,6 +4,7 @@ import kevin.event.*
 import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.exploit.TP
+import kevin.module.modules.misc.HideAndSeekHack
 import kevin.module.modules.misc.Teams
 import kevin.utils.*
 import net.minecraft.client.gui.inventory.GuiContainer
@@ -131,8 +132,8 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
      */
 
     // Target
-    var target: EntityLivingBase? = null
-    private var currentTarget: EntityLivingBase? = null
+    var target: Entity? = null
+    private var currentTarget: Entity? = null
     private var hitable = false
     private val prevTargetEntities = mutableListOf<Int>()
 
@@ -354,7 +355,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
             RenderUtils.drawPlatform(target, if (hitable) Color(37, 126, 255, 70) else Color(255, 0, 0, 70))
 
         if (currentTarget != null && attackTimer.hasTimePassed(attackDelay) &&
-            currentTarget!!.hurtTime <= hurtTimeValue.get()) {
+            (currentTarget !is EntityLivingBase || (currentTarget as EntityLivingBase).hurtTime <= hurtTimeValue.get())) {
             clicks++
             attackTimer.reset()
             attackDelay = TimeUtils.randomClickDelay(minCPS.get(), maxCPS.get())
@@ -409,7 +410,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
                 for (entity in theWorld.loadedEntityList) {
                     val distance = thePlayer.getDistanceToEntityBox(entity)
 
-                    if ((entity) is EntityLivingBase && isEnemy(entity) && distance <= getRange(entity)) {
+                    if ((entity is EntityLivingBase || HideAndSeekHack.isHider(entity)) && isEnemy(entity) && distance <= getRange(entity)) {
                         attackEntity(entity)
 
                         targets += 1
@@ -444,26 +445,26 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         val switchMode = targetModeValue.get().equals("Switch", ignoreCase = true)
 
         // Find possible targets
-        val targets = mutableListOf<EntityLivingBase>()
+        val targets = mutableListOf<Entity>()
 
         val theWorld = mc.theWorld!!
         val thePlayer = mc.thePlayer!!
 
         for (entity in theWorld.loadedEntityList) {
-            if ((entity) !is EntityLivingBase || !isEnemy(entity) || (switchMode && prevTargetEntities.contains(entity.entityId)))
+            if ((entity !is EntityLivingBase && !HideAndSeekHack.isHider(entity)) || !isEnemy(entity) || (switchMode && prevTargetEntities.contains(entity.entityId)))
                 continue
 
             val distance = thePlayer.getDistanceToEntityBox(entity)
             val entityFov = RotationUtils.getRotationDifference(entity)
 
-            if (distance <= maxRange && (fov == 180F || entityFov <= fov) && entity.hurtTime <= hurtTime)
+            if (distance <= maxRange && (fov == 180F || entityFov <= fov) && (entity !is EntityLivingBase || entity.hurtTime <= hurtTime))
                 targets.add(entity)
         }
 
         // Sort targets by priority
         when (priorityValue.get().toLowerCase()) {
             "distance" -> targets.sortBy { thePlayer.getDistanceToEntityBox(it) } // Sort by distance
-            "health" -> targets.sortBy { it.health } // Sort by health
+            "health" -> targets.sortBy { if (it is EntityLivingBase) it.health else thePlayer.getDistanceToEntityBox(it).toFloat() } // Sort by health
             "direction" -> targets.sortBy { RotationUtils.getRotationDifference(it) } // Sort by FOV
             "livingtime" -> targets.sortBy { -it.ticksExisted } // Sort by existence
         }
@@ -490,7 +491,10 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
      * Check if [entity] is selected as enemy with current target options and other modules
      */
     private fun isEnemy(entity: Entity?): Boolean {
-        if ((entity) is EntityLivingBase && entity != null && (EntityUtils.targetDeath || isAlive(entity)) && entity != mc.thePlayer) {
+        if (HideAndSeekHack.isHider(entity)){
+            return true
+        } else if (HideAndSeekHack.isSeeker()) return false
+        if ((entity) is EntityLivingBase && (EntityUtils.targetDeath || isAlive(entity)) && entity != mc.thePlayer) {
             if (!EntityUtils.targetInvisible && entity.isInvisible)
                 return false
 
@@ -503,7 +507,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
  **/
                 val teams = KevinClient.moduleManager.getModule("Teams") as Teams
 
-                return !teams.getToggle() || !teams.isInYourTeam(entity)
+                return !teams.state || !teams.isInYourTeam(entity)
             }
 
             return EntityUtils.targetMobs && entity.isMob() || EntityUtils.targetAnimals && entity.isAnimal()
@@ -515,7 +519,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
     /**
      * Attack [entity]
      */
-    private fun attackEntity(entity: EntityLivingBase) {
+    private fun attackEntity(entity: Entity) {
         // Stop blocking
         val thePlayer = mc.thePlayer!!
 
@@ -537,7 +541,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
                 thePlayer.onCriticalHit(entity)
 
             // Enchant Effect
-            if (EnchantmentHelper.getModifierForCreature(thePlayer.heldItem, entity.creatureAttribute) > 0F)
+            if (entity is EntityLivingBase && EnchantmentHelper.getModifierForCreature(thePlayer.heldItem, entity.creatureAttribute) > 0F)
                 thePlayer.onEnchantmentCritical(entity)
         } else {
             if (mc.playerController.currentGameType != WorldSettings.GameType.SPECTATOR)
@@ -549,11 +553,11 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
 
         for (i in 0..2) {
             // Critical Effect
-            if (thePlayer.fallDistance > 0F && !thePlayer.onGround && !thePlayer.isOnLadder && !thePlayer.isInWater && !thePlayer.isPotionActive(Potion.blindness) && thePlayer.ridingEntity == null || criticals.getToggle() && criticals.msTimer.hasTimePassed(criticals.delayValue.get().toLong()) && !thePlayer.isInWater && !thePlayer.isInLava && !thePlayer.isInWeb)
+            if (thePlayer.fallDistance > 0F && !thePlayer.onGround && !thePlayer.isOnLadder && !thePlayer.isInWater && !thePlayer.isPotionActive(Potion.blindness) && thePlayer.ridingEntity == null || criticals.state && criticals.msTimer.hasTimePassed(criticals.delayValue.get().toLong()) && !thePlayer.isInWater && !thePlayer.isInLava && !thePlayer.isInWeb)
                 thePlayer.onCriticalHit(target!!)
 
             // Enchant Effect
-            if (EnchantmentHelper.getModifierForCreature(thePlayer.heldItem, target!!.creatureAttribute) > 0.0f || fakeSharpValue.get())
+            if (target is EntityLivingBase && EnchantmentHelper.getModifierForCreature(thePlayer.heldItem, (target as EntityLivingBase).creatureAttribute) > 0.0f || fakeSharpValue.get())
                 thePlayer.onEnchantmentCritical(target!!)
         }
 
@@ -613,13 +617,13 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         if (raycastValue.get()) {
             val raycastedEntity = RaycastUtils.raycastEntity(reach, object : RaycastUtils.EntityFilter {
                 override fun canRaycast(entity: Entity?): Boolean {
-                    return (!livingRaycastValue.get() || ((entity) is EntityLivingBase && (entity) !is EntityArmorStand)) &&
+                    return (!livingRaycastValue.get() || (((entity) is EntityLivingBase || HideAndSeekHack.isHider(entity)) && (entity) !is EntityArmorStand)) &&
                             (isEnemy(entity) || raycastIgnoredValue.get() || aacValue.get() && mc.theWorld!!.getEntitiesWithinAABBExcludingEntity(entity, entity!!.entityBoundingBox).isNotEmpty())
                 }
 
             })
 
-            if (raycastValue.get() && raycastedEntity != null && (raycastedEntity) is EntityLivingBase
+            if (raycastValue.get() && raycastedEntity != null && (raycastedEntity is EntityLivingBase || HideAndSeekHack.isHider(raycastedEntity))
                 /**&& (LiquidBounce.moduleManager[NoFriends::class.java].state || !(classProvider.isEntityPlayer(raycastedEntity) && raycastedEntity.asEntityPlayer().isClientFriend()))**/)
                 currentTarget = raycastedEntity
 
@@ -681,7 +685,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
      */
     private val cancelRun: Boolean
         inline get() = mc.thePlayer!!.isSpectator || !isAlive(mc.thePlayer!!)
-                || KevinClient.moduleManager.getModule("Blink")!!.getToggle() || KevinClient.moduleManager.getModule("FreeCam")!!.getToggle() || (KevinClient.moduleManager.getModule("TP")!!.getToggle()&&(KevinClient.moduleManager.getModule("TP") as TP).mode.get().equals("AAC",true))
+                || KevinClient.moduleManager.getModule("Blink")!!.state || KevinClient.moduleManager.getModule("FreeCam")!!.state || (KevinClient.moduleManager.getModule("TP")!!.state&&(KevinClient.moduleManager.getModule("TP") as TP).mode.get().equals("AAC",true))
 
     /**
      * Check if [entity] is alive
@@ -711,5 +715,5 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         get() = targetModeValue.get()
 
     val isBlockingChestAura: Boolean
-        get() = this.getToggle() && target != null
+        get() = this.state && target != null
 }

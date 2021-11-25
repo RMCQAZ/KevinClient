@@ -22,6 +22,7 @@ public class FileManager extends MinecraftInstance {
     public final File killMessages = new File(dir,"KillMessages");
     public final File playerModels = new File(dir,"PlayerModels");
     public final File scripts = new File(dir,"Scripts");
+    public final File via = new File(dir,"Via");
     public final FileConfig modulesConfig = new ModulesConfig(new File(dir, "modules.json"));
     public final FileConfig hudConfig = new HudConfig(new File(dir, "hud.json"));
     public final File altsFile = new File(dir,"accounts.json");
@@ -38,13 +39,14 @@ public class FileManager extends MinecraftInstance {
         if (!killMessages.exists()) killMessages.mkdir();
         if (!playerModels.exists()) playerModels.mkdir();
         if (!scripts.exists()) scripts.mkdir();
+        if (!via.exists()) via.mkdir();
     }
 
     public void saveConfig(final FileConfig config) {
         saveConfig(config, false);
     }
     private void saveConfig(final FileConfig config, final boolean ignoreStarting) {
-        if (!ignoreStarting && KevinClient.fileManager == null)
+        if (!ignoreStarting && KevinClient.INSTANCE.isStarting())
             return;
 
         try {

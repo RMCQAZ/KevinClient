@@ -43,7 +43,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             "New" -> mc.displayGuiScreen(KevinClient.newClickGui)
             "Old" -> mc.displayGuiScreen(KevinClient.clickGUI)
         }
-        this.toggle(false)
+        this.state = false
     }
 
     class ClickGUI : GuiScreen(){
@@ -300,7 +300,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             val moduleHigh = mc.currentScreen.height/16F
             for (m in KevinClient.moduleManager.getModules()){
                 if (y > mc.currentScreen.height / 4F+moduleHigh*7)break
-                if (m.getCategory() != category) continue
+                if (m.category != category) continue
                 if (jumpOver != start){jumpOver+=1;continue}
                 val rainbow = isClick(mc.currentScreen.width/8F*3,y,mc.currentScreen.width / 16F * 9,y+moduleHigh,mouseX.toFloat(),mouseY.toFloat())
                 val noHead = y != mc.currentScreen.height / 4F && isClick(mc.currentScreen.width/8F*3,y-moduleHigh,mc.currentScreen.width / 16F * 9,y,mouseX.toFloat(),mouseY.toFloat())
@@ -319,7 +319,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 }
                 FontManager.RainbowFontShader.begin(fontRainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
                     KevinClient.fontManager.font35!!.drawString(
-                        m.getName(),
+                        m.name,
                         mc.currentScreen.width / 8F * 3 + 5,
                         y - KevinClient.fontManager.font35!!.fontHeight / 3 + moduleHigh / 2,
                         Color(0, 111, 255).rgb
@@ -335,8 +335,8 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     ModuleCategory.WORLD -> "World"
                 }
                 if (fontRainbow) drawSettings(m,settingStart!![moduleCategoryString]!!,mouseX,mouseY)
-                drawButton1(mc.currentScreen.width / 16F * 9 -13,y+moduleHigh/2-2.5F,m.getToggle(),isClick(mc.currentScreen.width / 16F * 9 -13,y+moduleHigh/2-2.5F,mc.currentScreen.width / 16F * 9 - 4,y+moduleHigh/2-2.5F + 5,mouseX.toFloat(),mouseY.toFloat()),1F)
-                if (rainbow){glPushMatrix();drawHoveringText(listOf(m.getDescription()),mouseX,mouseY);RenderHelper.disableStandardItemLighting();glPopMatrix()}
+                drawButton1(mc.currentScreen.width / 16F * 9 -13,y+moduleHigh/2-2.5F,m.state,isClick(mc.currentScreen.width / 16F * 9 -13,y+moduleHigh/2-2.5F,mc.currentScreen.width / 16F * 9 - 4,y+moduleHigh/2-2.5F + 5,mouseX.toFloat(),mouseY.toFloat()),1F)
+                if (rainbow){glPushMatrix();drawHoveringText(listOf(m.description),mouseX,mouseY);RenderHelper.disableStandardItemLighting();glPopMatrix()}
                 y += moduleHigh
             }
         }
@@ -346,7 +346,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             val moduleHigh = mc.currentScreen.height/16F
             for (m in KevinClient.moduleManager.getModules()){
                 if (y > mc.currentScreen.height / 4F+moduleHigh*7)break
-                if (m.getCategory() != category) continue
+                if (m.category != category) continue
                 if (jumpOver != start){jumpOver+=1;continue}
                 if (isClick(mc.currentScreen.width / 16F * 9 -13,y+moduleHigh/2-2.5F,mc.currentScreen.width / 16F * 9 - 4,y+moduleHigh/2-2.5F + 5,mouseX.toFloat(),mouseY.toFloat())){ m.toggle() }
                 if (isClick(mc.currentScreen.width/8F*3,y,mc.currentScreen.width / 16F * 9,y+moduleHigh,mouseX.toFloat(),mouseY.toFloat())&&!isClick(mc.currentScreen.width / 16F * 9 -13,y+moduleHigh/2-2.5F,mc.currentScreen.width / 16F * 9 - 4,y+moduleHigh/2-2.5F + 5,mouseX.toFloat(),mouseY.toFloat())){
@@ -416,7 +416,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             }
             var modulesNumber = 0
             for (m in KevinClient.moduleManager.getModules()){
-                if (m.getCategory() == moduleCategory) modulesNumber += 1
+                if (m.category == moduleCategory) modulesNumber += 1
             }
             when{
                 Mouse.getEventDWheel() > 0 ->{
@@ -679,7 +679,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             }
             KevinClient.moduleManager.getModules().forEach {
                 if(!(it is Targets||it is ClickGui||it is CapeManager||it is HudDesigner))
-                    cateMaxY[it.getCategory()] = cateMaxY[it.getCategory()]!! + 1
+                    cateMaxY[it.category] = cateMaxY[it.category]!! + 1
             }
             ModuleCategory.values().forEach{
                 cateMaxY[it] = if (cateMaxY[it]!!-8<=0) 0 else cateMaxY[it]!! - 8
@@ -1018,7 +1018,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     var yO = 1.5F
                     KevinClient.moduleManager.getModules().forEach {
                         if (it is ClickGui||it is CapeManager||it is HudDesigner){
-                            buttonList.add(Button(it.getName(),startX.toFloat(),y1+radius.toFloat()*2.25F+yO,endX.toFloat(),y1+radius.toFloat()*2.25F+yO+yS.toFloat(),Color.white,Color.black,it.getName(),Button.TextPos.Middle))
+                            buttonList.add(Button(it.name,startX.toFloat(),y1+radius.toFloat()*2.25F+yO,endX.toFloat(),y1+radius.toFloat()*2.25F+yO+yS.toFloat(),Color.white,Color.black,it.name,Button.TextPos.Middle))
                             yO += yS.toFloat() + 1F
                         }
                     }
@@ -1083,10 +1083,10 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             var r = 0
             for (it in KevinClient.moduleManager.getModules()) {
                 if (it is Targets||it is ClickGui||it is CapeManager||it is HudDesigner) continue
-                if (it.getCategory()==moduleCategory){
+                if (it.category==moduleCategory){
                     if (r!=start){r+=1;continue}
                     if (buttonList.size==8)break
-                    buttonList.add(Button(it.getName(),startX.toFloat(),y1+radius.toFloat()*2.25F+yO,endX.toFloat(),y1+radius.toFloat()*2.25F+yO+yS.toFloat(),Color.white,Color.black,it.getName(),Button.TextPos.Middle))
+                    buttonList.add(Button(it.name,startX.toFloat(),y1+radius.toFloat()*2.25F+yO,endX.toFloat(),y1+radius.toFloat()*2.25F+yO+yS.toFloat(),Color.white,Color.black,it.name,Button.TextPos.Middle))
                     yO += yS.toFloat() + 1F
                 }
             }
@@ -1262,7 +1262,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 //Description
                 val textList = arrayListOf<String>()
                 var text = ""
-                val t = module.getDescription().split(" ").toMutableList()
+                val t = module.description.split(" ").toMutableList()
                 var cou = 0
                 t.forEach {
                     if (KevinClient.fontManager.font35!!.getStringWidth("$text $it") * 0.7 < endX - startX) {
@@ -1279,7 +1279,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 }
                 yO += 3F
                 //Settings
-                val moduleName = module.getName()
+                val moduleName = module.name
                 val settings = module.values
                 settings.forEach {
                     when (it) {
@@ -1458,7 +1458,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 glScaled(0.7, 0.7, 0.7)
                 val textList = arrayListOf<String>()
                 var text = ""
-                val t = module.getDescription().split(" ").toMutableList()
+                val t = module.description.split(" ").toMutableList()
                 var cou = 0
                 t.forEach {
                     if (KevinClient.fontManager.font35!!.getStringWidth("$text $it") * 0.7 < endX - startX) {
@@ -1482,7 +1482,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 yO += 3F
                 glPopMatrix()
                 //DrawSettings
-                val moduleName = module.getName()
+                val moduleName = module.name
                 settings.forEach {
                     when (it) {
                         is BooleanValue -> {
@@ -1822,7 +1822,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             val cn = if (clickModule[category]!=-1) clickModule[category] else lastModule[category]
             for (it in KevinClient.moduleManager.getModules()){
                 if (it is Targets||it is ClickGui||it is CapeManager||it is HudDesigner) continue
-                if (it.getCategory()!=category) continue
+                if (it.category!=category) continue
                 if (c != cn) {c+=1;continue}
 
                 val animLineY = if (lineAnim["LineSettings"]!!!=100F) startY.toFloat() + ((((endY+2F) - (startY-2F))) * lineAnim["LineSettings"]!! / 100F).toFloat() else Float.MAX_VALUE
@@ -1843,7 +1843,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     //Description
                     val textList = arrayListOf<String>()
                     var text = ""
-                    val t = it.getDescription().split(" ").toMutableList()
+                    val t = it.description.split(" ").toMutableList()
                     var cou = 0
                     t.forEach{
                         if (KevinClient.fontManager.font35!!.getStringWidth("$text $it")*0.7<endX-startX){
@@ -1864,7 +1864,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     }
                     yO += 3F
                     //Settings
-                    val moduleName = it.getName()
+                    val moduleName = it.name
                     val settings = it.values
                     settings.forEach{
                         when(it){
@@ -2025,10 +2025,10 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     KevinClient.fontManager.font35!!.drawString("State",(startX.toFloat()+1F)/0.8F,(yO+startY.toFloat())/0.8F,Color(0,111,255,alpha1).rgb)
 
                     glPopMatrix()
-                    if (buttonsAnim["${it.getName()}State"]!=null){
-                        animButton("${it.getName()}State",9F,it.getToggle())
+                    if (buttonsAnim["${it.name}State"]!=null){
+                        animButton("${it.name}State",9F,it.state)
                     }
-                    if (buttonsAnim["${it.getName()}State"]==null) buttonsAnim["${it.getName()}State"] = if (it.getToggle()) 100F else 0F
+                    if (buttonsAnim["${it.name}State"]==null) buttonsAnim["${it.name}State"] = if (it.state) 100F else 0F
                     yO -= 2F
                     val l = isClick(mouseX.toFloat(),mouseY.toFloat(),endX.toFloat()-25F,yO+startY.toFloat(),endX.toFloat()-5F,yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.8F) && (mouseX.toFloat() in startX-2F..endX+2F && mouseY.toFloat() in startY-2F..endY+2F)
 
@@ -2038,7 +2038,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                         glDisable(GL_SCISSOR_TEST)
                         return
                     }
-                    drawButton1(endX.toFloat()-25F,yO+startY.toFloat(),endX.toFloat()-5F,yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.8F,if(isLight()) if (l) Color(170,170,170,alpha2) else Color(255,255,255,alpha2) else if (l) Color(64,64,64,alpha2) else Color(0,0,0,alpha2),if (it.getToggle()) Color(0,255,0,alpha2) else Color(255,0,0,alpha2),buttonsAnim["${it.getName()}State"]!!)
+                    drawButton1(endX.toFloat()-25F,yO+startY.toFloat(),endX.toFloat()-5F,yO+startY.toFloat()+KevinClient.fontManager.font35!!.fontHeight*0.8F,if(isLight()) if (l) Color(170,170,170,alpha2) else Color(255,255,255,alpha2) else if (l) Color(64,64,64,alpha2) else Color(0,0,0,alpha2),if (it.state) Color(0,255,0,alpha2) else Color(255,0,0,alpha2),buttonsAnim["${it.name}State"]!!)
 
                     yO += KevinClient.fontManager.font35!!.fontHeight*0.8F + 4F
                     //DrawDescription
@@ -2046,7 +2046,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     glScaled(0.7,0.7,0.7)
                     val textList = arrayListOf<String>()
                     var text = ""
-                    val t = it.getDescription().split(" ").toMutableList()
+                    val t = it.description.split(" ").toMutableList()
                     var cou = 0
                     t.forEach{
                         if (KevinClient.fontManager.font35!!.getStringWidth("$text $it")*0.7<endX-startX){
@@ -2074,7 +2074,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     yO += 3F
                     glPopMatrix()
                     //DrawSettings
-                    val moduleName = it.getName()
+                    val moduleName = it.name
                     settings.forEach{
                         when(it){
                             is BooleanValue -> {

@@ -159,7 +159,7 @@ public class PlayerControllerMP
         }
         ItemStack heldItem = this.mc.thePlayer.getHeldItem();
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=mc.thePlayer.inventory.currentItem){
+        if (autoTool.getState()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=mc.thePlayer.inventory.currentItem){
             heldItem = mc.thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
 
@@ -192,7 +192,7 @@ public class PlayerControllerMP
                 if (!this.currentGameType.isCreative())
                 {
                     ItemStack itemstack1 = this.mc.thePlayer.getCurrentEquippedItem();
-                    if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=mc.thePlayer.inventory.currentItem) {
+                    if (autoTool.getState()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=mc.thePlayer.inventory.currentItem) {
                         itemstack1 = mc.thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
                     }
 

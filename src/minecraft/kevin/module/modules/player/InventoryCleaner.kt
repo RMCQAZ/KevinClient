@@ -187,10 +187,10 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
             } else if (itemStack.unlocalizedName == "item.compass") {
                 items(0, 45).none { (_, stack) -> itemStack != stack && stack.unlocalizedName == "item.compass" }
             } else item is ItemFood || itemStack.unlocalizedName == "item.arrow" ||
-                    ((item is ItemBlock && item.block !is BlockBush)&&(blocks<=maxBlocks.get()||!this.getToggle())) ||
+                    ((item is ItemBlock && item.block !is BlockBush)&&(blocks<=maxBlocks.get()||!this.state)) ||
                     item is ItemBed || itemStack.unlocalizedName == "item.diamond" || itemStack.unlocalizedName == "item.ingotIron" ||
-                    item is ItemPotion || item is ItemEnderPearl || item is ItemEnchantedBook || (item is ItemBucket&&(buckets<=maxBuckets.get()||!this.getToggle())) || itemStack.unlocalizedName == "item.stick" ||
-                    ignoreVehiclesValue.get() && (item is ItemBoat || item is ItemMinecart) || ((item is ItemSnowball||item is ItemEgg)&&(throwables<=maxThrowableItems.get()||!this.getToggle()))
+                    item is ItemPotion || item is ItemEnderPearl || item is ItemEnchantedBook || (item is ItemBucket&&(buckets<=maxBuckets.get()||!this.state)) || itemStack.unlocalizedName == "item.stick" ||
+                    ignoreVehiclesValue.get() && (item is ItemBoat || item is ItemMinecart) || ((item is ItemSnowball||item is ItemEgg)&&(throwables<=maxThrowableItems.get()||!this.state))
         } catch (ex: Exception) {
             true
         }

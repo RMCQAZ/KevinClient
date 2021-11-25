@@ -69,10 +69,10 @@ class Arraylist(x: Double = 1.0, y: Double = 2.0, scale: Float = 1F,
         val delta = RenderUtils.deltaTime
 
         for (module in KevinClient.moduleManager.getModules()) {
-            if (!module.array || (!module.getToggle() && module.slide == 0F)) continue
+            if (!module.array || (!module.state && module.slide == 0F)) continue
 
             var displayString = if (!tags.get())
-                module.getName()
+                module.name
             else if (tagsArrayColor.get())
                 module.getColorlessTagName(tagLeft,tagRight)
             else module.getTagName(tagLeft,tagRight)
@@ -82,7 +82,7 @@ class Arraylist(x: Double = 1.0, y: Double = 2.0, scale: Float = 1F,
 
             val width = fontRenderer.getStringWidth(displayString)
 
-            if (module.getToggle()) {
+            if (module.state) {
                 if (module.slide < width) {
                     module.slide = AnimationUtils.easeOut(module.slideStep, width.toFloat()) * width
                     module.slideStep += delta / 4F
@@ -116,7 +116,7 @@ class Arraylist(x: Double = 1.0, y: Double = 2.0, scale: Float = 1F,
 
         modules.forEachIndexed { index, module ->
             var displayString = if (!tags.get())
-                module.getName()
+                module.name
             else if (tagsArrayColor.get())
                 module.getColorlessTagName(tagLeft,tagRight)
             else module.getTagName(tagLeft,tagRight)
@@ -231,6 +231,6 @@ class Arraylist(x: Double = 1.0, y: Double = 2.0, scale: Float = 1F,
         val tagsArrayColor = arrayListTagsArrayColor
         modules = KevinClient.moduleManager.getModules()
             .filter { it.array && it.slide > 0 }
-            .sortedBy { -fontValue.getStringWidth(if (upperCaseValue.get()) (if (!tags.get()) it.getName() else if (tagsArrayColor.get()) it.getColorlessTagName(tagLeft,tagRight) else it.getTagName(tagLeft,tagRight)).toUpperCase() else if (!tags.get()) it.getName() else if (tagsArrayColor.get()) it.getColorlessTagName(tagLeft,tagRight) else it.getTagName(tagLeft,tagRight)) }
+            .sortedBy { -fontValue.getStringWidth(if (upperCaseValue.get()) (if (!tags.get()) it.name else if (tagsArrayColor.get()) it.getColorlessTagName(tagLeft,tagRight) else it.getTagName(tagLeft,tagRight)).toUpperCase() else if (!tags.get()) it.name else if (tagsArrayColor.get()) it.getColorlessTagName(tagLeft,tagRight) else it.getTagName(tagLeft,tagRight)) }
     }
 }

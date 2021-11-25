@@ -272,7 +272,7 @@ public class ItemInWorldManager
     {
         ItemStack heldItem = this.thisPlayerMP.getHeldItem();
         AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
-        if (autoTool.getToggle()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=this.thisPlayerMP.inventory.currentItem){
+        if (autoTool.getState()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=this.thisPlayerMP.inventory.currentItem){
             heldItem = this.thisPlayerMP.inventory.getStackInSlot(autoTool.getNowSlot());
         }
 

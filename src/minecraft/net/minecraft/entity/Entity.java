@@ -404,7 +404,7 @@ public abstract class Entity implements ICommandSender
      */
     public void setAngles(float yaw, float pitch)
     {
-        if (Objects.requireNonNull(KevinClient.moduleManager.getModule("NoPitchLimit")).getToggle()) {
+        if (Objects.requireNonNull(KevinClient.moduleManager.getModule("NoPitchLimit")).getState()) {
             float f = this.rotationPitch;
             float f1 = this.rotationYaw;
             this.rotationYaw = (float) ((double) this.rotationYaw + (double) yaw * 0.15D);
@@ -2091,7 +2091,7 @@ public abstract class Entity implements ICommandSender
     {
         final HitBox hitBox = (HitBox) KevinClient.moduleManager.getModule("HitBox");
 
-        if (Objects.requireNonNull(hitBox).getToggle()) return 0.1F + hitBox.getSizeValue().get();
+        if (Objects.requireNonNull(hitBox).getState()) return 0.1F + hitBox.getSizeValue().get();
 
         return 0.1F;
     }

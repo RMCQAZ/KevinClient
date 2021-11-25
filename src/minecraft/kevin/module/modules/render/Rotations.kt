@@ -46,7 +46,7 @@ class Rotations : Module("Rotations", description = "Allows you to see server-si
         }
     }
 
-    private fun getState(module: String) = KevinClient.moduleManager.getModule(module)!!.getToggle()
+    private fun getState(module: String) = KevinClient.moduleManager.getModule(module)!!.state
 
     private fun shouldRotate(): Boolean {
         val killAura = KevinClient.moduleManager.getModule("KillAura") as KillAura

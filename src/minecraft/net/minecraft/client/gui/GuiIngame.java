@@ -943,7 +943,7 @@ public class GuiIngame extends Gui
     {
         final AntiBlind antiBlind = (AntiBlind) KevinClient.moduleManager.getModule("AntiBlind");
 
-        if(antiBlind.getToggle() && antiBlind.getPumpkinEffect().get())
+        if(antiBlind.getState() && antiBlind.getPumpkinEffect().get())
             return;
 
         GlStateManager.disableDepth();

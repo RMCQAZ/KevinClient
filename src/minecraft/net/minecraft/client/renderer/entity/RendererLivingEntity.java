@@ -126,7 +126,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     {
         final Chams chams = (Chams) KevinClient.moduleManager.getModule("Chams");
 
-        if (chams.getToggle() && chams.getTargetsValue().get() && EntityUtils.isSelected(entity, false)) {
+        if (chams.getState() && chams.getTargetsValue().get() && EntityUtils.isSelected(entity, false)) {
             GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
             GL11.glPolygonOffset(1.0F, -1000000F);
         }
@@ -309,7 +309,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             }
         }
 
-        if (chams.getToggle() && chams.getTargetsValue().get() && EntityUtils.isSelected(entity, false)) {
+        if (chams.getState() && chams.getTargetsValue().get() && EntityUtils.isSelected(entity, false)) {
             GL11.glPolygonOffset(1.0F, 1000000F);
             GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
         }
@@ -364,7 +364,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     {
         boolean flag = !entitylivingbaseIn.isInvisible();
         final TrueSight trueSight = (TrueSight) KevinClient.moduleManager.getModule("TrueSight");
-        boolean flag1 = !flag && (!entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer) || (trueSight.getToggle() && trueSight.getEntitiesValue().get()));
+        boolean flag1 = !flag && (!entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer) || (trueSight.getState() && trueSight.getEntitiesValue().get()));
 
         if (flag || flag1)
         {
@@ -384,7 +384,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             }
 
             final ESP esp = (ESP) KevinClient.moduleManager.getModule("ESP");
-            if(esp.getToggle() && EntityUtils.isSelected(entitylivingbaseIn, false)) {
+            if(esp.getState() && EntityUtils.isSelected(entitylivingbaseIn, false)) {
                 Minecraft mc = Minecraft.getMinecraft();
                 boolean fancyGraphics = mc.gameSettings.fancyGraphics;
                 mc.gameSettings.fancyGraphics = false;
@@ -414,7 +414,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                     case "outline":
                         if (mc.gameSettings.ofFastRender) {
                             ChatUtils.INSTANCE.messageWithStart("§cPlease Turn OFF Fast Render!");
-                            esp.toggle(false);
+                            esp.setState(false);
                             return;
                         }
                         GlStateManager.resetColor();
@@ -833,7 +833,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
     protected boolean canRenderName(T entity)
     {
-        if (!ESP.renderNameTags || (KevinClient.moduleManager.getModule("NameTags").getToggle() && EntityUtils.isSelected(entity, false))) return false;
+        if (!ESP.renderNameTags || (KevinClient.moduleManager.getModule("NameTags").getState() && EntityUtils.isSelected(entity, false))) return false;
 
         EntityPlayerSP entityplayersp = Minecraft.getMinecraft().thePlayer;
 

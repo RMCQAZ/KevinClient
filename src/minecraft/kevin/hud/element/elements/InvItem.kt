@@ -45,7 +45,7 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
     private fun getY2(): Float{
         val chestStealer = KevinClient.moduleManager.getModule("ChestStealer") as ChestStealer
         return if (
-            chestStealer.getToggle() &&
+            chestStealer.state &&
             chestStealer.chestItems.size > 27 &&
             chestStealer.overrideShowInvValue.get() &&
             (mc.currentScreen) is GuiChest
@@ -73,7 +73,7 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
         GL11.glPushMatrix()
         RenderHelper.enableGUIStandardItemLighting()
         val chestStealer = KevinClient.moduleManager.getModule("ChestStealer") as ChestStealer
-        val chest = (mc.currentScreen) is GuiChest && chestStealer.getToggle() && chestStealer.overrideShowInvValue.get()
+        val chest = (mc.currentScreen) is GuiChest && chestStealer.state && chestStealer.overrideShowInvValue.get()
 
         if (chestStealer.chestItems.isEmpty()&&chest) {
             RenderHelper.disableStandardItemLighting()
@@ -138,7 +138,7 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
     }
     private val isChest: Boolean get() {
         val chestStealer = KevinClient.moduleManager.getModule("ChestStealer") as ChestStealer
-        return (mc.currentScreen) is GuiChest && chestStealer.getToggle() && chestStealer.overrideShowInvValue.get()
+        return (mc.currentScreen) is GuiChest && chestStealer.state && chestStealer.overrideShowInvValue.get()
     }
     private fun drawChestItems(slot: Int,endSlot: Int,y: Int,chestItems: MutableList<ItemStack?>){
         var xOffset=6
@@ -155,7 +155,7 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
         val name = if (
             chestStealer.overrideShowInvValue.get()
             && (mc.currentScreen) is GuiChest
-            && chestStealer.getToggle()
+            && chestStealer.state
         ) "Chest"
         else "Inventory"
         if (titleRainbow.get()) {
@@ -185,7 +185,7 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
     }
     private fun drawInvEmptyString(){
         val chestStealer = KevinClient.moduleManager.getModule("ChestStealer") as ChestStealer
-        if (chestStealer.overrideShowInvValue.get() && (mc.currentScreen) is GuiChest && chestStealer.getToggle()) return
+        if (chestStealer.overrideShowInvValue.get() && (mc.currentScreen) is GuiChest && chestStealer.state) return
         if (invEmptyStringRainbow.get()) {
             FontManager.RainbowFontShader.begin(true, 1.0F / 1000, 1.0F / 1000, System.currentTimeMillis() % 10000 / 10000F).use {
                 KevinClient.fontManager.font35!!.drawString(

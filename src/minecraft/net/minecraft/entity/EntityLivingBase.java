@@ -731,7 +731,7 @@ public abstract class EntityLivingBase extends Entity
     public boolean isPotionActive(Potion potionIn)
     {
         final AntiBlind antiBlind = (AntiBlind) KevinClient.moduleManager.getModule("AntiBlind");
-        if ((potionIn == Potion.confusion || potionIn == Potion.blindness) && Objects.requireNonNull(antiBlind).getToggle() && antiBlind.getConfusionEffect().get())
+        if ((potionIn == Potion.confusion || potionIn == Potion.blindness) && Objects.requireNonNull(antiBlind).getState() && antiBlind.getConfusionEffect().get())
             return false;
         return this.activePotionsMap.containsKey(potionIn.id);
     }
@@ -1349,7 +1349,7 @@ public abstract class EntityLivingBase extends Entity
     private int getArmSwingAnimationEnd()
     {
         Animations animations = (Animations) KevinClient.moduleManager.getModule("Animations");
-        if (animations.getToggle() && this == Minecraft.getMinecraft().thePlayer){
+        if (animations.getState() && this == Minecraft.getMinecraft().thePlayer){
             return animations.getAnimationSpeed().get();
         } else if (this.isPotionActive(Potion.digSpeed))
         {
@@ -2055,7 +2055,7 @@ public abstract class EntityLivingBase extends Entity
             this.jumpTicks = 0;
         }
 
-        if (Objects.requireNonNull(KevinClient.moduleManager.getModule("AirJump")).getToggle() && isJumping && this.jumpTicks == 0) {
+        if (Objects.requireNonNull(KevinClient.moduleManager.getModule("AirJump")).getState() && isJumping && this.jumpTicks == 0) {
             this.jump();
             this.jumpTicks = 10;
         }
