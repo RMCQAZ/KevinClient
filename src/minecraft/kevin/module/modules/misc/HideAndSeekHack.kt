@@ -195,6 +195,8 @@ object HideAndSeekHack : Module("HideAndSeekHack","Mark every hider.") {
     }
     @EventTarget
     fun onWorld(event: WorldEvent){
+        if (event.worldClient == null)
+            return
         hiderBlocks.clear()
         airs.clear()
         sY = 0

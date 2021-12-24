@@ -49,6 +49,7 @@ class ModuleManager : Listenable {
             GhostHand(),
             KeepContainer(),
             Kick(),
+            Log4j2(),
             MultiActions(),
             NoPitchLimit(),
             Phase(),
@@ -62,6 +63,7 @@ class ModuleManager : Listenable {
         miscList = arrayListOf(
             AdminDetector,
             AntiBot(),
+            AntiInvalidBlockPlacement(),
             AutoCommand(),
             AutoDisable,
             AutoL(),

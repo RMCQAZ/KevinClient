@@ -99,7 +99,7 @@ class NameTags : Module("NameTags", "Changes the scale of the nametags so you ca
 
                 val distanceText = if (distanceValue.get()) "§7 [§a${mc.thePlayer.getDistanceToEntity(entity).roundToInt()}§7]" else ""
                 val pingText = if (pingValue.get() && entity is EntityPlayer) (if (ping > 200) "§c" else if (ping > 100) "§e" else "§a") + ping + "ms §7" else ""
-                val healthText = if (healthValue.get()) "§7 [§f" + entity.health.toInt() + "§c❤§7]" else ""
+                val healthText = if (healthValue.get()) "§7 [§c${entity.health.toInt()}❤${if (entity.absorptionAmount != 0F) "§7 + §e${entity.absorptionAmount.toInt()}❤" else ""}§7]" else ""
                 val botText = if (bot) " §7[§6§lBot§7]" else ""
 
                 val text = "$distanceText$pingText$nameColor$tag$healthText$botText"
