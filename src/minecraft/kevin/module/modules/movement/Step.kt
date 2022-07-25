@@ -9,15 +9,17 @@ import kevin.utils.MovementUtils
 import net.minecraft.block.Block
 import net.minecraft.block.BlockLiquid
 import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.minecraft.stats.StatList
 import net.minecraft.util.AxisAlignedBB
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
 class Step : Module("Step", "Allows you to step up/down blocks.", category = ModuleCategory.MOVEMENT) {
 
     private val modeValue = ListValue("Mode", arrayOf(
-        "Vanilla", "Jump", "NCP", "MotionNCP", "OldNCP", "AAC", "LAAC", "AAC3.3.4", "Spartan", "Rewinside"
+        "Vanilla", "Jump", "NCP", "SigmaNCP", "MotionNCP", "OldNCP", "AAC", "LAAC", "AAC3.3.4", "Spartan", "Rewinside"
     ), "NCP")
 
     private val heightValue = FloatValue("Height", 1F, 0.6F, 10F)
@@ -26,6 +28,9 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
 
     private val reverse = BooleanValue("ReverseStep",false)
     private val motionValue = FloatValue("Motion", 1f, 0.21f, 1f)
+
+    private val sigmaNCPTimer = FloatValue("SigmaNCPTimer", 0.37f, 0.2f, 1f)
+
     private var jumped = false
 
     @EventTarget(ignoreCondition = true)
@@ -46,11 +51,17 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
     private var spartanSwitch = false
     private var isAACStep = false
 
+    private var resetTimer = false
+
     private val timer = MSTimer()
+
+    override fun onEnable() {
+        resetTimer = false
+    }
 
     override fun onDisable() {
         val thePlayer = mc.thePlayer ?: return
-
+        mc.timer.timerSpeed = 1f
         // Change step height back to default (0.5 is default)
         thePlayer.stepHeight = 0.5F
     }
@@ -126,6 +137,11 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
         val mode = modeValue.get()
         val thePlayer = mc.thePlayer ?: return
 
+        if (resetTimer) {
+            resetTimer = false
+            mc.timer.timerSpeed = 1f
+        }
+
         // Motion steps
         when {
             mode.equals("motionncp", true) && thePlayer.isCollidedHorizontally && !mc.gameSettings.keyBindJump.isKeyDown -> {
@@ -159,6 +175,11 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
     @EventTarget
     fun onStep(event: StepEvent) {
         val thePlayer = mc.thePlayer ?: return
+
+        if (resetTimer) {
+            resetTimer = false
+            mc.timer.timerSpeed = 1f
+        }
 
         // Phase should disable step
         if (KevinClient.moduleManager.getModule("Phase")!!.state) {
@@ -208,23 +229,44 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
 
     @EventTarget(ignoreCondition = true)
     fun onStepConfirm(event: StepConfirmEvent) {
+        if (resetTimer) {
+            resetTimer = false
+            mc.timer.timerSpeed = 1f
+        }
+
         val thePlayer = mc.thePlayer
 
         if (thePlayer == null || !isStep) // Check if step
             return
 
-        if (thePlayer.entityBoundingBox.minY - stepY > 0.5) { // Check if full block step
+        val rheight = thePlayer.entityBoundingBox.minY - stepY
+
+        if (rheight > 0.5) { // Check if full block step
             val mode = modeValue.get()
 
             when {
+                mode.equals("SigmaNCP", ignoreCase = true) -> {
+                    mc.timer.timerSpeed =
+                        sigmaNCPTimer.get() - if (rheight >= 1) abs(1 - rheight.toFloat()) * (sigmaNCPTimer.get() * 0.55f) else 0f
+                    if (mc.timer.timerSpeed <= 0.05f) {
+                        mc.timer.timerSpeed = 0.05f
+                    }
+                    resetTimer = true
+                    ncpStep(rheight)
+                }
+
                 mode.equals("NCP", ignoreCase = true) || mode.equals("AAC", ignoreCase = true) -> {
                     fakeJump()
 
                     // Half legit step (1 packet missing) [COULD TRIGGER TOO MANY PACKETS]
-                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                        stepY + 0.41999998688698, stepZ, false))
-                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                        stepY + 0.7531999805212, stepZ, false))
+                    mc.netHandler.addToSendQueue(
+                        C04PacketPlayerPosition(stepX,
+                        stepY + 0.41999998688698, stepZ, false)
+                    )
+                    mc.netHandler.addToSendQueue(
+                        C04PacketPlayerPosition(stepX,
+                        stepY + 0.7531999805212, stepZ, false)
+                    )
                     timer.reset()
                 }
 
@@ -233,15 +275,23 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
 
                     if (spartanSwitch) {
                         // Vanilla step (3 packets) [COULD TRIGGER TOO MANY PACKETS]
-                        mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                            stepY + 0.41999998688698, stepZ, false))
-                        mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                            stepY + 0.7531999805212, stepZ, false))
-                        mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                            stepY + 1.001335979112147, stepZ, false))
+                        mc.netHandler.addToSendQueue(
+                            C04PacketPlayerPosition(stepX,
+                            stepY + 0.41999998688698, stepZ, false)
+                        )
+                        mc.netHandler.addToSendQueue(
+                            C04PacketPlayerPosition(stepX,
+                            stepY + 0.7531999805212, stepZ, false)
+                        )
+                        mc.netHandler.addToSendQueue(
+                            C04PacketPlayerPosition(stepX,
+                            stepY + 1.001335979112147, stepZ, false)
+                        )
                     } else // Force step
-                        mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                            stepY + 0.6, stepZ, false))
+                        mc.netHandler.addToSendQueue(
+                            C04PacketPlayerPosition(stepX,
+                            stepY + 0.6, stepZ, false)
+                        )
 
                     // Spartan allows one unlegit step so just swap between legit and unlegit
                     spartanSwitch = !spartanSwitch
@@ -254,12 +304,18 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
                     fakeJump()
 
                     // Vanilla step (3 packets) [COULD TRIGGER TOO MANY PACKETS]
-                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                        stepY + 0.41999998688698, stepZ, false))
-                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                        stepY + 0.7531999805212, stepZ, false))
-                    mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                        stepY + 1.001335979112147, stepZ, false))
+                    mc.netHandler.addToSendQueue(
+                        C04PacketPlayerPosition(stepX,
+                        stepY + 0.41999998688698, stepZ, false)
+                    )
+                    mc.netHandler.addToSendQueue(
+                        C04PacketPlayerPosition(stepX,
+                        stepY + 0.7531999805212, stepZ, false)
+                    )
+                    mc.netHandler.addToSendQueue(
+                        C04PacketPlayerPosition(stepX,
+                        stepY + 1.001335979112147, stepZ, false)
+                    )
 
                     // Reset timer
                     timer.reset()
@@ -298,6 +354,57 @@ class Step : Module("Step", "Allows you to step up/down blocks.", category = Mod
 
         return mc.theWorld!!.getCollisionBoxes(mc.thePlayer!!.entityBoundingBox.offset(x, 1.001335979112147, z))
             .isEmpty()
+    }
+
+    private fun ncpStep(height: Double) {
+        val offset = listOf(0.42, 0.333, 0.248, 0.083, -0.078)
+        val posX = mc.thePlayer.posX
+        val posZ = mc.thePlayer.posZ
+        var y = mc.thePlayer.posY
+        if (height < 1.1) {
+            var first = 0.42
+            var second = 0.75
+            if (height != 1.0) {
+                first *= height
+                second *= height
+                if (first > 0.425) {
+                    first = 0.425
+                }
+                if (second > 0.78) {
+                    second = 0.78
+                }
+                if (second < 0.49) {
+                    second = 0.49
+                }
+            }
+            if (first == 0.42) first = 0.41999998688698
+            mc.thePlayer.sendQueue.addToSendQueue(C04PacketPlayerPosition(posX, y + first, posZ, false))
+            if (y + second < y + height) mc.thePlayer.sendQueue.addToSendQueue(
+                C04PacketPlayerPosition(
+                    posX,
+                    y + second,
+                    posZ,
+                    false
+                )
+            )
+            return
+        } else if (height < 1.6) {
+            for (i in offset.indices) {
+                val off = offset[i]
+                y += off
+                mc.thePlayer.sendQueue.addToSendQueue(C04PacketPlayerPosition(posX, y, posZ, false))
+            }
+        } else if (height < 2.1) {
+            val heights = doubleArrayOf(0.425, 0.821, 0.699, 0.599, 1.022, 1.372, 1.652, 1.869)
+            for (off in heights) {
+                mc.thePlayer.sendQueue.addToSendQueue(C04PacketPlayerPosition(posX, y + off, posZ, false))
+            }
+        } else {
+            val heights = doubleArrayOf(0.425, 0.821, 0.699, 0.599, 1.022, 1.372, 1.652, 1.869, 2.019, 1.907)
+            for (off in heights) {
+                mc.thePlayer.sendQueue.addToSendQueue(C04PacketPlayerPosition(posX, y + off, posZ, false))
+            }
+        }
     }
 
     override val tag: String

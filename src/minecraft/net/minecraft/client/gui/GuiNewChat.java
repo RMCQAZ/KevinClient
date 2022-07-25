@@ -3,6 +3,9 @@ package net.minecraft.client.gui;
 import com.google.common.collect.Lists;
 import java.util.Iterator;
 import java.util.List;
+
+import kevin.main.KevinClient;
+import kevin.module.modules.misc.ChatControl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -118,6 +121,10 @@ public class GuiNewChat extends Gui
      */
     public void clearChatMessages()
     {
+        if (ChatControl.INSTANCE.noChatClear()) {
+            printChatMessage(new ChatComponentText(KevinClient.INSTANCE.getCStart() + " Chat clear canceled."));
+            return;
+        }
         this.drawnChatLines.clear();
         this.chatLines.clear();
         this.sentMessages.clear();
@@ -159,7 +166,7 @@ public class GuiNewChat extends Gui
             this.drawnChatLines.add(0, new ChatLine(updateCounter, ichatcomponent, chatLineId));
         }
 
-        while (this.drawnChatLines.size() > 100)
+        if (!ChatControl.INSTANCE.noLengthLimit()) while (this.drawnChatLines.size() > 100)
         {
             this.drawnChatLines.remove(this.drawnChatLines.size() - 1);
         }
@@ -168,7 +175,7 @@ public class GuiNewChat extends Gui
         {
             this.chatLines.add(0, new ChatLine(updateCounter, chatComponent, chatLineId));
 
-            while (this.chatLines.size() > 100)
+            if (!ChatControl.INSTANCE.noLengthLimit()) while (this.chatLines.size() > 100)
             {
                 this.chatLines.remove(this.chatLines.size() - 1);
             }

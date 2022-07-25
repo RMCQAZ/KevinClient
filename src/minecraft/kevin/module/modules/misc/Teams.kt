@@ -8,13 +8,19 @@ import kevin.main.KevinClient
 import kevin.module.*
 import kevin.utils.BlockUtils.getBlock
 import kevin.utils.MSTimer
+import kevin.utils.RandomUtils
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
+import net.minecraft.item.ItemArmor
+import net.minecraft.item.ItemStack
 import net.minecraft.util.BlockPos
 import java.util.concurrent.CopyOnWriteArrayList
 
 class Teams : Module("Teams","Prevents Killaura from attacking team mates.", category = ModuleCategory.MISC) {
     private val scoreboardValue = BooleanValue("ScoreboardTeam", true)
+    private val armorColorValue = BooleanValue("ArmorColor", false)
+    private val armorColorArmorValue = ListValue("ArmorColorArmor", arrayOf("Helmet", "Plate", "Legs", "Boots", "Random", "First", "First(IgnoreNotCorresponding)"), "First")
     private val colorValue = BooleanValue("Color", true)
     private val gommeSWValue = BooleanValue("GommeSW", false)
 
@@ -46,6 +52,35 @@ class Teams : Module("Teams","Prevents Killaura from attacking team mates.", cat
                     return targetName[1] == clientName[1]
         }
 
+        if (armorColorValue.get()) {
+            when(armorColorArmorValue.get()) {
+                "Helmet" -> if (checkArmor(0, entity to thePlayer)) return true
+                "Plate" -> if (checkArmor(1, entity to thePlayer)) return true
+                "Legs" -> if (checkArmor(2, entity to thePlayer)) return true
+                "Boots" -> if (checkArmor(3, entity to thePlayer)) return true
+                "Random" -> if (checkArmor(RandomUtils.nextInt(0, 3), entity to thePlayer)) return true
+                "First" -> for (i in 1..3)
+                    if (checkArmor(i, entity to thePlayer))
+                        return true
+                "First(IgnoreNotCorresponding)" -> {
+                    val targetColors = arrayListOf<Int>()
+                    val playerColors = arrayListOf<Int>()
+                    for (i in 0..3) {
+                        val targetArmor = entity.getCurrentArmor(i)
+                        if (targetArmor != null && targetArmor.item is ItemArmor && (targetArmor.item as ItemArmor).armorMaterial == ItemArmor.ArmorMaterial.LEATHER)
+                            targetColors.add(targetArmor.getArmorColor())
+
+                        val playerArmor = thePlayer.getCurrentArmor(i)
+                        if (playerArmor != null && playerArmor.item is ItemArmor && (targetArmor.item as ItemArmor).armorMaterial == ItemArmor.ArmorMaterial.LEATHER)
+                            playerColors.add(playerArmor.getArmorColor())
+                    }
+                    for (c in targetColors)
+                        if (playerColors.contains(c))
+                            return true
+                }
+            }
+        }
+
         if (colorValue.get() && displayName != null && entity.displayName != null) {
             val targetName = entity.displayName!!.formattedText.replace("§r", "")
             val clientName = displayName.formattedText.replace("§r", "")
@@ -53,6 +88,17 @@ class Teams : Module("Teams","Prevents Killaura from attacking team mates.", cat
         }
 
         return false
+    }
+    fun ItemStack.getArmorColor() =
+        (this.item as ItemArmor).getColor(this)
+    fun checkArmor(i: Int, entities: Pair<EntityLivingBase,EntityLivingBase>): Boolean {
+        val firstEntityArmor = entities.first.getCurrentArmor(i) ?: return false
+        val secondEntityArmor = entities.second.getCurrentArmor(i) ?: return false
+        val firstItem = firstEntityArmor.item
+        val secondItem = secondEntityArmor.item
+        if (firstItem !is ItemArmor || secondItem !is ItemArmor) return false
+        if (firstItem.armorMaterial != ItemArmor.ArmorMaterial.LEATHER || secondItem.armorMaterial != ItemArmor.ArmorMaterial.LEATHER) return false
+        return firstEntityArmor.getArmorColor() == secondEntityArmor.getArmorColor()
     }
     @EventTarget
     fun onWorld(event: WorldEvent){

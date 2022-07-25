@@ -1,8 +1,6 @@
 package kevin.module.modules.render
 
-import kevin.module.ListValue
-import kevin.module.Module
-import kevin.module.ModuleCategory
+import kevin.module.*
 import net.minecraft.init.Blocks
 
 class XRay : Module(name = "XRay", description = "Allows you to see through walls.", category = ModuleCategory.RENDER) {
@@ -10,6 +8,9 @@ class XRay : Module(name = "XRay", description = "Allows you to see through wall
         mc.renderGlobal.loadRenderers()
     }
     val mode = ListValue("Mode", arrayOf("Simple","Translucent"),"Simple")
+    val opacity = IntegerValue("Opacity", 160, 0, 255)
+    val noBlock = BooleanValue("NoBlock", false)
+    val cave = BooleanValue("OnlyInAir", false)
     override val tag: String
         get() = mode.get()
     val xrayBlocks = mutableListOf(

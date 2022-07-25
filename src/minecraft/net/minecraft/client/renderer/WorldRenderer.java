@@ -9,6 +9,9 @@ import java.nio.ShortBuffer;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Comparator;
+
+import kevin.main.KevinClient;
+import kevin.module.modules.render.XRay;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -439,21 +442,35 @@ public class WorldRenderer
         {
             j = this.rawIntBuffer.get(i);
 
+            int iR;
+            int iG;
+            int iB;
+
             if (ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN)
             {
-                int k = (int)((float)(j & 255) * red);
-                int l = (int)((float)(j >> 8 & 255) * green);
-                int i1 = (int)((float)(j >> 16 & 255) * blue);
+                iR = (int)((float)(j & 255) * red);
+                iG = (int)((float)(j >> 8 & 255) * green);
+                iB = (int)((float)(j >> 16 & 255) * blue);
                 j = j & -16777216;
-                j = j | i1 << 16 | l << 8 | k;
+                j = j | iB << 16 | iG << 8 | iR;
             }
             else
             {
-                int j1 = (int)((float)(j >> 24 & 255) * red);
-                int k1 = (int)((float)(j >> 16 & 255) * green);
-                int l1 = (int)((float)(j >> 8 & 255) * blue);
+                iR = (int)((float)(j >> 24 & 255) * red);
+                iG = (int)((float)(j >> 16 & 255) * green);
+                iB = (int)((float)(j >> 8 & 255) * blue);
                 j = j & 255;
-                j = j | j1 << 24 | k1 << 16 | l1 << 8;
+                j = j | iR << 24 | iG << 16 | iB << 8;
+            }
+
+            final XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+            if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Translucent")) {
+                int color = 0;
+                color |= xRay.getOpacity().get() << 24;
+                color |= iR << 16;
+                color |= iG << 8;
+                color |= iB;
+                j = color;
             }
         }
 

@@ -90,7 +90,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
 
         // BedCheck
         val teams = KevinClient.moduleManager.getModule("Teams") as Teams
-        if (Block.getBlockById(targetId)==Blocks.bed&&teams.bedCheckValue.get()&&pos in teams.teamBed){
+        if (Block.getBlockById(targetId)==Blocks.bed&&teams.bedCheckValue.get()&&(pos in teams.teamBed||(bypassValue.get()&&teams.teamBed.any { pos == it.up() }))){
             pos = null
             currentDamage = 0F
             return

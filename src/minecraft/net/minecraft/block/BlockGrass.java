@@ -1,6 +1,9 @@
 package net.minecraft.block;
 
 import java.util.Random;
+
+import kevin.main.KevinClient;
+import kevin.module.modules.render.XRay;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockState;
@@ -155,6 +158,9 @@ public class BlockGrass extends Block implements IGrowable
 
     public EnumWorldBlockLayer getBlockLayer()
     {
+        final XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Translucent"))
+            return super.getBlockLayer();
         return EnumWorldBlockLayer.CUTOUT_MIPPED;
     }
 

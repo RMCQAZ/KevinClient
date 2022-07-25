@@ -564,6 +564,11 @@ public class GuiIngame extends Gui
 
     private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes)
     {
+        if (!KevinClient.INSTANCE.isStarting()) {
+            if (KevinClient.hud.disableMinecraftScoreboard())
+                return;
+        }
+
         Scoreboard scoreboard = objective.getScoreboard();
         Collection<Score> collection = scoreboard.getSortedScores(objective);
         List<Score> list = Lists.newArrayList(Iterables.filter(collection, new Predicate<Score>()

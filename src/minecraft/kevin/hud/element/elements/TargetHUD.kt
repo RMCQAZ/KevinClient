@@ -39,7 +39,6 @@ class TargetHUD : Element() {
 
     override fun drawElement(): Border? {
         val target = (KevinClient.moduleManager.getModule("KillAura") as KillAura).target
-        if (target !is EntityLivingBase) return null
         when(mode.get()){
             "Liquid" -> {
                 if ((target) is EntityPlayer) {
@@ -81,11 +80,11 @@ class TargetHUD : Element() {
             }
             "Kevin" -> {
                 if (target!=null){
-                    val health = String.format("%.2f",target.health).toFloat()
-                    val maxHealth = String.format("%.2f",target.maxHealth).toFloat()
+                    val health = if (target is EntityLivingBase) String.format("%.2f",target.health).toFloat() else 1F
+                    val maxHealth = if (target is EntityLivingBase) String.format("%.2f",target.maxHealth).toFloat() else 1F
                     val healthPercent = (health/maxHealth)*100f
 
-                    val hurtTime = target.hurtTime
+                    val hurtTime = if (target is EntityLivingBase) target.hurtTime else 0
                     val ping = if (target is EntityPlayer) target.getPing() else 0
                     val yaw = String.format("%.2f",target.rotationYaw).toFloat()
                     val pitch = String.format("%.2f",target.rotationPitch).toFloat()
@@ -100,18 +99,18 @@ class TargetHUD : Element() {
                     val rotationText = "Yaw: $yaw | Pitch: $pitch"
                     val distanceOnGroundText = "Distance: $distance | OnGround: $onGround"
 
-                    val itemInHand = target.heldItem
-                    val armor1 = target.getCurrentArmor(0)
-                    val armor2 = target.getCurrentArmor(1)
-                    val armor3 = target.getCurrentArmor(2)
-                    val armor4 = target.getCurrentArmor(3)
+                    val itemInHand = if (target is EntityLivingBase) target.heldItem else null
+                    val armor1 = if (target is EntityLivingBase) target.getCurrentArmor(0) else null
+                    val armor2 = if (target is EntityLivingBase) target.getCurrentArmor(1) else null
+                    val armor3 = if (target is EntityLivingBase) target.getCurrentArmor(2) else null
+                    val armor4 = if (target is EntityLivingBase) target.getCurrentArmor(3) else null
 
                     val textList = arrayListOf(nameText,healthText,hurtTimeText,pingText,rotationText,distanceOnGroundText)
                     val textListSorted = textList.toMutableList()
                     textListSorted.sortBy{KevinClient.fontManager.font40!!.getStringWidth(it)}
                     val width = KevinClient.fontManager.font35!!.getStringWidth(textListSorted.last())
                     val x2 = if (0.25F+width/2+3F>18*5)0.25F+width/2+3F else 18*5F
-                    val text = "A:${target.totalArmorValue} ${(target.totalArmorValue/20F)*100}%"
+                    val text = if (target is EntityLivingBase) "A:${target.totalArmorValue} ${(target.totalArmorValue/20F)*100}%" else "A:? ?%"
 
                     RenderUtils.drawBorderedRect(-8.5F,-12.5F,14.75F+x2,54.5F,1F,Color.white.rgb,Color(0,0,0,150).rgb)
                     drawEntityOnScreen(3.0,20.0,15F,target)
@@ -152,7 +151,7 @@ class TargetHUD : Element() {
                     linesEnd()
                     linesStart(5F,Color(0,111,255))
 
-                    val arv = (14.0+x2+6.5-(KevinClient.fontManager.font35!!.getStringWidth(text))*0.8)*(target.totalArmorValue/20F)
+                    val arv = if (target is EntityLivingBase) (14.0+x2+6.5-(KevinClient.fontManager.font35!!.getStringWidth(text))*0.8)*(target.totalArmorValue/20F) else .0
 
                     GL11.glVertex2d(-7.75,52.5)
                     GL11.glVertex2d(-7.75+arv,52.5)
@@ -236,40 +235,40 @@ class TargetHUD : Element() {
             64F, 64F)
     }
 
-    private fun drawEntityOnScreen(X: Double, Y: Double, S: Float, entityLivingBase: EntityLivingBase){
+    private fun drawEntityOnScreen(X: Double, Y: Double, S: Float, entity: Entity){
         GlStateManager.enableColorMaterial()
         GlStateManager.pushMatrix()
         GlStateManager.translate(X, Y, 50.0)
         GlStateManager.scale((-S), S, S)
         GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F)
-        val renderYawOffset = entityLivingBase.renderYawOffset
-        val rotationYaw = entityLivingBase.rotationYaw
-        val rotationPitch = entityLivingBase.rotationPitch
-        val prevRotationYawHead = entityLivingBase.prevRotationYawHead
-        val rotationYawHead = entityLivingBase.rotationYawHead
+        val renderYawOffset = if (entity is EntityLivingBase) entity.renderYawOffset else 0F
+        val rotationYaw = entity.rotationYaw
+        val rotationPitch = entity.rotationPitch
+        val prevRotationYawHead = if (entity is EntityLivingBase) entity.prevRotationYawHead else 0F
+        val rotationYawHead = entity.rotationYawHead
         GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F)
         RenderHelper.enableStandardItemLighting()
         GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F)
 
-        entityLivingBase.renderYawOffset = atan(entityLivingBase.rotationYaw / 40F) * 20F
-        entityLivingBase.rotationYaw = atan(entityLivingBase.rotationYaw / 40F) * 40F
-        entityLivingBase.rotationPitch = -atan((if (entityLivingBase.rotationPitch > 0) -entityLivingBase.rotationPitch else abs(entityLivingBase.rotationPitch)) / 40F) * 20F
-        entityLivingBase.rotationYawHead = entityLivingBase.rotationYaw
-        entityLivingBase.prevRotationYawHead = entityLivingBase.rotationYaw
+        if (entity is EntityLivingBase) entity.renderYawOffset = atan(entity.rotationYaw / 40F) * 20F
+        entity.rotationYaw = atan(entity.rotationYaw / 40F) * 40F
+        entity.rotationPitch = -atan((if (entity.rotationPitch > 0) -entity.rotationPitch else abs(entity.rotationPitch)) / 40F) * 20F
+        entity.rotationYawHead = entity.rotationYaw
+        if (entity is EntityLivingBase) entity.prevRotationYawHead = entity.rotationYaw
 
         GlStateManager.translate(0.0, 0.0, 0.0)
 
         val renderManager = mc.renderManager
         renderManager.playerViewY = 180.0F
         renderManager.isRenderShadow = false
-        renderManager.renderEntityWithPosYaw(entityLivingBase, 0.0, 0.0, 0.0, 0.0F, 1.0F)
+        renderManager.renderEntityWithPosYaw(entity, 0.0, 0.0, 0.0, 0.0F, 1.0F)
         renderManager.isRenderShadow = true
 
-        entityLivingBase.renderYawOffset = renderYawOffset
-        entityLivingBase.rotationYaw = rotationYaw
-        entityLivingBase.rotationPitch = rotationPitch
-        entityLivingBase.prevRotationYawHead = prevRotationYawHead
-        entityLivingBase.rotationYawHead = rotationYawHead
+        if (entity is EntityLivingBase) entity.renderYawOffset = renderYawOffset
+        entity.rotationYaw = rotationYaw
+        entity.rotationPitch = rotationPitch
+        if (entity is EntityLivingBase) entity.prevRotationYawHead = prevRotationYawHead
+        entity.rotationYawHead = rotationYawHead
 
         GlStateManager.popMatrix()
         RenderHelper.disableStandardItemLighting()

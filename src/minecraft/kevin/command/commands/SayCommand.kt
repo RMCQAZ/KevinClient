@@ -11,6 +11,11 @@ class SayCommand : ICommand {
             ChatUtils.messageWithStart("§cUsage: .say <Message>")
             return
         }
-        Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(C01PacketChatMessage(args[0]))
+        var tmp = ""
+        for (t in args) {
+           tmp += " $t"
+        }
+        tmp = tmp.removePrefix(" ")
+        Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(C01PacketChatMessage(tmp))
     }
 }

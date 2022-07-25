@@ -24,7 +24,8 @@ public class VisGraph
     public void func_178606_a(BlockPos pos)
     {
         XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
-        if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Simple")) return;
+        if (xRay.getState())
+            return;
 
         this.field_178612_d.set(getIndex(pos), true);
         --this.field_178611_f;
@@ -43,6 +44,12 @@ public class VisGraph
     public SetVisibility computeVisibility()
     {
         SetVisibility setvisibility = new SetVisibility();
+
+        final XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Translucent")) {
+            setvisibility.setAllVisible(true);
+            return setvisibility;
+        }
 
         if (4096 - this.field_178611_f < 256)
         {

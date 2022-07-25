@@ -511,6 +511,42 @@ public final class RenderUtils extends MinecraftInstance{
         glDepthMask(true);
         glDisable(GL_BLEND);
     }
+
+    public static void drawPlatform(final double y, final Color color, final double size) {
+        final RenderManager renderManager = mc.getRenderManager();
+        final double renderY = y - renderManager.getRenderPosY();
+
+        drawAxisAlignedBB(new AxisAlignedBB(size, renderY + 0.02D, size, -size, renderY, -size), color,false,true,2F);
+    }
+
+    public static void drawAxisAlignedBB(final AxisAlignedBB axisAlignedBB, final Color color, final boolean outline, final boolean box, final float outlineWidth) {
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glLineWidth(outlineWidth);
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_DEPTH_TEST);
+        glDepthMask(false);
+        glColor(color);
+
+        if (outline) {
+            glLineWidth(outlineWidth);
+            enableGlCap(GL_LINE_SMOOTH);
+            glColor(color.getRed(), color.getGreen(), color.getBlue(), 95);
+            drawSelectionBoundingBox(axisAlignedBB);
+        }
+
+        if(box) {
+            glColor(color.getRed(), color.getGreen(), color.getBlue(), outline ? 26 : 35);
+            drawFilledBox(axisAlignedBB);
+        }
+
+        GlStateManager.resetColor();
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(true);
+        glDisable(GL_BLEND);
+    }
+
     public static void drawPlatform(final Entity entity, final Color color) {
         final RenderManager renderManager = mc.getRenderManager();
         final Timer timer = mc.getTimer();

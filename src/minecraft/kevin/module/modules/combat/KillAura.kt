@@ -4,6 +4,7 @@ import kevin.event.*
 import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.exploit.TP
+import kevin.module.modules.misc.AntiShop
 import kevin.module.modules.misc.HideAndSeekHack
 import kevin.module.modules.misc.Teams
 import kevin.utils.*
@@ -505,8 +506,11 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
                 if (player.isClientFriend() && !LiquidBounce.moduleManager[NoFriends::class.java].state)
                     return false
  **/
-                val teams = KevinClient.moduleManager.getModule("Teams") as Teams
+                val antiShop = KevinClient.moduleManager.getModule("AntiShop") as AntiShop
+                if (antiShop.isShop(entity))
+                    return false
 
+                val teams = KevinClient.moduleManager.getModule("Teams") as Teams
                 return !teams.state || !teams.isInYourTeam(entity)
             }
 

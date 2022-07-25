@@ -3,6 +3,8 @@ package kevin.hud
 import kevin.hud.designer.GuiHudDesigner
 import kevin.hud.element.Element
 import kevin.hud.element.elements.*
+import kevin.main.KevinClient
+import kevin.module.modules.misc.NoScoreboard
 import kevin.utils.*
 import net.minecraft.client.gui.ScaledResolution
 import org.lwjgl.opengl.GL11
@@ -25,7 +27,7 @@ open class HUD : MinecraftInstance()  {
             Information::class.java,
             //TabGUI::class.java,
             Text::class.java,
-            //ScoreboardElement::class.java,
+            ScoreboardElement::class.java,
             TargetHUD::class.java,
             Radar::class.java,
             InvItem::class.java
@@ -38,8 +40,8 @@ open class HUD : MinecraftInstance()  {
         fun createDefault() = HUD()
             .addElement(Text.defaultClient())
             .addElement(Text.defaultClientVersion())
-            /**.addElement(TabGUI())
-            .addElement(ScoreboardElement())**/
+            /**.addElement(TabGUI())**/
+            .addElement(ScoreboardElement())
             .addElement(Notifications())
             .addElement(Armor())
             .addElement(Arraylist())
@@ -48,6 +50,37 @@ open class HUD : MinecraftInstance()  {
 
     }
 
+    fun disableMinecraftScoreboard() =
+        (elements.filterIsInstance<ScoreboardElement>().isNotEmpty() && (KevinClient.moduleManager.getModule("HUD")!!.state || (KevinClient.moduleManager.getModule("HUD")!! as kevin.module.modules.render.HUD).keepScoreboard.get())) || NoScoreboard.state
+
+    fun renderScoreboardOnly() {
+        elements.filterIsInstance<ScoreboardElement>()
+            .forEach {
+                GL11.glPushMatrix()
+
+                if (!it.info.disableScale)
+                    GL11.glScalef(it.scale, it.scale, it.scale)
+
+                GL11.glTranslated(it.renderX, it.renderY, 0.0)
+
+                try {
+                    it.border = it.drawElement()
+                } catch (ex: Exception) {
+                    println("Something went wrong while drawing ${it.name} element in HUD. $ex")
+                }
+
+                GL11.glEnable(GL11.GL_BLEND)
+                GL11.glColor4f(1F,1F,1F,1F)
+                GL11.glPopMatrix()
+            }
+    }
+
+    fun updateScoreboardOnly() {
+        elements.filterIsInstance<ScoreboardElement>()
+            .forEach {
+                it.updateElement()
+            }
+    }
     /**
      * Render all elements
      */

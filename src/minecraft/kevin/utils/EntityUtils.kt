@@ -1,6 +1,7 @@
 package kevin.utils
 
 import kevin.main.KevinClient
+import kevin.module.modules.misc.AntiShop
 import kevin.module.modules.misc.Teams
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
@@ -37,7 +38,13 @@ object EntityUtils : MinecraftInstance() {
                         if (entity.isClientFriend() /***&& !LiquidBounce.moduleManager.getModule(NoFriends::class.java).state***/ )
                             return false
 
-                        if (entity.isSpectator) return false
+                        if (entity.isSpectator)
+                            return false
+
+                        val antiShop = KevinClient.moduleManager.getModule("AntiShop") as AntiShop
+                        if (antiShop.isShop(entity))
+                            return false
+
                         val teams = KevinClient.moduleManager.getModule("Teams") as Teams
                         return !teams.state || !teams.isInYourTeam(entity)
                     }

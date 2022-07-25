@@ -2,6 +2,7 @@ package kevin.module.modules.movement
 
 import kevin.event.EventTarget
 import kevin.event.UpdateEvent
+import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
@@ -22,6 +23,11 @@ class Sprint : Module("Sprint","Automatically sprints all the time.", Keyboard.K
 
     @EventTarget
     fun onUpdate(event: UpdateEvent?) {
+        val keepSprint = KevinClient.moduleManager.getModule("KeepSprint") as KeepSprint
+        if (keepSprint.stopSprint && keepSprint.stopTimer.hasTimePassed(keepSprint.delay/2+50)) {
+            keepSprint.stopSprint = false
+        }
+
         if (!MovementUtils.isMoving || mc.thePlayer.isSneaking ||
             blindnessValue.get() && mc.thePlayer
                 .isPotionActive(Potion.blindness) ||
@@ -29,7 +35,7 @@ class Sprint : Module("Sprint","Automatically sprints all the time.", Keyboard.K
             || (checkServerSide.get() && (mc.thePlayer.onGround || !checkServerSideGround.get())
                     && !allDirectionsValue.get() && RotationUtils.targetRotation != null && RotationUtils.getRotationDifference(
                 Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)
-            ) > 30)) {
+            ) > 30) || keepSprint.stopSprint) {
             mc.thePlayer.isSprinting = false
             return
         }

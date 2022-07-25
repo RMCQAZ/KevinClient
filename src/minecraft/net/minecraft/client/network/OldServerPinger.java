@@ -137,7 +137,7 @@ public class OldServerPinger
                         }
                         else
                         {
-                            OldServerPinger.logger.error("Invalid server icon (unknown format)");
+                            if (!s.equals("")) OldServerPinger.logger.error("Invalid server icon (unknown format)");
                         }
                     }
                     else

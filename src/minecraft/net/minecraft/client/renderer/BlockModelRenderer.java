@@ -65,7 +65,8 @@ public class BlockModelRenderer
 
             RenderEnv renderenv = worldRendererIn.getRenderEnv(blockStateIn, blockPosIn);
             modelIn = BlockModelCustomizer.getRenderModel(modelIn, blockStateIn, renderenv);
-            boolean flag1 = flag ? this.renderModelSmooth(blockAccessIn, modelIn, blockStateIn, blockPosIn, worldRendererIn, checkSides) : this.renderModelFlat(blockAccessIn, modelIn, blockStateIn, blockPosIn, worldRendererIn, checkSides);
+            final XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+            boolean flag1 = (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Translucent")) ? this.renderModelSmooth(blockAccessIn, modelIn, blockStateIn, blockPosIn, worldRendererIn, checkSides) : (flag ? this.renderModelSmooth(blockAccessIn, modelIn, blockStateIn, blockPosIn, worldRendererIn, checkSides) : this.renderModelFlat(blockAccessIn, modelIn, blockStateIn, blockPosIn, worldRendererIn, checkSides));
 
             if (flag1)
             {

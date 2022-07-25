@@ -23,4 +23,6 @@ abstract class FlyMode(val modeName: String): MinecraftInstance() {
     open fun onJump(event: JumpEvent) {}
     open fun onUpdate(event: UpdateEvent) {}
     open fun onPacket(event: PacketEvent) {}
+    open fun onMove(event: MoveEvent) {}
+    open val tagV: String? = null
 }

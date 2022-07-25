@@ -472,7 +472,13 @@ public class Block
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
         XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
-        if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Simple")) return xRay.getXrayBlocks().contains(this);
+        if (xRay.getState()) {
+            if (xRay.getMode().get().equalsIgnoreCase("Translucent")) {
+                if (xRay.getXrayBlocks().contains(this)&&!xRay.getNoBlock().get()&&!xRay.getCave().get()) {
+                    return true;
+                }
+            } else return xRay.getXrayBlocks().contains(this);
+        }
 
         if (side == EnumFacing.DOWN && this.minY > 0.0D)
         {
@@ -915,7 +921,7 @@ public class Block
     {
         final XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
         if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Translucent"))
-            return EnumWorldBlockLayer.TRANSLUCENT;
+            return xRay.getNoBlock().get() ? EnumWorldBlockLayer.TRANSLUCENT : (xRay.getXrayBlocks().contains(this) ? EnumWorldBlockLayer.SOLID : EnumWorldBlockLayer.TRANSLUCENT);
 
         return EnumWorldBlockLayer.SOLID;
     }

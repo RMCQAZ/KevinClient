@@ -22,7 +22,7 @@ import org.lwjgl.opengl.Display
 
 object KevinClient {
     var name = "Kevin"
-    var version = "b1.8"
+    var version = "b2.0"
 
     var isStarting = true
 

@@ -10,6 +10,7 @@ import kevin.module.modules.exploit.Disabler
 import kevin.module.modules.movement.flys.FlyMode
 import kevin.utils.MovementUtils
 import kevin.utils.TickTimer
+import net.minecraft.block.BlockAir
 import net.minecraft.client.settings.GameSettings
 import net.minecraft.init.Blocks
 import net.minecraft.network.play.client.C00PacketKeepAlive
@@ -19,6 +20,7 @@ import kotlin.math.round
 
 object VerusAuto : FlyMode("VerusAuto") {
 
+    private val verusMode = ListValue("VerusMode", arrayOf("FakeGround", "FDP-5"),"FakeGround")
     private val verusMoveMode = ListValue("VerusMoveMode", arrayOf("Walk","Jump"),"Walk")
     private val verusMoveJump: Boolean
         get() = verusMoveMode equal "Jump"
@@ -33,6 +35,7 @@ object VerusAuto : FlyMode("VerusAuto") {
     private val verusTimer = TickTimer()
     private var playerY = .0
     private var y = 0
+    private var ticks = 0
 
     override fun onEnable() {
         y = round(mc.thePlayer.posY).toInt()
@@ -81,51 +84,100 @@ object VerusAuto : FlyMode("VerusAuto") {
             mc.thePlayer.hurtTime = 0
             mc.thePlayer.onGround = false
         }
+        ticks = 0
     }
 
     override fun onDisable() {
         verusState = 0
         mc.thePlayer.speedInAir = .02F
+        when(verusMode.get()) {
+            "FDP-5" -> {
+                mc.timer.timerSpeed = 1F
+            }
+        }
     }
 
     override fun onMotion(event: MotionEvent) {
-        if (
-            verusMoveJump&&
-            !verusVanilla&&
-            verusState!=1&&
-            event.eventState== EventState.PRE&&
-            !mc.gameSettings.keyBindJump.isKeyDown&&
-            mc.thePlayer.jumpTicks==0&&
-            !mc.thePlayer.isInWater&&
-            !mc.thePlayer.isInLava&&
-            !mc.thePlayer.isInWeb&&
-            !mc.thePlayer.isOnLadder&&
-            mc.thePlayer.posY == round(mc.thePlayer.posY)
-        ) mc.thePlayer.jump()
+        if (!verusVanilla&&verusState!=1) when(verusMode.get()) {
+            "FakeGround" -> if (
+                verusMoveJump&&
+                !verusVanilla&&
+                verusState!=1&&
+                event.eventState== EventState.PRE&&
+                !mc.gameSettings.keyBindJump.isKeyDown&&
+                mc.thePlayer.jumpTicks==0&&
+                !mc.thePlayer.isInWater&&
+                !mc.thePlayer.isInLava&&
+                !mc.thePlayer.isInWeb&&
+                !mc.thePlayer.isOnLadder&&
+                mc.thePlayer.posY == round(mc.thePlayer.posY)
+            ) mc.thePlayer.jump()
+        }
+    }
+
+    override fun onMove(event: MoveEvent) {
+        when(verusMode.get()) {
+            "FDP-5" -> {
+                if (ticks % 10 == 0 && mc.thePlayer.onGround) {
+                    MovementUtils.strafe(1f)
+                    event.y = 0.42
+                    ticks = 0
+                    mc.thePlayer.motionY = 0.0
+                    mc.timer.timerSpeed = 4f
+                } else {
+                    if (mc.gameSettings.keyBindJump.isKeyDown && ticks % 2 == 1) {
+                        event.y = 0.5
+                        MovementUtils.strafe(0.48f)
+                        fly.launchY += 0.5
+                        mc.timer.timerSpeed = 1f
+                        return
+                    }
+                    mc.timer.timerSpeed = 1f
+                    if (mc.thePlayer.onGround) {
+                        MovementUtils.strafe(0.8f)
+                    } else {
+                        MovementUtils.strafe(0.72f)
+                    }
+                }
+                ticks++
+            }
+        }
     }
 
     override fun onBB(event: BlockBBEvent) {
-        if (!verusVanilla&&
-            verusState!=1&&
-            event.block== Blocks.air&&
-            if (verusMoveJump) (event.y < y&&event.y < mc.thePlayer!!.posY) else event.y < mc.thePlayer!!.posY&&
-                    mc.thePlayer.getDistance(event.x.toDouble(),event.y.toDouble(),event.z.toDouble()) < 1.5) event.boundingBox =
-            AxisAlignedBB(
-                event.x.toDouble(),
-                event.y.toDouble(),
-                event.z.toDouble(),
-                event.x + 1.0,
-                (if (verusMoveJump) (if (y.toDouble() > mc.thePlayer.posY) mc.thePlayer.posY.toInt().toDouble() else y.toDouble()) else mc.thePlayer.posY.toInt().toDouble()) - if (verusDown.get()&& GameSettings.isKeyDown(mc.gameSettings.keyBindSneak)) 1.0 else .0,
-                event.z + 1.0
-            )
+        if (!verusVanilla&&verusState!=1) when(verusMode.get()) {
+            "FakeGround" -> if (!verusVanilla&&
+                verusState!=1&&
+                event.block== Blocks.air&&
+                if (verusMoveJump) (event.y < y&&event.y < mc.thePlayer!!.posY) else event.y < mc.thePlayer!!.posY&&
+                        mc.thePlayer.getDistance(event.x.toDouble(),event.y.toDouble(),event.z.toDouble()) < 1.5) event.boundingBox =
+                AxisAlignedBB(
+                    event.x.toDouble(),
+                    event.y.toDouble(),
+                    event.z.toDouble(),
+                    event.x + 1.0,
+                    (if (verusMoveJump) (if (y.toDouble() > mc.thePlayer.posY) mc.thePlayer.posY.toInt().toDouble() else y.toDouble()) else mc.thePlayer.posY.toInt().toDouble()) - if (verusDown.get()&& GameSettings.isKeyDown(mc.gameSettings.keyBindSneak)) 1.0 else .0,
+                    event.z + 1.0
+                )
+            "FDP-5" -> {
+                if (event.block is BlockAir && event.y <= fly.launchY) {
+                    event.boundingBox = AxisAlignedBB.fromBounds(event.x.toDouble(), event.y.toDouble(), event.z.toDouble(), event.x + 1.0, fly.launchY, event.z + 1.0)
+                }
+            }
+        }
     }
 
     override fun onStep(event: StepEvent) {
-        if (!verusVanilla&&verusState!=1) event.stepHeight = 0f
+        if (!verusVanilla&&verusState!=1) when(verusMode.get()) {
+            "FakeGround" -> if (!verusVanilla&&verusState!=1) event.stepHeight = 0f
+        }
     }
 
     override fun onJump(event: JumpEvent) {
-        if (!verusVanilla&&verusState!=1&&!(verusJump.get()&& MovementUtils.isMoving)) event.cancelEvent()
+        if (!verusVanilla&&verusState!=1) when(verusMode.get()) {
+            "FakeGround" -> if (!verusVanilla&&verusState!=1&&!(verusJump.get()&& MovementUtils.isMoving)) event.cancelEvent()
+            "FDP-5" -> event.cancelEvent()
+        }
     }
 
     override fun onUpdate(event: UpdateEvent) {
@@ -171,14 +223,22 @@ object VerusAuto : FlyMode("VerusAuto") {
             mc.thePlayer.speedInAir = .02F
             verusTimer.reset()
         }
+        if (!verusVanilla&&verusState!=1) when(verusMode.get()) {
+
+        }
     }
 
     override fun onPacket(event: PacketEvent) {
         val packet = event.packet
         if (packet is C03PacketPlayer){
-            if (!verusVanilla&&mc.thePlayer.posY == round(mc.thePlayer.posY)) packet.onGround = true
+            when(verusMode.get()) {
+                "FakeGround" -> if (!verusVanilla&&mc.thePlayer.posY == round(mc.thePlayer.posY)) packet.onGround = true
+            }
         }
     }
+
+    override val tagV: String
+        get() = verusMode.get()
 
     private val verusVanilla: Boolean
         get() = (Disabler.modeValue.get().contains("verusmove",true)&& Disabler.state) || (verusState == 2&&!verusTimer.hasTimePassed(verusBoostTicks.get()+1))
