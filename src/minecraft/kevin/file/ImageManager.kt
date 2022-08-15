@@ -4,6 +4,8 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kevin.main.KevinClient
 import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.texture.DynamicTexture
+import net.minecraft.util.ResourceLocation
 import org.apache.commons.io.IOUtils
 import java.awt.image.BufferedImage
 import java.io.*
@@ -13,7 +15,28 @@ import javax.imageio.ImageIO
 object ImageManager {
     var saveServerIcon = false
     private val jsonFile = File(KevinClient.fileManager.serverIconsDir,"config.json")
+    //load some textures
+    val resourceShadow1 = ResourceLocation("kevin/shadows/PanelBottom.png")
+    val resourceShadow2 = ResourceLocation("kevin/shadows/PanelBottomLeft.png")
+    val resourceShadow3 = ResourceLocation("kevin/shadows/PanelBottomRight.png")
+    val resourceShadow4 = ResourceLocation("kevin/shadows/PanelLeft.png")
+    val resourceShadow5 = ResourceLocation("kevin/shadows/PanelRight.png")
+    val resourceShadow6 = ResourceLocation("kevin/shadows/PanelTop.png")
+    val resourceShadow7 = ResourceLocation("kevin/shadows/PanelTopLeft.png")
+    val resourceShadow8 = ResourceLocation("kevin/shadows/PanelTopRight.png")
+
     fun load(){
+        val mc = Minecraft.getMinecraft()
+        mc.addScheduledTask{
+            mc.textureManager.loadTexture(resourceShadow1, DynamicTexture(ImageIO.read(javaClass.getResourceAsStream("/resources/shadows/PanelBottom.png"))))
+            mc.textureManager.loadTexture(resourceShadow2, DynamicTexture(ImageIO.read(javaClass.getResourceAsStream("/resources/shadows/PanelBottomLeft.png"))))
+            mc.textureManager.loadTexture(resourceShadow3, DynamicTexture(ImageIO.read(javaClass.getResourceAsStream("/resources/shadows/PanelBottomRight.png"))))
+            mc.textureManager.loadTexture(resourceShadow4, DynamicTexture(ImageIO.read(javaClass.getResourceAsStream("/resources/shadows/PanelLeft.png"))))
+            mc.textureManager.loadTexture(resourceShadow5, DynamicTexture(ImageIO.read(javaClass.getResourceAsStream("/resources/shadows/PanelRight.png"))))
+            mc.textureManager.loadTexture(resourceShadow6, DynamicTexture(ImageIO.read(javaClass.getResourceAsStream("/resources/shadows/PanelTop.png"))))
+            mc.textureManager.loadTexture(resourceShadow7, DynamicTexture(ImageIO.read(javaClass.getResourceAsStream("/resources/shadows/PanelTopLeft.png"))))
+            mc.textureManager.loadTexture(resourceShadow8, DynamicTexture(ImageIO.read(javaClass.getResourceAsStream("/resources/shadows/PanelTopRight.png"))))
+        }
         if (!jsonFile.exists()) return
         val json = JsonParser().parse(IOUtils.toString(FileInputStream(jsonFile),"utf-8")).asJsonObject
         if (json.has("state")){

@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Timer;
 import org.lwjgl.opengl.GL11;
 
@@ -19,6 +20,8 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 import static org.lwjgl.opengl.GL11.*;
 
 public final class RenderUtils extends MinecraftInstance{
@@ -275,6 +278,45 @@ public final class RenderUtils extends MinecraftInstance{
         glDisable(GL_LINE_SMOOTH);
     }
 
+    public static void drawShadow(float x, float y, float width, float height) {
+        drawTexturedRect(x - 9, y - 9, 9, 9, "PanelTopLeft");
+        drawTexturedRect(x - 9, y + height, 9, 9, "PanelBottomLeft");
+        drawTexturedRect(x + width, y + height, 9, 9, "PanelBottomRight");
+        drawTexturedRect(x + width, y - 9, 9, 9, "PanelTopRight");
+        drawTexturedRect(x - 9, y, 9, height, "PanelLeft");
+        drawTexturedRect(x + width, y, 9, height, "PanelRight");
+        drawTexturedRect(x, y - 9, width, 9, "PanelTop");
+        drawTexturedRect(x, y + height, width, 9, "PanelBottom");
+    }
+
+    public static void drawTexturedRect(float x, float y, float width, float height, String image) {
+        glPushMatrix();
+        final boolean enableBlend = glIsEnabled(GL_BLEND);
+        final boolean disableAlpha = !glIsEnabled(GL_ALPHA_TEST);
+        if (!enableBlend) glEnable(GL_BLEND);
+        if (!disableAlpha) glDisable(GL_ALPHA_TEST);
+        mc.getTextureManager().bindTexture(new ResourceLocation("kevin/shadows/" + image + ".png"));
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        RenderUtils.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
+        if (!enableBlend) glDisable(GL_BLEND);
+        if (!disableAlpha) glEnable(GL_ALPHA_TEST);
+        glPopMatrix();
+    }
+
+    public static void drawModalRectWithCustomSizedTexture(float x, float y, float u, float v, float width, float height, float textureWidth, float textureHeight)
+    {
+        float f = 1.0F / textureWidth;
+        float f1 = 1.0F / textureHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        worldrenderer.pos(x, (y + height), 0.0D).tex((u * f), ((v + height) * f1)).endVertex();
+        worldrenderer.pos((x + width), (y + height), 0.0D).tex(((u + width) * f), ((v + height) * f1)).endVertex();
+        worldrenderer.pos((x + width), y, 0.0D).tex(((u + width) * f), (v * f1)).endVertex();
+        worldrenderer.pos(x, y, 0.0D).tex((u * f), (v * f1)).endVertex();
+        tessellator.draw();
+    }
+
     public static void drawRectRoundedCorners(final double x,final double y,final double x2,final double y2,final double radius,final Color color){
         final double X1 = Math.min(x,x2);
         final double X2 = Math.max(x,x2);
@@ -292,6 +334,64 @@ public final class RenderUtils extends MinecraftInstance{
         drawSector(X2-radius,Y1+radius,270,360,radius,color);
     }
 
+    public static void drawBorderRoundedCorners(final double x,final double y,final double x2,final double y2,final double radius,final float width,final Color color) {
+        final double X1 = Math.min(x,x2);
+        final double X2 = Math.max(x,x2);
+        final double Y1 = Math.min(y,y2);
+        final double Y2 = Math.max(y,y2);
+
+        if (radius*2>X2-X1 || radius*2>Y2-Y1) return;
+
+        /*
+             A      1      B
+             ↓      ↓      ↓
+             /-------------\
+         2-> |             | <-3
+             |             |
+             \-------------/
+             ↑      ↑      ↑
+             C      4      D
+        */
+
+        glEnable(GL_BLEND);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        glColor(color);
+        drawLine(X1 + radius , Y1, X2 - radius, Y1, width); // 1
+        drawLine(X1 , Y1 + radius, X1, Y2 - radius, width); // 2
+        drawLine(X2 , Y1 + radius, X2, Y2 - radius, width); // 3
+        drawLine(X1 + radius , Y2, X2 - radius, Y2, width); // 4
+        glDisable(GL_BLEND);
+
+        arc(X1 + radius, Y1 + radius, 180, 270, radius, width, color); //A
+        arc(X2 - radius, Y1 + radius, 270, 360, radius, width, color); //B
+        arc(X1 + radius, Y2 - radius, 90 , 180, radius, width, color); //C
+        arc(X2 - radius, Y2 - radius, 0  , 90 , radius, width, color); //D
+    }
+
+    public static void arc(final double x,final double y,int angle1,int angle2,final double radius,final float width,final Color color) {
+        if (angle1 > angle2) {
+            int temp = angle2;
+            angle2 = angle1;
+            angle1 = temp;
+        }
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        glLineWidth(width);
+        glColor(color);
+        glBegin(GL_LINE_STRIP);
+
+        for(double i = angle2; i >= angle1; i-=1) {
+            double ldx = cos(i * Math.PI / 180.0) * radius;
+            double ldy = sin(i * Math.PI / 180.0) * radius;
+            glVertex2d(x + ldx, y + ldy);
+        }
+
+        glEnd();
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+    }
+
     public static void drawSector(final double x,final double y,int angle1,int angle2,final double radius,final Color color){
         if (angle1 > angle2) {
             int temp = angle2;
@@ -305,8 +405,8 @@ public final class RenderUtils extends MinecraftInstance{
         glBegin(GL11.GL_TRIANGLE_FAN);
         glVertex2d(x, y);
         for(double i = angle2; i >= angle1; i-=1) {
-            double ldx = Math.cos(i * Math.PI / 180.0) * radius;
-            double ldy = Math.sin(i * Math.PI / 180.0) * radius;
+            double ldx = cos(i * Math.PI / 180.0) * radius;
+            double ldy = sin(i * Math.PI / 180.0) * radius;
             glVertex2d(x + ldx, y + ldy);
         }
         glVertex2d(x, y);

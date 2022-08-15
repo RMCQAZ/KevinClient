@@ -1,18 +1,19 @@
 package kevin.module.modules.movement
 
-import kevin.event.EventState
-import kevin.event.EventTarget
-import kevin.event.MotionEvent
-import kevin.event.SlowDownEvent
+import kevin.event.*
 import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.combat.KillAura
+import kevin.utils.MSTimer
 import kevin.utils.MovementUtils
+import kevin.utils.PacketUtils
 import net.minecraft.item.*
-import net.minecraft.network.play.client.C07PacketPlayerDigging
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
+import net.minecraft.network.Packet
+import net.minecraft.network.play.INetHandlerPlayServer
+import net.minecraft.network.play.client.*
 import net.minecraft.util.BlockPos
 import net.minecraft.util.EnumFacing
+import java.util.*
 
 class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and using items.", category = ModuleCategory.MOVEMENT) {
 
@@ -25,10 +26,25 @@ class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and
     private val bowForwardMultiplier = FloatValue("BowForwardMultiplier", 1.0F, 0.2F, 1.0F)
     private val bowStrafeMultiplier = FloatValue("BowStrafeMultiplier", 1.0F, 0.2F, 1.0F)
 
-    private val packetMode = ListValue("PacketMode", arrayOf("None","AntiCheat","AAC5"),"None")
+    private val packetMode = ListValue("PacketMode", arrayOf("None","AntiCheat","AAC5","Matrix","Vulcan"),"None")
 
     val soulsandValue = BooleanValue("Soulsand", true)
     val liquidPushValue = BooleanValue("LiquidPush", true)
+
+    private var lastBlockingStat = false
+    private var nextTemp = false
+    private var waitC03 = false
+    private val msTimer = MSTimer()
+    private var packetBuf = LinkedList<Packet<INetHandlerPlayServer>>()
+    private val isBlocking: Boolean
+        get() = (mc.thePlayer.isUsingItem || (KevinClient.moduleManager.getModule("KillAura")!! as KillAura).blockingStatus) && mc.thePlayer.heldItem != null && mc.thePlayer.heldItem.item is ItemSword
+
+    override fun onDisable() {
+        msTimer.reset()
+        nextTemp = false
+        waitC03 = false
+        packetBuf.clear()
+    }
 
     @EventTarget
     fun onMotion(event: MotionEvent) {
@@ -59,6 +75,59 @@ class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and
                 if (event.eventState == EventState.POST && (mc.thePlayer.isUsingItem || mc.thePlayer.isBlocking || aura.blockingStatus)) {
                     mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(BlockPos(-1, -1, -1), 255, mc.thePlayer.inventory.getCurrentItem(), 0f, 0f, 0f))
                 }
+            }
+        }
+    }
+
+    @EventTarget
+    fun onUpdate(event: UpdateEvent) {
+        if(mc.thePlayer == null || mc.theWorld == null)
+            return
+        if((packetMode.equals("Matrix") || packetMode.equals("Vulcan")) && (lastBlockingStat || isBlocking)) {
+            if(msTimer.hasTimePassed(230) && nextTemp) {
+                nextTemp = false
+                PacketUtils.sendPacketNoEvent(C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos(-1, -1, -1), EnumFacing.DOWN))
+                if(packetBuf.isNotEmpty()) {
+                    var canAttack = false
+                    for(packet in packetBuf) {
+                        if(packet is C03PacketPlayer) {
+                            canAttack = true
+                        }
+                        if(!((packet is C02PacketUseEntity || packet is C0APacketAnimation) && !canAttack)) {
+                            PacketUtils.sendPacketNoEvent(packet)
+                        }
+                    }
+                    packetBuf.clear()
+                }
+            }
+            if(!nextTemp) {
+                lastBlockingStat = isBlocking
+                if (!isBlocking) {
+                    return
+                }
+                PacketUtils.sendPacketNoEvent(C08PacketPlayerBlockPlacement(BlockPos(-1, -1, -1), 255, mc.thePlayer.inventory.getCurrentItem(), 0f, 0f, 0f))
+                nextTemp = true
+                waitC03 = packetMode.equals("Vulcan")
+                msTimer.reset()
+            }
+        }
+    }
+
+    @EventTarget
+    fun onPacket(event: PacketEvent) {
+        if(mc.thePlayer == null || mc.theWorld == null)
+            return
+        val packet = event.packet
+        if((packetMode.equals("Matrix") || packetMode.equals("Vulcan")) && nextTemp) {
+            if((packet is C07PacketPlayerDigging || packet is C08PacketPlayerBlockPlacement) && isBlocking) {
+                event.cancelEvent()
+            }else if (packet is C03PacketPlayer || packet is C0APacketAnimation || packet is C0BPacketEntityAction || packet is C02PacketUseEntity || packet is C07PacketPlayerDigging || packet is C08PacketPlayerBlockPlacement) {
+                if (packetMode.equals("Vulcan") && waitC03 && packet is C03PacketPlayer) {
+                    waitC03 = false
+                    return
+                }
+                packetBuf.add(packet as Packet<INetHandlerPlayServer>)
+                event.cancelEvent()
             }
         }
     }

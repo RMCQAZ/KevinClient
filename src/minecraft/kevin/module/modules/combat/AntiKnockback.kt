@@ -16,10 +16,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of knockback you take.", category = ModuleCategory.COMBAT) {
-    private val horizontalValue = FloatValue("Horizontal", 0F, 0F, 1F)
-    private val verticalValue = FloatValue("Vertical", 0F, 0F, 1F)
+    private val horizontalValue = FloatValue("Horizontal", 0F, -1F, 1F)
+    private val verticalValue = FloatValue("Vertical", 0F, -1F, 1F)
     private val modeValue = ListValue("Mode", arrayOf("Simple", "AAC", "AACPush", "AACZero", "AACv4",
-        "Reverse", "SmoothReverse", "Jump", "Glitch", "AAC5Packet"), "Simple")
+        "Reverse", "SmoothReverse", "Jump", "Glitch", "AAC5Packet", "MatrixReduce", "MatrixSimple", "MatrixReverse"), "Simple")
 
     // Reverse
     private val reverseStrengthValue = FloatValue("ReverseStrength", 1F, 0.1F, 1F)
@@ -157,6 +157,24 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
                 thePlayer.onGround = true
             } else
                 velocityInput = false
+            "matrixreduce" -> {
+                if (mc.thePlayer.hurtTime > 0) {
+                    if (mc.thePlayer.onGround) {
+                        if (mc.thePlayer.hurtTime <= 6) {
+                            mc.thePlayer.motionX *= 0.70
+                            mc.thePlayer.motionZ *= 0.70
+                        }
+                        if (mc.thePlayer.hurtTime <= 5) {
+                            mc.thePlayer.motionX *= 0.80
+                            mc.thePlayer.motionZ *= 0.80
+                        }
+                    } else if (mc.thePlayer.hurtTime <= 10) {
+                        mc.thePlayer.motionX *= 0.60
+                        mc.thePlayer.motionZ *= 0.60
+                    }
+                }
+            }
+
         }
     }
 
@@ -167,17 +185,17 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
         val packet = event.packet
 
         if (packet is S12PacketEntityVelocity) {
-            val packetEntityVelocity = packet
 
-
-            if ((mc.theWorld?.getEntityByID(packetEntityVelocity.entityID) ?: return) != thePlayer)
+            if ((mc.theWorld?.getEntityByID(packet.entityID) ?: return) != thePlayer)
                 return
 
             velocityTimer.reset()
 
             when (modeValue.get().toLowerCase()) {
                 "simple" -> {
-                    if (explosion && explosionCheck.get()) {explosion=false;return}
+                    if (explosion && explosionCheck.get()) {
+                        explosion = false;return
+                    }
 
                     val horizontal = horizontalValue.get()
                     val vertical = verticalValue.get()
@@ -185,9 +203,9 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
                     if (horizontal == 0F && vertical == 0F)
                         event.cancelEvent()
 
-                    packetEntityVelocity.motionX = (packetEntityVelocity.motionX * horizontal).toInt()
-                    packetEntityVelocity.motionY = (packetEntityVelocity.motionY * vertical).toInt()
-                    packetEntityVelocity.motionZ = (packetEntityVelocity.motionZ * horizontal).toInt()
+                    packet.motionX = (packet.motionX * horizontal).toInt()
+                    packet.motionY = (packet.motionY * vertical).toInt()
+                    packet.motionZ = (packet.motionZ * horizontal).toInt()
                 }
 
                 "aac", "reverse", "smoothreverse", "aaczero" -> velocityInput = true
@@ -205,6 +223,20 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
 
                     velocityInput = true
                     event.cancelEvent()
+                }
+
+                "matrixsimple" -> {
+                    packet.motionX = (packet.motionX * 0.36).toInt()
+                    packet.motionZ = (packet.motionZ * 0.36).toInt()
+                    if (mc.thePlayer.onGround) {
+                        packet.motionX = (packet.motionX * 0.9).toInt()
+                        packet.motionZ = (packet.motionZ * 0.9).toInt()
+                    }
+                }
+
+                "matrixreverse" -> {
+                    packet.motionX = (packet.motionX * -0.3).toInt()
+                    packet.motionZ = (packet.motionZ * -0.3).toInt()
                 }
             }
         } else if (packet is S27PacketExplosion) {

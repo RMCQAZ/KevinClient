@@ -19,12 +19,12 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class HighJump : Module("HighJump", "Allows you to jump higher.", category = ModuleCategory.MOVEMENT) {
-    private val heightValue = FloatValue("Height", 2f, 1.1f, 5f)
+    private val heightValue = FloatValue("Height", 2f, 0.5f, 5f)
     private val modeValue = ListValue("Mode", arrayOf("Vanilla", "Damage", "AACv3", "DAC", "Mineplex", "Timer", "Matrix","MatrixWater"), "Vanilla")
     private val glassValue = BooleanValue("OnlyGlassPane", false)
-    private val timerValue = FloatValue("Timer",0.1f,0.01f,1f)
-    private val waitTimeValue = IntegerValue("WaitTime",1,0,5)
-    private val flyValue = BooleanValue("Fly",false)
+    private val timerValue = FloatValue("Timer-Timer",0.1f,0.01f,1f)
+    private val waitTimeValue = IntegerValue("Timer-WaitTime",1,0,5)
+    private val flyValue = BooleanValue("Timer-Glide",false)
 
     private var jumpState = 1
     private var fly = false

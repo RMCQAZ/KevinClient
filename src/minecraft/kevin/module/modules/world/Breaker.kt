@@ -72,7 +72,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
         if (noHitValue.get()) {
             val killAura = KevinClient.moduleManager.getModule("KillAura") as KillAura
 
-            if (killAura.state && killAura.target != null)
+            if (killAura.state && (killAura.target != null || killAura.sTarget != null))
                 return
         }
 

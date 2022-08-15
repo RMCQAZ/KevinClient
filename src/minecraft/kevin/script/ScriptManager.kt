@@ -49,6 +49,28 @@ object ScriptManager : ICommand {
         Minecraft.logger.info("[ScriptManager] Reloaded ClickGui.")
     }
 
+    fun reAdd() {
+        val dir = KevinClient.fileManager.scripts
+        if (!dir.exists()) return
+        val files = dir.listFiles() ?: return
+        Minecraft.logger.info("[ScriptManager] Re add scripts...")
+        val time = System.currentTimeMillis()
+        scripts.clear()
+        files.forEach {
+            try {
+                val script = Script(it)
+                script.initScript()
+                scripts += script
+            } catch (e: Throwable){
+                Minecraft.logger.error("[ScriptManager] Error loading script ${it.name}!",e)
+            }
+        }
+        Minecraft.logger.info("[ScriptManager] Re add ${scripts.size} script(s),${System.currentTimeMillis()-time}ms.")
+        KevinClient.clickGUI = ClickGui.ClickGUI()
+        KevinClient.newClickGui = ClickGui.NewClickGui()
+        Minecraft.logger.info("[ScriptManager] Reloaded ClickGui.")
+    }
+
     class Script(private val scriptFile: File) : MinecraftInstance() {
         lateinit var scriptName: String
         lateinit var scriptVersion: String

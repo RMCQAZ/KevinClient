@@ -20,8 +20,6 @@ class AutoTool : Module(name = "AutoTool", description = "Automatically selects 
     @EventTarget
     fun onClick(event: ClickBlockEvent) {
         switchSlot(event.clickedBlock ?: return)
-        switchTimer.reset()
-        needReset = true
     }
     @EventTarget fun onUpdate(event: UpdateEvent){
         if (needReset) {
@@ -64,5 +62,7 @@ class AutoTool : Module(name = "AutoTool", description = "Automatically selects 
                 mc.thePlayer!!.inventory.currentItem = bestSlot
             }
         }
+        switchTimer.reset()
+        needReset = true
     }
 }

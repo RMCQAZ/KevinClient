@@ -25,7 +25,7 @@ import org.lwjgl.input.Keyboard;
 public abstract class GuiContainer extends GuiScreen
 {
     /** The location of the inventory background texture */
-    protected static final ResourceLocation inventoryBackground = new ResourceLocation("textures/gui/container/inventory.png");
+    public static final ResourceLocation inventoryBackground = new ResourceLocation("textures/gui/container/inventory.png");
 
     /** The X size of the inventory window in pixels. */
     protected int xSize = 176;

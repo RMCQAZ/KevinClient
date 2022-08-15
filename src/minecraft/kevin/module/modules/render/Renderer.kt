@@ -483,7 +483,7 @@ object Renderer : Module("Renderer","Allows you to modify some renderings.",cate
             }
 
             val killAura = KevinClient.moduleManager.getModule("Killaura") as KillAura
-            if (killAura.state&&killAura.target!=null){
+            if (killAura.state&&(killAura.target!=null||killAura.sTarget!=null)){
                 head.rotateAngleX = RotationUtils.serverRotation.pitch / (180f / Math.PI.toFloat())
             }
 

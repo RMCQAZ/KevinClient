@@ -62,5 +62,5 @@ class InvMove : Module("InvMove","Allows you to walk while an inventory is opene
     }
 
     override val tag: String?
-        get() = if (fakeSprint.get()) "FakeSprint" else null
+        get() = if (fakeSprint.get()&&bypass.get()) "FakeSprint & NoPacket" else if (fakeSprint.get()) "FakeSprint" else if (bypass.get()) "NoPacket" else null
 }

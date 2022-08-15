@@ -38,7 +38,7 @@ class TargetHUD : Element() {
     private var lastTarget: Entity? = null
 
     override fun drawElement(): Border? {
-        val target = (KevinClient.moduleManager.getModule("KillAura") as KillAura).target
+        val target = (KevinClient.moduleManager.getModule("KillAura") as KillAura).target ?: (KevinClient.moduleManager.getModule("KillAura") as KillAura).sTarget
         when(mode.get()){
             "Liquid" -> {
                 if ((target) is EntityPlayer) {

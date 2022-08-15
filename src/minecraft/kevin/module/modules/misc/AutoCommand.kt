@@ -42,7 +42,7 @@ class AutoCommand : Module("AutoCommand","Send commands automatically.",category
     }
 
     override val tag: String
-        get() = "Auto ${if(autoJoin.get()) "Join" else ""} ${if(autoLoginValue.get()) "Login" else ""} ${if(autoRegisterValue.get()) "Register" else ""}"
+        get() = "Auto${if(autoJoin.get()) " Join" else ""}${if(autoLoginValue.get()) " Login" else ""}${if(autoRegisterValue.get()) " Register" else ""}"
 
     @EventTarget
     fun onPacket(event: PacketEvent){

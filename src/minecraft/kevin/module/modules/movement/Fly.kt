@@ -5,13 +5,15 @@ import kevin.module.*
 import kevin.module.modules.movement.flys.FlyMode
 import kevin.module.modules.movement.flys.aac.AAC5
 import kevin.module.modules.movement.flys.ncp.NCPFly
-import kevin.module.modules.movement.flys.ncp.NCPNew
 import kevin.module.modules.movement.flys.ncp.OldNCP
-import kevin.module.modules.movement.flys.other.Matrix
+import kevin.module.modules.movement.flys.matrix.Matrix
+import kevin.module.modules.movement.flys.matrix.NewMatrix
+import kevin.module.modules.movement.flys.matrix.NewMatrixClip
 import kevin.module.modules.movement.flys.other.Teleport
 import kevin.module.modules.movement.flys.vanilla.Creative
 import kevin.module.modules.movement.flys.vanilla.Vanilla
 import kevin.module.modules.movement.flys.verus.VerusAuto
+import kevin.module.modules.movement.flys.vulcan.Vulcan
 import kevin.utils.*
 import org.lwjgl.input.Keyboard
 import java.awt.Color
@@ -23,10 +25,12 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
         AAC5,
         Teleport,
         VerusAuto,
-        //NCPNew, (未完成)
         NCPFly,
         OldNCP,
-        Matrix
+        Matrix, // from FDP
+        NewMatrix, // from FDP
+        NewMatrixClip, // from FDP
+        Vulcan // from FDP
     )
 
     private val names: Array<String>

@@ -42,6 +42,10 @@ class CommandManager {
         commands[arrayOf("ReloadScripts","ReloadScript")] = ScriptManager
 
         commands[arrayOf("Admin")] = AdminDetector
+
+        commands[arrayOf("DisableAllModule")] = DisableAllCommand()
+
+        commands[arrayOf("ClearMainConfig")] = ClearMainConfigCommand()
     }
 
     fun execCommand(message: String): Boolean{

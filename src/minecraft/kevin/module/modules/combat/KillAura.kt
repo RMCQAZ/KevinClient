@@ -7,6 +7,8 @@ import kevin.module.modules.exploit.TP
 import kevin.module.modules.misc.AntiShop
 import kevin.module.modules.misc.HideAndSeekHack
 import kevin.module.modules.misc.Teams
+import kevin.module.modules.movement.Fly
+import kevin.module.modules.world.Scaffold
 import kevin.utils.*
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.enchantment.EnchantmentHelper
@@ -65,10 +67,18 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
     // Bypass
     private val swingValue = BooleanValue("Swing", true)
     private val keepSprintValue = BooleanValue("KeepSprint", true)
+    private val scaffoldCheck = BooleanValue("ScaffoldCheck", true)
+
+    //Timing
+    private val attackTimingValue = ListValue("AttackTiming", arrayOf("Pre", "Post", "Update", "Pre&Post", "Update&Pre", "Update&Post", "Update&Pre&Post"), "Update")
+    private val extraBlockTimingValue // vanilla will send block packet at pre
+    = ListValue("ExtraBlockTiming", arrayOf("NoExtra", "Pre", "Post", "Update", "Pre&Post", "Update&Pre", "Update&Post", "Update&Pre&Post"), "NoExtra")
+    private val afterTickTimingValue = ListValue("AfterTickBlockTiming", arrayOf("Pre", "Post", "Both"), "Post")
 
     // AutoBlock
     private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Packet", "AfterTick", "Keep"), "Packet")
     private val interactAutoBlockValue = BooleanValue("InteractAutoBlock", true)
+    private val blockStatusCheck = BooleanValue("BlockStatusCheck", true)
     private val blockRate = IntegerValue("BlockRate", 100, 1, 100)
 
     // Raycast
@@ -133,10 +143,12 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
      */
 
     // Target
+    var sTarget: Entity? = null
     var target: Entity? = null
     private var currentTarget: Entity? = null
     private var hitable = false
     private val prevTargetEntities = mutableListOf<Int>()
+    private val discoveredTargets = mutableListOf<Entity>()
 
     // Attack delay
     private val attackTimer = MSTimer()
@@ -168,31 +180,62 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
      */
     override fun onDisable() {
         target = null
+        sTarget = null
         currentTarget = null
         hitable = false
         prevTargetEntities.clear()
+        discoveredTargets.clear()
         attackTimer.reset()
         clicks = 0
 
         stopBlocking()
     }
 
+    private val afterTick
+    get() = autoBlockValue equal "AfterTick"
+
     /**
      * Motion event
      */
     @EventTarget
     fun onMotion(event: MotionEvent) {
+        if (afterTick&&(
+            afterTickTimingValue equal "Both" ||
+            (afterTickTimingValue equal "Pre" && event.eventState == EventState.PRE) ||
+            (afterTickTimingValue equal "Post" && event.eventState == EventState.POST)
+        )) {
+            if (target != null && currentTarget != null) {
+                updateHitable()
+                if(canBlock)
+                    startBlocking(currentTarget!!, hitable)
+            }
+        }
+
+        if (attackTimingValue equal "Update&Pre&Post" || attackTimingValue equal "Pre&Post" ||
+            ((attackTimingValue equal "Pre" || attackTimingValue equal "Update&Pre") && event.eventState == EventState.PRE) ||
+            ((attackTimingValue equal "Post" || attackTimingValue equal "Update&Post") && event.eventState == EventState.POST)
+        ) {
+            runAttackLoop()
+        }
+
+        if (!afterTick&&(extraBlockTimingValue equal "Update&Pre&Post" || extraBlockTimingValue equal "Pre&Post" ||
+            ((extraBlockTimingValue equal "Pre" || extraBlockTimingValue equal "Update&Pre") && event.eventState == EventState.PRE) ||
+            ((extraBlockTimingValue equal "Post" || extraBlockTimingValue equal "Update&Post") && event.eventState == EventState.POST)
+        )) {
+            runBlock()
+        }
+
         if (event.eventState == EventState.POST) {
             target ?: return
             currentTarget ?: return
 
             // Update hitable
             updateHitable()
-
+/*
             // AutoBlock
             if (autoBlockValue.get().equals("AfterTick", true) && canBlock)
                 startBlocking(currentTarget!!, hitable)
-
+*/
             return
         }
 
@@ -266,8 +309,10 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         // Target
         currentTarget = target
 
-        if (!targetModeValue.get().equals("Switch", ignoreCase = true) && isEnemy(currentTarget))
+        if (!targetModeValue.get().equals("Switch", ignoreCase = true) && isEnemy(currentTarget)) {
             target = currentTarget
+            sTarget = currentTarget
+        }
     }
 
     @EventTarget(ignoreCondition = true)
@@ -305,25 +350,51 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
 
         if (cancelRun) {
             target = null
+            sTarget = null
             currentTarget = null
             hitable = false
             stopBlocking()
+            discoveredTargets.clear()
             return
         }
 
         if (noInventoryAttackValue.get() && ((mc.currentScreen)is GuiContainer ||
                     System.currentTimeMillis() - containerOpen < noInventoryDelayValue.get())) {
             target = null
+            sTarget = null
             currentTarget = null
             hitable = false
             if ((mc.currentScreen)is GuiContainer) containerOpen = System.currentTimeMillis()
             return
         }
 
+        if (attackTimingValue equal "Update&Pre&Post" || attackTimingValue equal "Update&Pre" || attackTimingValue equal "Update&Post" || attackTimingValue equal "Update")
+            runAttackLoop()
+        if (!afterTick&&(extraBlockTimingValue equal "Update&Pre&Post" || extraBlockTimingValue equal "Update&Pre" || extraBlockTimingValue equal "Update&Post" || extraBlockTimingValue equal "Update"))
+            runBlock()
+    }
+
+    private fun runAttackLoop() {
         if (target != null && currentTarget != null) {
             while (clicks > 0) {
                 runAttack()
                 clicks--
+            }
+        }
+    }
+
+    private fun runBlock() {
+        if (discoveredTargets.isNotEmpty() && canBlock) {
+            val target = this.target ?: discoveredTargets.first()
+            if (mc.thePlayer.getDistanceToEntityBox(target) <= rangeValue.get()) {
+                startBlocking(
+                    target,
+                    interactAutoBlockValue.get() && (mc.thePlayer.getDistanceToEntityBox(target) < maxRange)
+                )
+            } else {
+                if (!mc.thePlayer.isBlocking) {
+                    stopBlocking()
+                }
             }
         }
     }
@@ -335,15 +406,18 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
     fun onRender3D(event: Render3DEvent) {
         if (cancelRun) {
             target = null
+            sTarget = null
             currentTarget = null
             hitable = false
             stopBlocking()
+            discoveredTargets.clear()
             return
         }
 
         if (noInventoryAttackValue.get() && ((mc.currentScreen) is GuiContainer ||
                     System.currentTimeMillis() - containerOpen < noInventoryDelayValue.get())) {
             target = null
+            sTarget = null
             currentTarget = null
             hitable = false
             if ((mc.currentScreen) is GuiContainer) containerOpen = System.currentTimeMillis()
@@ -439,6 +513,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
     private fun updateTarget() {
         // Reset fixed target to null
         target = null
+        sTarget = null
 
         // Settings
         val hurtTime = hurtTimeValue.get()
@@ -446,7 +521,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         val switchMode = targetModeValue.get().equals("Switch", ignoreCase = true)
 
         // Find possible targets
-        val targets = mutableListOf<Entity>()
+        discoveredTargets.clear()
 
         val theWorld = mc.theWorld!!
         val thePlayer = mc.thePlayer!!
@@ -459,25 +534,26 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
             val entityFov = RotationUtils.getRotationDifference(entity)
 
             if (distance <= maxRange && (fov == 180F || entityFov <= fov) && (entity !is EntityLivingBase || entity.hurtTime <= hurtTime))
-                targets.add(entity)
+                discoveredTargets.add(entity)
         }
 
         // Sort targets by priority
         when (priorityValue.get().toLowerCase()) {
-            "distance" -> targets.sortBy { thePlayer.getDistanceToEntityBox(it) } // Sort by distance
-            "health" -> targets.sortBy { if (it is EntityLivingBase) it.health else thePlayer.getDistanceToEntityBox(it).toFloat() } // Sort by health
-            "direction" -> targets.sortBy { RotationUtils.getRotationDifference(it) } // Sort by FOV
-            "livingtime" -> targets.sortBy { -it.ticksExisted } // Sort by existence
+            "distance" -> discoveredTargets.sortBy { thePlayer.getDistanceToEntityBox(it) } // Sort by distance
+            "health" -> discoveredTargets.sortBy { if (it is EntityLivingBase) it.health else thePlayer.getDistanceToEntityBox(it).toFloat() } // Sort by health
+            "direction" -> discoveredTargets.sortBy { RotationUtils.getRotationDifference(it) } // Sort by FOV
+            "livingtime" -> discoveredTargets.sortBy { -it.ticksExisted } // Sort by existence
         }
 
         // Find best target
-        for (entity in targets) {
+        for (entity in discoveredTargets) {
             // Update rotations to current target
             if (!updateRotations(entity)) // when failed then try another target
                 continue
 
             // Set target to current entity
             target = entity
+            sTarget = entity
             return
         }
 
@@ -566,7 +642,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         }
 
         // Start blocking after attack
-        if ((autoBlockValue.get().equals("Packet", true)||keepAutoBlock) && (thePlayer.isBlocking || canBlock))
+        if ((autoBlockValue equal "Packet"||keepAutoBlock) && (thePlayer.isBlocking || canBlock))
             startBlocking(entity, interactAutoBlockValue.get())
     }
 
@@ -643,6 +719,10 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         if (!(blockRate.get() > 0 && Random().nextInt(100) <= blockRate.get()))
             return
 
+        if (blockingStatus&&blockStatusCheck.get()) {
+            return
+        }
+
         if (interact) {
             val positionEye = mc.renderViewEntity?.getPositionEyes(1F)
 
@@ -690,6 +770,8 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
     private val cancelRun: Boolean
         inline get() = mc.thePlayer!!.isSpectator || !isAlive(mc.thePlayer!!)
                 || KevinClient.moduleManager.getModule("Blink")!!.state || KevinClient.moduleManager.getModule("FreeCam")!!.state || (KevinClient.moduleManager.getModule("TP")!!.state&&(KevinClient.moduleManager.getModule("TP") as TP).mode.get().equals("AAC",true))
+                || (KevinClient.moduleManager.getModule("Fly")!!.state&&(KevinClient.moduleManager.getModule("Fly")!! as Fly).mode.get().equals("Vulcan",true))
+                || (scaffoldCheck.get()&&KevinClient.moduleManager.getModule("Scaffold")!!.state)
 
     /**
      * Check if [entity] is alive

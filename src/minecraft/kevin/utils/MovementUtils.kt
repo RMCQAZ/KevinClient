@@ -1,6 +1,7 @@
 package kevin.utils
 
-import java.lang.Math.*
+import java.lang.Math.toRadians
+import kotlin.math.*
 
 object MovementUtils : MinecraftInstance() {
     val speed: Float
@@ -43,4 +44,11 @@ object MovementUtils : MinecraftInstance() {
             if (thePlayer.moveStrafing < 0f) rotationYaw += 90f * forward
             return toRadians(rotationYaw.toDouble())
         }
+
+    fun move(speed: Float) {
+        if (!isMoving) return
+        val yaw = direction
+        mc.thePlayer.motionX += -sin(yaw) * speed
+        mc.thePlayer.motionZ += cos(yaw) * speed
+    }
 }

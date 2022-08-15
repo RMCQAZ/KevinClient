@@ -1,6 +1,9 @@
 package kevin.module.modules.player
 
-import kevin.event.*
+import kevin.event.ClickWindowEvent
+import kevin.event.EventTarget
+import kevin.event.PacketEvent
+import kevin.event.UpdateEvent
 import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.combat.AutoArmor
@@ -13,6 +16,7 @@ import net.minecraft.item.*
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
 import net.minecraft.network.play.client.C0DPacketCloseWindow
 import net.minecraft.network.play.client.C16PacketClientStatus
+import net.minecraft.potion.Potion
 
 class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automatically throws away useless items.", category = ModuleCategory.PLAYER) {
     private val maxDelayValue: IntegerValue = object : IntegerValue("MaxDelay", 600, 0, 1000) {
@@ -41,8 +45,11 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
     private val maxBlocks = IntegerValue("MaxBlocks",4,1,36)
     private val maxBuckets = IntegerValue("MaxBuckets",2,0,36)
     private val maxThrowableItems = IntegerValue("MaxThrowableItems",0,0,36)
+    private val maxPotions = IntegerValue("MaxPotions",9,0,36)
 
-    private val items = arrayOf("None", "Ignore", "Sword", "Bow", "Pickaxe", "Axe", "Food", "Block", "Water", "Gapple", "Pearl", "Throwable")
+    private val keepBadEffectPotions = BooleanValue("KeepBadEffectPotions", false)
+
+    private val items = arrayOf("None", "Ignore", "Sword", "Bow", "Pickaxe", "Axe", "Food", "Block", "Water", "Gapple", "Pearl", "Throwable", "GoodPotion", "BadPotion")
     private val sortSlot1Value = ListValue("SortSlot-1", items, "Sword")
     private val sortSlot2Value = ListValue("SortSlot-2", items, "Bow")
     private val sortSlot3Value = ListValue("SortSlot-3", items, "Pickaxe")
@@ -77,9 +84,9 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
 
             val garbageItems = items(9, if (hotbarValue.get()) 45 else 36)
                 .filter {
-                    !isUseful(it.value, it.key)
+                    !isUseful(it.value, it.key)/*
                             ||(it.value.item is ItemBlock&&blocks > maxBlocks.get())
-                            ||(it.value.item is ItemBucket&&buckets > maxBuckets.get())
+                            ||(it.value.item is ItemBucket&&buckets > maxBuckets.get())*/
                 }
                 .keys
                 .toMutableList()
@@ -131,6 +138,15 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
             .filter { it!=null&&it.item!=null&&(it.item is ItemSnowball||it.item is ItemEgg) }
             .forEach { _ -> throwables+=1 }
         return throwables
+    }
+    //Potions
+    private val potions: Int
+    get() {
+        var potions = 0
+        mc.thePlayer.inventory.mainInventory
+            .filter { it!=null&&it.item!=null&&it.item is ItemPotion }
+            .forEach { _ -> potions+=1 }
+        return potions
     }
 
     fun isUseful(itemStack: ItemStack, slot: Int): Boolean {
@@ -189,7 +205,7 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
             } else item is ItemFood || itemStack.unlocalizedName == "item.arrow" ||
                     ((item is ItemBlock && item.block !is BlockBush)&&(blocks<=maxBlocks.get()||!this.state)) ||
                     item is ItemBed || itemStack.unlocalizedName == "item.diamond" || itemStack.unlocalizedName == "item.ingotIron" ||
-                    item is ItemPotion || item is ItemEnderPearl || item is ItemEnchantedBook || (item is ItemBucket&&(buckets<=maxBuckets.get()||!this.state)) || itemStack.unlocalizedName == "item.stick" ||
+                    (item is ItemPotion && (keepBadEffectPotions.get()||!item.getEffects(itemStack).any { Potion.potionTypes[it.potionID].isBadEffect }) && (potions<=maxPotions.get()||!this.state)) || item is ItemEnderPearl || item is ItemEnchantedBook || (item is ItemBucket&&(buckets<=maxBuckets.get()||!this.state)) || itemStack.unlocalizedName == "item.stick" ||
                     ignoreVehiclesValue.get() && (item is ItemBoat || item is ItemMinecart) || ((item is ItemSnowball||item is ItemEgg)&&(throwables<=maxThrowableItems.get()||!this.state))
         } catch (ex: Exception) {
             true
@@ -291,7 +307,7 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
                         val item = stack.item
 
                         if (item is ItemFood && item !is ItemAppleGold && !type(index).equals("Food", ignoreCase = true)) {
-                            val replaceCurr = ItemUtils.isStackEmpty(slotStack)
+                            val replaceCurr = ItemUtils.isStackEmpty(slotStack) || slotStack?.item !is ItemFood || slotStack.item is ItemAppleGold
 
                             return if (replaceCurr) index else null
                         }
@@ -306,7 +322,7 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
 
                         if (item is ItemBlock && !InventoryUtils.BLOCK_BLACKLIST.contains(item.block) &&
                             !type(index).equals("Block", ignoreCase = true)) {
-                            val replaceCurr = ItemUtils.isStackEmpty(slotStack)
+                            val replaceCurr = ItemUtils.isStackEmpty(slotStack) || slotStack?.item !is ItemBlock || (slotStack.item is ItemBlock && InventoryUtils.BLOCK_BLACKLIST.contains((slotStack.item as ItemBlock).block))
 
                             return if (replaceCurr) index else null
                         }
@@ -320,7 +336,7 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
                         val item = stack.item
 
                         if ((item is ItemSnowball||item is ItemEgg) && !type(index).equals("Throwable", ignoreCase = true)) {
-                            val replaceCurr = ItemUtils.isStackEmpty(slotStack)
+                            val replaceCurr = ItemUtils.isStackEmpty(slotStack) || (slotStack?.item !is ItemSnowball && slotStack?.item !is ItemEgg)
 
                             return if (replaceCurr) index else null
                         }
@@ -363,6 +379,34 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
 
                         if (item is ItemEnderPearl && !type(index).equals("Pearl", ignoreCase = true)) {
                             val replaceCurr = ItemUtils.isStackEmpty(slotStack) || slotStack?.item !is ItemEnderPearl
+
+                            return if (replaceCurr) index else null
+                        }
+                    }
+                }
+            }
+
+            "goodpotion" -> {
+                thePlayer.inventory.mainInventory.forEachIndexed { index, stack ->
+                    if (stack != null) {
+                        val item = stack.item
+
+                        if (item is ItemPotion && !item.getEffects(stack).any { Potion.potionTypes[it.potionID].isBadEffect } && !type(index).equals("Potion", ignoreCase = true)) {
+                            val replaceCurr = ItemUtils.isStackEmpty(slotStack) || slotStack?.item !is ItemPotion || (slotStack.item as ItemPotion).getEffects(slotStack).any { Potion.potionTypes[it.potionID].isBadEffect }
+
+                            return if (replaceCurr) index else null
+                        }
+                    }
+                }
+            }
+
+            "badpotion" -> {
+                thePlayer.inventory.mainInventory.forEachIndexed { index, stack ->
+                    if (stack != null) {
+                        val item = stack.item
+
+                        if (item is ItemPotion && item.getEffects(stack).any { Potion.potionTypes[it.potionID].isBadEffect } && !type(index).equals("Potion", ignoreCase = true)) {
+                            val replaceCurr = ItemUtils.isStackEmpty(slotStack) || slotStack?.item !is ItemPotion || !(slotStack.item as ItemPotion).getEffects(slotStack).any { Potion.potionTypes[it.potionID].isBadEffect }
 
                             return if (replaceCurr) index else null
                         }

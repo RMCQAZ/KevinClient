@@ -297,8 +297,12 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void sendChatMessage(String message)
     {
-        if (!KevinClient.commandManager.execCommand(message)) {
+        if (KevinClient.moduleManager.getModule("NoCommand").getState()) {
             this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
+        } else {
+            if (!KevinClient.commandManager.execCommand(message)) {
+                this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
+            }
         }
     }
 

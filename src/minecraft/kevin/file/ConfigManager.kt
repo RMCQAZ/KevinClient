@@ -85,7 +85,7 @@ object ConfigManager {
                             warns["$key-AutoDisableValue"] = "The AutoDisable attribute of the module is not saved in the config file(OldConfig?)."
                         for (moduleValue in module.values) {
                             val element = jsonModule[moduleValue.name]
-                            if (element != null) moduleValue.fromJson(element) else warns["$key-$moduleValue"] = "The config file does not have a value for this option."
+                            if (element != null) moduleValue.fromJson(element) else warns["$key-${moduleValue.name}"] = "The config file does not have a value for this option."
                         }
                     } else warns[key] = "Module does not exist."
                 }

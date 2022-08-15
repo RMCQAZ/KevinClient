@@ -21,6 +21,8 @@ class HelpCommand : ICommand {
         ChatUtils.message("§a.AutoDisableSet <ModuleName> <add/remove> <World/SetBack/All> §9Add/Remove a module to AutoDisable List.")
         ChatUtils.message("§a.reloadScripts §9Reload Scripts.")
         ChatUtils.message("§a.reloadScript §9Reload Scripts.")
-        ChatUtils.message("§a.Admin <Add/Remove> <Name> Add admin name to detect list.")
+        ChatUtils.message("§a.Admin <Add/Remove> <Name> §9Add admin name to detect list.")
+        ChatUtils.message("§a.DisableAllModule §9Disable all modules.")
+        ChatUtils.message("§a.ClearMainConfig §9Clear main config.")
     }
 }

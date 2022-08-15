@@ -187,7 +187,7 @@ public class ModelBiped extends ModelBase
         final Scaffold scaffold = (Scaffold) KevinClient.moduleManager.getModule("Scaffold");
         final Breaker breaker = (Breaker) KevinClient.moduleManager.getModule("Breaker");
         final Nuker nuker = (Nuker) KevinClient.moduleManager.getModule("Nuker");
-        final boolean needRotate = (killAura.getState() && killAura.getTarget() != null) || scaffold.getState() || (breaker.getState() && breaker.getCurrentDamage() > 0) || (nuker.getState() && nuker.getCurrentDamage() > 0);
+        final boolean needRotate = (killAura.getState() && (killAura.getTarget() != null || killAura.getSTarget() != null)) || scaffold.getState() || (breaker.getState() && breaker.getCurrentDamage() > 0) || (nuker.getState() && nuker.getCurrentDamage() > 0);
 
         if (KevinClient.moduleManager.getModule("Rotations").getState() && RotationUtils.serverRotation != null && entityIn instanceof EntityPlayer
                 && entityIn.equals(Minecraft.getMinecraft().thePlayer) && needRotate) {

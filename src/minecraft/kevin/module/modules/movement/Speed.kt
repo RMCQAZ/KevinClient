@@ -5,21 +5,27 @@ import kevin.module.*
 import kevin.module.modules.movement.speeds.SpeedMode
 import kevin.module.modules.movement.speeds.aac.AAC5Fast
 import kevin.module.modules.movement.speeds.aac.AAC5Long
+import kevin.module.modules.movement.speeds.matrix.MatrixNew
 import kevin.module.modules.movement.speeds.other.AutoJump
+import kevin.module.modules.movement.speeds.other.Custom
 import kevin.module.modules.movement.speeds.other.YPort
 import kevin.module.modules.movement.speeds.verus.VerusHop
 import kevin.module.modules.movement.speeds.verus.VerusYPort
+import kevin.module.modules.movement.speeds.vulcan.VulcanHop
 import kevin.utils.MovementUtils
 import net.minecraft.network.play.server.S12PacketEntityVelocity
 
 class Speed : Module("Speed","Allows you to move faster.", category = ModuleCategory.MOVEMENT) {
     private val speeds = arrayListOf(
+        Custom, // from FDP
         AAC5Long,
         AAC5Fast,
         YPort,
         AutoJump,
         VerusYPort,
-        VerusHop
+        VerusHop,
+        MatrixNew, //from FDP
+        VulcanHop //from FDP
     )
 
     private val names: Array<String>
@@ -71,8 +77,8 @@ class Speed : Module("Speed","Allows you to move faster.", category = ModuleCate
     override val values: List<Value<*>>
     get(){
         val valueList = arrayListOf<Value<*>>()
-        speeds.forEach { valueList.addAll(it.values) }
         valueList.addAll(super.values)
+        speeds.forEach { valueList.addAll(it.values) }
         return valueList.toList()
     }
 }
