@@ -83,7 +83,7 @@ class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and
     fun onUpdate(event: UpdateEvent) {
         if(mc.thePlayer == null || mc.theWorld == null)
             return
-        if((packetMode.equals("Matrix") || packetMode.equals("Vulcan")) && (lastBlockingStat || isBlocking)) {
+        if((packetMode equal "Matrix" || packetMode equal "Vulcan") && (lastBlockingStat || isBlocking)) {
             if(msTimer.hasTimePassed(230) && nextTemp) {
                 nextTemp = false
                 PacketUtils.sendPacketNoEvent(C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos(-1, -1, -1), EnumFacing.DOWN))
@@ -107,7 +107,7 @@ class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and
                 }
                 PacketUtils.sendPacketNoEvent(C08PacketPlayerBlockPlacement(BlockPos(-1, -1, -1), 255, mc.thePlayer.inventory.getCurrentItem(), 0f, 0f, 0f))
                 nextTemp = true
-                waitC03 = packetMode.equals("Vulcan")
+                waitC03 = packetMode equal "Vulcan"
                 msTimer.reset()
             }
         }
@@ -118,11 +118,11 @@ class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and
         if(mc.thePlayer == null || mc.theWorld == null)
             return
         val packet = event.packet
-        if((packetMode.equals("Matrix") || packetMode.equals("Vulcan")) && nextTemp) {
+        if((packetMode equal "Matrix" || packetMode equal "Vulcan") && nextTemp) {
             if((packet is C07PacketPlayerDigging || packet is C08PacketPlayerBlockPlacement) && isBlocking) {
                 event.cancelEvent()
             }else if (packet is C03PacketPlayer || packet is C0APacketAnimation || packet is C0BPacketEntityAction || packet is C02PacketUseEntity || packet is C07PacketPlayerDigging || packet is C08PacketPlayerBlockPlacement) {
-                if (packetMode.equals("Vulcan") && waitC03 && packet is C03PacketPlayer) {
+                if (packetMode equal "Vulcan" && waitC03 && packet is C03PacketPlayer) {
                     waitC03 = false
                     return
                 }

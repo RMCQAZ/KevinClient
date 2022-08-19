@@ -4,6 +4,7 @@ import kevin.event.EventTarget
 import kevin.event.Render3DEvent
 import kevin.main.KevinClient
 import kevin.module.*
+import kevin.module.modules.misc.AntiBot
 import kevin.utils.ColorUtils
 import kevin.utils.EntityUtils
 import kevin.utils.RenderUtils.drawBorderedRect
@@ -33,8 +34,8 @@ class NameTags : Module("NameTags", "Changes the scale of the nametags so you ca
         for(entity in mc.theWorld.loadedEntityList) {
             if(EntityUtils.isSelected(entity, false)) {
                 renderNameTag(entity as EntityLivingBase,
-                     /**if(!modeValue.get().equals("Liquid",ignoreCase = true) && AntiBot.isBot(entity)){ "§e" }else{ "" }
-                            +**/ if (clearNamesValue.get()){ entity.name } else { entity.getDisplayName().unformattedText })
+                     if(!modeValue.get().equals("Liquid",ignoreCase = true) && AntiBot.isBot(entity)){ "§e" }else{ "" }
+                            + if (clearNamesValue.get()){ entity.name } else { entity.getDisplayName().unformattedText })
             }
         }
     }
@@ -93,7 +94,7 @@ class NameTags : Module("NameTags", "Changes the scale of the nametags so you ca
 
             "liquid" -> {
                 // Modify tag
-                val bot = /**AntiBot.isBot(entity)**/ false
+                val bot = AntiBot.isBot(entity)
                 val nameColor = if (bot) "§3" else if (entity.isInvisible) "§6" else if (entity.isSneaking) "§4" else "§7"
                 val ping = if (entity is EntityPlayer) EntityUtils.getPing(entity) else 0
 

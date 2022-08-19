@@ -1,21 +1,62 @@
 package kevin.module.modules.misc
 
-import kevin.event.EventTarget
-import kevin.event.PacketEvent
-import kevin.event.TextEvent
-import kevin.event.UpdateEvent
+import kevin.event.*
 import kevin.hud.element.elements.Notification
 import kevin.main.KevinClient
-import kevin.module.BooleanValue
-import kevin.module.ListValue
-import kevin.module.Module
-import kevin.module.ModuleCategory
+import kevin.module.*
+import kevin.utils.ChatUtils
+import kevin.utils.ColorUtils.stripColor
+import kevin.utils.ColorUtils.stripColorNoNull
+import kevin.utils.CombatManager
+import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemArmor
-import net.minecraft.network.play.server.S02PacketChat
+import net.minecraft.network.play.server.*
+import net.minecraft.world.WorldSettings
+import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.collections.ArrayList
 
-class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bots.", category = ModuleCategory.MISC) {
-    private val modeValue = ListValue("Mode", arrayOf("ZQAT-ArmorAndColor(BW)","NoColorArmor","UnusualArmor"),"ZQAT-ArmorAndColor(BW)")
+object AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bots.", category = ModuleCategory.MISC) {
+    private val modeValue = ListValue("Mode", arrayOf("Custom","NoColorArmor","UnusualArmor"),"Custom")
+    private val removeFromWorld = BooleanValue("RemoveFromWord", false)
+    private val debugValue = BooleanValue("Debug", true)
+
+    private val tabValue = BooleanValue("Tab", true)
+    private val tabModeValue = ListValue("TabMode", arrayOf("Equals", "Contains"), "Contains")
+    private val entityIDValue = BooleanValue("EntityID", true)
+    private val colorValue = BooleanValue("Color", false)
+    private val livingTimeValue = BooleanValue("LivingTime", false)
+    private val livingTimeTicksValue = IntegerValue("LivingTimeTicks", 40, 1, 200)
+    private val groundValue = BooleanValue("Ground", true)
+    private val airValue = BooleanValue("Air", false)
+    private val invalidGroundValue = BooleanValue("InvalidGround", true)
+    private val swingValue = BooleanValue("Swing", false)
+    private val healthValue = BooleanValue("Health", false)
+    private val derpValue = BooleanValue("Derp", true)
+    private val wasInvisibleValue = BooleanValue("WasInvisible", false)
+    private val validNameValue = BooleanValue("ValidName", true)
+    private val armorValue = BooleanValue("Armor", false)
+    private val pingValue = BooleanValue("Ping", false)
+    private val needHitValue = BooleanValue("NeedHit", false)
+    private val noClipValue = BooleanValue("NoClip", false)
+    private val czechHekValue = BooleanValue("CzechMatrix", false)
+    private val czechHekPingCheckValue = BooleanValue("PingCheck", true)
+    private val czechHekGMCheckValue = BooleanValue("GamemodeCheck", true)
+    private val reusedEntityIdValue = BooleanValue("ReusedEntityId", false)
+    private val spawnInCombatValue = BooleanValue("SpawnInCombat", false)
+    private val duplicateInWorldValue = BooleanValue("DuplicateInWorld", false)
+    private val duplicateInTabValue = BooleanValue("DuplicateInTab", false)
+    private val duplicateCompareModeValue = ListValue("DuplicateCompareMode", arrayOf("OnTime", "WhenSpawn"), "OnTime")
+    private val fastDamageValue = BooleanValue("FastDamage", false)
+    private val fastDamageTicksValue = IntegerValue("FastDamageTicks", 5, 1, 20)
+    private val alwaysInRadiusValue = BooleanValue("AlwaysInRadius", false)
+    private val alwaysRadiusValue = FloatValue("AlwaysInRadiusBlocks", 20f, 5f, 30f)
+    private val alwaysInRadiusRemoveValue = BooleanValue("AlwaysInRadiusRemove", false)
+    private val alwaysInRadiusWithTicksCheckValue = BooleanValue("AlwaysInRadiusWithTicksCheck", false)
+
 
     //Helmet
     private val allowDiamondHelmet = BooleanValue("AllowDiamondHelmet",true)
@@ -51,94 +92,34 @@ class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bot
 
     private val removeNoColorLeatherArmor = BooleanValue("NoColorLeatherArmor",true)
 
+    private val botList = CopyOnWriteArrayList<EntityLivingBase>()
+
+    private val ground = mutableListOf<Int>()
+    private val air = mutableListOf<Int>()
+    private val invalidGround = mutableMapOf<Int, Int>()
+    private val swing = mutableListOf<Int>()
+    private val invisible = mutableListOf<Int>()
+    private val hitted = mutableListOf<Int>()
+    private val spawnInCombat = mutableListOf<Int>()
+    private val notAlwaysInRadius = mutableListOf<Int>()
+    private val lastDamage = mutableMapOf<Int, Int>()
+    private val lastDamageVl = mutableMapOf<Int, Float>()
+    private val duplicate = mutableListOf<UUID>()
+    private val noClip = mutableListOf<Int>()
+    private val hasRemovedEntities = mutableListOf<Int>()
+    private val regex = Regex("\\w{3,16}")
+    private var wasAdded = mc.thePlayer != null
+
     override val tag: String
         get() = modeValue.get()
 
-    private var gameStarted = false
-
-    override fun onEnable() {
-        gameStarted = false
-    }
-
-    @EventTarget
-    fun onPacket(event: PacketEvent){
-        val packet = event.packet
-        when{
-            modeValue equal "ZQAT-ArmorAndColor(BW)" -> {
-                if (packet is S02PacketChat){
-                    if (packet.chatComponent.formattedText.contains("获得胜利",true)){
-                        gameStarted = false
-                        KevinClient.hud.addNotification(Notification("GameEnd!"),"Antibot")
-                    }
-
-                    if (packet.chatComponent.formattedText.contains("游戏开始",true)){
-                        gameStarted = true
-                        KevinClient.hud.addNotification(Notification("GameStart!"),"Antibot")
-                    }
-                }
-            }
-        }
-    }
-
-    @EventTarget
-    fun onText(event: TextEvent){
-        val text = event.text
-        when{
-            modeValue equal "ZQAT-ArmorAndColor(BW)" -> {
-                if (text != null && text.contains("游戏结束",true) && gameStarted && !text.contains("后",true)){
-                    gameStarted = false
-                    KevinClient.hud.addNotification(Notification("GameEnd!"),"Antibot")
-                }
-            }
-        }
-    }
-
     @EventTarget
     fun onUpdate(event: UpdateEvent){
-        when{
-            modeValue equal "ZQAT-ArmorAndColor(BW)" -> {
-                if (!gameStarted) return
-                for (entity in mc.theWorld.playerEntities){
-                    if (entity == mc.thePlayer) continue
-                    var isBot = false
-                    val armorInventory = entity.inventory.armorInventory
-                    if (armorInventory[2] != null
-                        && armorInventory[3] != null
-                        && armorInventory[2].item is ItemArmor
-                        && armorInventory[3].item is ItemArmor
-                    ){
-                        if ((armorInventory[2].item as ItemArmor).armorMaterial != ItemArmor.ArmorMaterial.LEATHER) isBot = true
-                        if ((armorInventory[3].item as ItemArmor).armorMaterial != ItemArmor.ArmorMaterial.LEATHER) isBot = true
-                    }
-                    if (armorInventory[0] != null
-                        && armorInventory[1] != null
-                        && armorInventory[0].item is ItemArmor
-                        && armorInventory[1].item is ItemArmor
-                    ){
-                        if ((armorInventory[0].item as ItemArmor).armorMaterial != (armorInventory[1].item as ItemArmor).armorMaterial) isBot = true
-                    }
-                    if (((armorInventory[0] != null && armorInventory[0].item is ItemArmor) && armorInventory[1] == null)
-                        || ((armorInventory[1] != null && armorInventory[1].item is ItemArmor) && armorInventory[0] == null)
-                        || ((armorInventory[2] != null && armorInventory[2].item is ItemArmor) && armorInventory[3] == null)
-                        || ((armorInventory[3] != null && armorInventory[3].item is ItemArmor) && armorInventory[2] == null)
-                    ) isBot = true
-
-                    for (a in armorInventory) {
-                        if ((a != null
-                                    && a.item is ItemArmor
-                                    && ((a.item as ItemArmor).armorMaterial == ItemArmor.ArmorMaterial.LEATHER
-                                    && a.tagCompound == null
-                                    ))
-                        ) isBot = true
-                    }
-
-                    if (isBot) {
-                        removeBot(entity)
-                    }
-                }
-            }
+        val playerEntities = mc.theWorld.playerEntities.toList()
+        botList.clear()
+        when {
             modeValue equal "NoColorArmor" -> {
-                for (player in mc.theWorld.playerEntities){
+                for (player in playerEntities){
                     if (player == mc.thePlayer) continue
                     var isBot = false
                     val armorInventory = player.inventory.armorInventory
@@ -155,13 +136,12 @@ class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bot
                         }
                     }
                     if (isBot) {
-                        removeBot(player)
+                        botList.add(player)
                     }
                 }
             }
             modeValue equal "UnusualArmor" -> {
-                val playerList = mc.theWorld.playerEntities.toList()
-                for (player in playerList) {
+                for (player in playerEntities) {
                     if (player == mc.thePlayer) continue
                     var isBot = false
                     val armorInventory = player.inventory.armorInventory
@@ -209,14 +189,305 @@ class AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bot
                                 )&&removeNoColorLeatherArmor.get())
                     )isBot = true
                     if (isBot) {
-                        removeBot(player)
+                        botList.add(player)
                     }
                 }
             }
         }
+        if (removeFromWorld.get()) {
+            if (mc.thePlayer == null || mc.theWorld == null) return
+            val bots: MutableList<EntityPlayer> = ArrayList()
+            for (player in playerEntities)
+                if (player !== mc.thePlayer && isBot(player)) bots.add(player)
+            for (bot in bots)
+                removeBot(bot)
+        }
     }
     private fun removeBot(bot: Entity){
         mc.theWorld.removeEntityFromWorld(bot.entityId)
-        KevinClient.hud.addNotification(Notification("Removed Bot"),"AntiBot")
+        if (debugValue.get())
+            KevinClient.hud.addNotification(Notification("Removed Bot"),"AntiBot")
+    }
+    @JvmStatic
+    fun isBot(entity: EntityLivingBase): Boolean {
+        // Check if entity is a player
+        if (entity !is EntityPlayer || entity === mc.thePlayer) {
+            return false
+        }
+
+        // Check if anti bot is enabled
+        if (!state) {
+            return false
+        }
+
+        if (entity in botList)
+            return true
+
+        if (!(modeValue equal "Custom"))
+            return false
+
+        if (validNameValue.get() && !entity.name.matches(regex)) {
+            return true
+        }
+
+        // Anti Bot checks
+        if (colorValue.get() && !entity.displayName.formattedText.replace("§r", "").contains("§")) {
+            return true
+        }
+
+        if (livingTimeValue.get() && entity.ticksExisted < livingTimeTicksValue.get()) {
+            return true
+        }
+
+        if (groundValue.get() && !ground.contains(entity.entityId)) {
+            return true
+        }
+
+        if (airValue.get() && !air.contains(entity.entityId)) {
+            return true
+        }
+
+        if (swingValue.get() && !swing.contains(entity.entityId)) {
+            return true
+        }
+
+        if(noClipValue.get() && noClip.contains(entity.entityId)) {
+            return true
+        }
+
+        if(reusedEntityIdValue.get() && hasRemovedEntities.contains(entity.entityId)) {
+            return false
+        }
+
+        if (healthValue.get() && (entity.health > 20F || entity.health <= 0F)) {
+            return true
+        }
+
+        if (spawnInCombatValue.get() && spawnInCombat.contains(entity.entityId)) {
+            return true
+        }
+
+        if (entityIDValue.get() && (entity.entityId >= 1000000000 || entity.entityId <= -1)) {
+            return true
+        }
+
+        if (derpValue.get() && (entity.rotationPitch > 90F || entity.rotationPitch < -90F)) {
+            return true
+        }
+
+        if (wasInvisibleValue.get() && invisible.contains(entity.entityId)) {
+            return true
+        }
+
+        if (armorValue.get()) {
+            if (entity.inventory.armorInventory[0] == null && entity.inventory.armorInventory[1] == null &&
+                entity.inventory.armorInventory[2] == null && entity.inventory.armorInventory[3] == null) {
+                return true
+            }
+        }
+
+        if (pingValue.get()) {
+            if (mc.netHandler.getPlayerInfo(entity.uniqueID)?.responseTime == 0) {
+                return true
+            }
+        }
+
+        if (needHitValue.get() && !hitted.contains(entity.entityId)) {
+            return true
+        }
+
+        if (invalidGroundValue.get() && invalidGround.getOrDefault(entity.entityId, 0) >= 10) {
+            return true
+        }
+
+        if (tabValue.get()) {
+            val equals = tabModeValue.equals("Equals")
+            val targetName = stripColorNoNull(entity.displayName.formattedText)
+
+            for (networkPlayerInfo in mc.netHandler.playerInfoMap) {
+                val networkName = stripColorNoNull(networkPlayerInfo.getFullName())
+
+                if (if (equals) targetName == networkName else targetName.contains(networkName)) {
+                    return false
+                }
+            }
+
+            return true
+        }
+
+        if (duplicateCompareModeValue.equals("WhenSpawn") && duplicate.contains(entity.gameProfile.id)) {
+            return true
+        }
+
+        if (duplicateInWorldValue.get() && duplicateCompareModeValue.equals("OnTime") && mc.theWorld.loadedEntityList.count { it is EntityPlayer && it.name == it.name } > 1) {
+            return true
+        }
+
+        if (duplicateInTabValue.get() && duplicateCompareModeValue.equals("OnTime") && mc.netHandler.playerInfoMap.count { entity.name == it.gameProfile.name } > 1) {
+            return true
+        }
+
+        if (fastDamageValue.get() && lastDamageVl.getOrDefault(entity.entityId, 0f) > 0) {
+            return true
+        }
+
+        if (alwaysInRadiusValue.get() && !notAlwaysInRadius.contains(entity.entityId)) {
+            return true
+        }
+
+        return entity.name.isEmpty() || entity.name == mc.thePlayer.name
+    }
+
+    private fun NetworkPlayerInfo.getFullName(): String {
+        if (displayName != null) {
+            return displayName!!.formattedText
+        }
+
+        val team = playerTeam
+        val name = gameProfile.name
+        return team?.formatString(name) ?: name
+    }
+
+    override fun onDisable() {
+        clearAll()
+        super.onDisable()
+    }
+
+    private fun processEntityMove(entity: Entity, onGround: Boolean) {
+        if (entity is EntityPlayer) {
+            if (onGround && !ground.contains(entity.entityId)) {
+                ground.add(entity.entityId)
+            }
+
+            if (!onGround && !air.contains(entity.entityId)) {
+                air.add(entity.entityId)
+            }
+
+            if (onGround) {
+                if (entity.prevPosY != entity.posY) {
+                    invalidGround[entity.entityId] = invalidGround.getOrDefault(entity.entityId, 0) + 1
+                }
+            } else {
+                val currentVL = invalidGround.getOrDefault(entity.entityId, 0) / 2
+                if (currentVL <= 0) {
+                    invalidGround.remove(entity.entityId)
+                } else {
+                    invalidGround[entity.entityId] = currentVL
+                }
+            }
+
+            if (entity.isInvisible && !invisible.contains(entity.entityId)) {
+                invisible.add(entity.entityId)
+            }
+
+            if (!noClip.contains(entity.entityId)) {
+                val cb = mc.theWorld.getCollidingBoundingBoxes(entity, entity.entityBoundingBox.contract(0.0625, 0.0625, 0.0625))
+//                alert("NOCLIP[${cb.size}] ${entity.displayName.unformattedText} ${entity.posX} ${entity.posY} ${entity.posZ}")
+                if(cb.isNotEmpty()) {
+                    noClip.add(entity.entityId)
+                }
+            }
+
+            if ((!livingTimeValue.get() || entity.ticksExisted > livingTimeTicksValue.get() || !alwaysInRadiusWithTicksCheckValue.get()) && !notAlwaysInRadius.contains(entity.entityId) && mc.thePlayer.getDistanceToEntity(entity) > alwaysRadiusValue.get()) {
+                notAlwaysInRadius.add(entity.entityId)
+                if (alwaysInRadiusRemoveValue.get()) {
+                    mc.theWorld.removeEntity(entity)
+                }
+            }
+        }
+    }
+
+    @EventTarget
+    fun onPacket(event: PacketEvent) {
+        if (mc.thePlayer == null || mc.theWorld == null) return
+        if (czechHekValue.get()) {
+
+            val packet = event.packet
+
+            if (packet is S41PacketServerDifficulty) wasAdded = false
+            if (packet is S38PacketPlayerListItem) {
+                val packetListItem = event.packet as S38PacketPlayerListItem
+                val data = packetListItem.entries[0]
+                if (data.profile != null && data.profile.name != null) {
+                    if (!wasAdded) wasAdded =
+                        data.profile.name == mc.thePlayer.name else if (!mc.thePlayer.isSpectator && !mc.thePlayer.capabilities.allowFlying && (!czechHekPingCheckValue.get() || data.ping != 0) && (!czechHekGMCheckValue.get() || data.gameMode != WorldSettings.GameType.NOT_SET)) {
+                        event.cancelEvent()
+                        if (debugValue.get()) ChatUtils.messageWithStart("§7[§a§lAnti Bot/§6Matrix§7] §fPrevented §r" + data.profile.name + " §ffrom spawning.")
+                    }
+                }
+            }
+        }
+        val packet = event.packet
+
+        if(packet is S18PacketEntityTeleport) {
+            processEntityMove(mc.theWorld.getEntityByID(packet.entityId) ?: return, packet.onGround)
+        } else if (packet is S14PacketEntity) {
+            processEntityMove(packet.getEntity(mc.theWorld) ?: return, packet.onGround)
+        } else if (packet is S0BPacketAnimation) {
+            val entity = mc.theWorld.getEntityByID(packet.entityID)
+
+            if (entity != null && entity is EntityLivingBase && packet.animationType == 0 &&
+                !swing.contains(entity.entityId)) {
+                swing.add(entity.entityId)
+            }
+        } else if (packet is S38PacketPlayerListItem) {
+            if (duplicateCompareModeValue.equals("WhenSpawn") && packet.action == S38PacketPlayerListItem.Action.ADD_PLAYER) {
+                packet.entries.forEach { entry ->
+                    val name = entry.profile.name
+                    if (duplicateInWorldValue.get() && mc.theWorld.playerEntities.any { it.name == name } ||
+                        duplicateInTabValue.get() && mc.netHandler.playerInfoMap.any { it.gameProfile.name == name }) {
+                        duplicate.add(entry.profile.id)
+                    }
+                }
+            }
+        } else if (packet is S0CPacketSpawnPlayer) {
+            if(KevinClient.combatManager.inCombat && !hasRemovedEntities.contains(packet.entityID)) {
+                spawnInCombat.add(packet.entityID)
+            }
+        } else if (packet is S13PacketDestroyEntities) {
+            hasRemovedEntities.addAll(packet.entityIDs.toTypedArray())
+        }
+
+        if (packet is S19PacketEntityStatus && packet.opCode.toInt() == 2 || packet is S0BPacketAnimation && packet.animationType == 1) {
+            val entity = if (packet is S19PacketEntityStatus) { packet.getEntity(mc.theWorld) } else if (packet is S0BPacketAnimation) { mc.theWorld.getEntityByID(packet.entityID) } else { null } ?: return
+
+            if (entity is EntityPlayer) {
+                lastDamageVl[entity.entityId] = lastDamageVl.getOrDefault(entity.entityId, 0f) + if (entity.ticksExisted - lastDamage.getOrDefault(entity.entityId, 0) <= fastDamageTicksValue.get()) {
+                    1f
+                } else {
+                    -0.5f
+                }
+                lastDamage[entity.entityId] = entity.ticksExisted
+            }
+        }
+    }
+
+    @EventTarget
+    fun onAttack(e: AttackEvent) {
+        val entity = e.targetEntity
+
+        if (entity is EntityLivingBase && !hitted.contains(entity.entityId)) {
+            hitted.add(entity.entityId)
+        }
+    }
+
+    @EventTarget
+    fun onWorld(event: WorldEvent) {
+        clearAll()
+    }
+
+    private fun clearAll() {
+        hitted.clear()
+        swing.clear()
+        ground.clear()
+        invalidGround.clear()
+        invisible.clear()
+        lastDamage.clear()
+        lastDamageVl.clear()
+        notAlwaysInRadius.clear()
+        duplicate.clear()
+        spawnInCombat.clear()
+        noClip.clear()
+        hasRemovedEntities.clear()
     }
 }

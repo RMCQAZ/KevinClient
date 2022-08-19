@@ -3,6 +3,7 @@ package kevin.module.modules.render
 import kevin.event.EventTarget
 import kevin.event.Render3DEvent
 import kevin.module.*
+import kevin.module.modules.misc.AntiBot
 import kevin.utils.ColorUtils
 import kevin.utils.EntityUtils
 import kevin.utils.RenderUtils
@@ -41,7 +42,7 @@ class Tracers : Module("Tracers", "Draws a line to targets around you.", categor
         GL11.glBegin(GL11.GL_LINES)
 
         for (entity in mc.theWorld!!.loadedEntityList) {
-            if ((entity)!is EntityLivingBase || !botValue.get() /**&& AntiBot.isBot(entity)**/) continue
+            if ((entity)!is EntityLivingBase || !botValue.get() && AntiBot.isBot(entity)) continue
             if (entity != thePlayer && EntityUtils.isSelected(entity, false)) {
                 var dist = (thePlayer.getDistanceToEntity(entity) * 2).toInt()
 

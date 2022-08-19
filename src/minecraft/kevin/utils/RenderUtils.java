@@ -235,7 +235,7 @@ public final class RenderUtils extends MinecraftInstance{
         glColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     }
 
-    private static void glColor(final int hex) {
+    public static void glColor(final int hex) {
         glColor(hex >> 16 & 0xFF, hex >> 8 & 0xFF, hex & 0xFF, hex >> 24 & 0xFF);
     }
 

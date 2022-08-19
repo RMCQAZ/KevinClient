@@ -4,6 +4,7 @@ import kevin.event.*
 import kevin.main.KevinClient
 import kevin.module.*
 import kevin.module.modules.exploit.TP
+import kevin.module.modules.misc.AntiBot
 import kevin.module.modules.misc.AntiShop
 import kevin.module.modules.misc.HideAndSeekHack
 import kevin.module.modules.misc.Teams
@@ -575,9 +576,9 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
             if (!EntityUtils.targetInvisible && entity.isInvisible)
                 return false
 
-            if (EntityUtils.targetPlayer && (entity) is EntityPlayer) {
+            if (EntityUtils.targetPlayer && entity is EntityPlayer) {
 
-                if (entity.isSpectator /**|| AntiBot.isBot(player)**/ ) return false
+                if (entity.isSpectator || AntiBot.isBot(entity)) return false
 /**
                 if (player.isClientFriend() && !LiquidBounce.moduleManager[NoFriends::class.java].state)
                     return false

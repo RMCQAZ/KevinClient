@@ -1,5 +1,6 @@
 package net.minecraft.client.gui.achievement;
 
+import kevin.module.modules.misc.NoAchievement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -31,6 +32,8 @@ public class GuiAchievement extends Gui
 
     public void displayAchievement(Achievement ach)
     {
+        if (NoAchievement.INSTANCE.getState())
+            return;
         this.achievementTitle = I18n.format("achievement.get");
         this.achievementDescription = ach.getStatName().getUnformattedText();
         this.notificationTime = Minecraft.getSystemTime();
@@ -40,6 +43,8 @@ public class GuiAchievement extends Gui
 
     public void displayUnformattedAchievement(Achievement achievementIn)
     {
+        if (NoAchievement.INSTANCE.getState())
+            return;
         this.achievementTitle = achievementIn.getStatName().getUnformattedText();
         this.achievementDescription = achievementIn.getDescription();
         this.notificationTime = Minecraft.getSystemTime() + 2500L;

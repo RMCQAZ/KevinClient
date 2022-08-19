@@ -51,4 +51,33 @@ object MovementUtils : MinecraftInstance() {
         mc.thePlayer.motionX += -sin(yaw) * speed
         mc.thePlayer.motionZ += cos(yaw) * speed
     }
+    fun setMotion(speed: Double) {
+        var forward = mc.thePlayer.movementInput.moveForward.toDouble()
+        var strafe = mc.thePlayer.movementInput.moveStrafe.toDouble()
+        var yaw = mc.thePlayer.rotationYaw
+        if (forward == 0.0 && strafe == 0.0) {
+            mc.thePlayer.motionX = 0.0
+            mc.thePlayer.motionZ = 0.0
+        } else {
+            if (forward != 0.0) {
+                if (strafe > 0.0) {
+                    yaw += (if (forward > 0.0) -45 else 45).toFloat()
+                } else if (strafe < 0.0) {
+                    yaw += (if (forward > 0.0) 45 else -45).toFloat()
+                }
+                strafe = 0.0
+                if (forward > 0.0) {
+                    forward = 1.0
+                } else if (forward < 0.0) {
+                    forward = -1.0
+                }
+            }
+            val cos = cos(toRadians((yaw + 90.0f).toDouble()))
+            val sin = sin(toRadians((yaw + 90.0f).toDouble()))
+            mc.thePlayer.motionX = (forward * speed * cos +
+                    strafe * speed * sin)
+            mc.thePlayer.motionZ = (forward * speed * sin -
+                    strafe * speed * cos)
+        }
+    }
 }

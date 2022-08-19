@@ -1,6 +1,7 @@
 package kevin.utils
 
 import kevin.main.KevinClient
+import kevin.module.modules.misc.AntiBot.isBot
 import kevin.module.modules.misc.AntiShop
 import kevin.module.modules.misc.Teams
 import net.minecraft.entity.Entity
@@ -32,8 +33,8 @@ object EntityUtils : MinecraftInstance() {
                 if (targetPlayer && entity is EntityPlayer) {
 
                     if (canAttackCheck) {
-                        /***if (isBot(entityPlayer))
-                            return false***/
+                        if (isBot(entity))
+                            return false
 
                         if (entity.isClientFriend() /***&& !LiquidBounce.moduleManager.getModule(NoFriends::class.java).state***/ )
                             return false

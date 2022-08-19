@@ -70,8 +70,15 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Pick", "Spoof", "Switch"), "Spoof")
 
     // Basic stuff
-    @JvmField
-    val sprintValue = BooleanValue("Sprint", false)
+    private val sprintValue = ListValue("Sprint", arrayOf("Always", "Dynamic", "OnGround", "OffGround", "OFF"), "Always")
+    private val towerNoSprintSwitch = BooleanValue("TowerNoSprintSwitch", false)
+    val canSprint: Boolean
+        get() = MovementUtils.isMoving && when (sprintValue.get().lowercase()) {
+            "always", "dynamic" -> true
+            "onground" -> mc.thePlayer.onGround
+            "offground" -> !mc.thePlayer.onGround
+            else -> false
+        }
     private val autoJump = BooleanValue("AutoJump",false)
     private val swingValue = BooleanValue("Swing", true)
     private val searchValue = BooleanValue("Search", true)
@@ -93,11 +100,15 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     get() = expandLengthValue.get()!=0&&!(jumpCheckValue.get()&&mc.gameSettings.keyBindJump.isKeyDown)&&!(downCheckValue.get()&&shouldGoDown)&&(!expandOnlyMove.get()||(MovementUtils.isMoving||(expandOnlyMoveOnlyGround.get()&&!mc.thePlayer.onGround)))
 
     // Rotation Options
-    private val rotationValues = arrayOf("Off", "Normal", "AAC")
+    private val rotationValues = arrayOf("Off", "Normal", "AAC", "Custom")
     private val strafeMode = ListValue("Strafe", arrayOf("Off", "AAC"), "Off")
     private val rotationsValue = ListValue("Rotations", rotationValues, "Normal")
     private val towerRotationsValue = ListValue("TowerRotations", rotationValues, "Normal")
     private val aacYawOffsetValue = IntegerValue("AACYawOffset", 0, 0, 90)
+    private val customYawValue = IntegerValue("CustomYaw", -145, -180, 180)
+    private val customPitchValue = FloatValue("CustomPitch", 82.4f, -90f, 90f)
+    private val customTowerYawValue = IntegerValue("CustomTowerYaw", -145, -180, 180)
+    private val customTowerPitchValue = FloatValue("CustomTowerPitch", 79f, -90f, 90f)
     private val silentRotationValue = BooleanValue("SilentRotation", true)
     private val keepRotationValue = BooleanValue("KeepRotation", true)
     private val keepLengthValue = IntegerValue("KeepRotationLength", 0, 0, 20)
@@ -115,6 +126,23 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
 
     // Search Accuracy
     private val searchAccuracyValue: IntegerValue = object : IntegerValue("SearchAccuracy", 8, 1, 16) {
+        override fun onChanged(oldValue: Int, newValue: Int) {
+            if (maximum < newValue) {
+                set(maximum)
+            } else if (minimum > newValue) {
+                set(minimum)
+            }
+        }
+    }
+
+    //Tower XZ/Y range
+    private val towerSearchMode = ListValue("Tower-XYZSearch", arrayOf("Auto", "AutoCenter", "Manual", "Sigma"), "AutoCenter")
+    private val towerXZRangeValue = FloatValue("Tower-xzRange", 0.8f, 0f, 1f)
+    private var towerYRangeValue = FloatValue("Tower-yRange", 0.8f, 0f, 1f)
+    private val towerMinDistValue = FloatValue("Tower-MinDist", 0.0f, 0.0f, 0.2f)
+
+    // Tower Search Accuracy
+    private val towerSearchAccuracyValue: IntegerValue = object : IntegerValue("Tower-SearchAccuracy", 8, 1, 16) {
         override fun onChanged(oldValue: Int, newValue: Int) {
             if (maximum < newValue) {
                 set(maximum)
@@ -160,8 +188,10 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     // Game
     private val timerValue = FloatValue("Timer", 1f, 0.1f, 10f)
     private val speedModifierValue = FloatValue("SpeedModifier", 1f, 0f, 2f)
+    private val motionSpeedEnabled = BooleanValue("MotionSpeedSet", false)
+    private val motionSpeedValue = FloatValue("MotionSpeed", 0.1f, 0.05f, 1f)
     private val slowValue = BooleanValue("Slow", false)
-    private val slowSpeed = FloatValue("SlowSpeed", 0.6f, 0.2f, 0.8f)
+    private val slowSpeed = FloatValue("SlowSpeed", 0.6f, 0.2f, 1f)
 
     // Safety
     private val sameYValue = BooleanValue("SameY", false)
@@ -328,6 +358,8 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
 
         if (!sameY()) launchY = mc.thePlayer!!.posY.toInt()
 
+        mc.thePlayer.isSprinting = canSprint
+
         mc.timer.timerSpeed = timerValue.get()
         shouldGoDown =
             downValue.get() && !sameY() && GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) && blocksAmount > 1
@@ -340,7 +372,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
         }
         if (mc.thePlayer!!.onGround) {
             when (zitterMode.get().toLowerCase()) {
-                "off" -> return
+                //"off" -> return //LiquidBounce B73, WTF is this?? if you turn off zitter u cant use eagle??????
                 "smooth" -> {
                     if (!GameSettings.isKeyDown(mc.gameSettings.keyBindRight)) {
                         mc.gameSettings.keyBindRight.pressed = false
@@ -373,7 +405,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
         // Eagle
         if (!eagleValue.get().equals("Off", true) && !shouldGoDown) {
             var dif = 0.5
-            if (edgeDistanceValue.get() > 0 && !shouldGoDown) {
+            if (edgeDistanceValue.get() > 0) {
                 for (facingType in EnumFacing.values()) {
                     if (facingType != EnumFacing.NORTH && facingType != EnumFacing.EAST && facingType != EnumFacing.SOUTH && facingType != EnumFacing.WEST)
                         continue
@@ -400,7 +432,7 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
                         mc.thePlayer!!.posZ
                     )
                 ).block == (Blocks.air) || dif < edgeDistanceValue.get()
-                if (eagleValue.get().equals("Silent", true) && !shouldGoDown) {
+                if (eagleValue.get().equals("Silent", true)) {
                     if (eagleSneaking != shouldEagle) {
                         mc.netHandler.addToSendQueue(
                             C0BPacketEntityAction(
@@ -466,6 +498,10 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     @EventTarget
     fun onMotion(event: MotionEvent) {
         val eventState: EventState = event.eventState
+
+        if (motionSpeedEnabled.get())
+            MovementUtils.setMotion(motionSpeedValue.get().toDouble())
+
         //AutoJump
         if (mc.thePlayer.onGround
             && mc.thePlayer.jumpTicks == 0
@@ -836,6 +872,8 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
         if (!delayTimer.hasTimePassed(delay) || sameY() && launchY - 1 != targetPlace!!.vec3.yCoord.toInt())
             return
 
+        val isDynamicSprint = sprintValue equal "dynamic" && (!towerNoSprintSwitch.get() || !towerState)
+
         var itemStack: ItemStack? = mc.thePlayer!!.heldItem
         if (itemStack == null || (itemStack.item) !is ItemBlock ||
             ((itemStack.item!! as ItemBlock).block) is BlockBush || mc.thePlayer!!.heldItem!!.stackSize <= 0
@@ -866,6 +904,10 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }
 
+        if (isDynamicSprint) {
+            mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING))
+        }
+
         if (mc.playerController.onPlayerRightClick(
                 mc.thePlayer!!,
                 mc.theWorld!!,
@@ -890,6 +932,11 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
                 mc.netHandler.addToSendQueue(C0APacketAnimation())
             }
         }
+
+        if (isDynamicSprint) {
+            mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.START_SPRINTING))
+        }
+
         if (autoBlockValue.get().equals("Switch", true)) {
             if (slot != mc.thePlayer!!.inventory.currentItem) {
                 mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
@@ -1010,9 +1057,11 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
 
     private fun calculateRotation(rotation: Rotation): Rotation {
         return if (towerState) when(towerRotationsValue.get()) {
+            "Custom" -> Rotation(mc.thePlayer.rotationYaw + customTowerYawValue.get(), customTowerPitchValue.get())
             else -> rotation
         } else when(rotationsValue.get()) {
             "AAC" -> Rotation(mc.thePlayer.rotationYaw + (if (mc.thePlayer.movementInput.moveForward < 0) 0 else 180) + aacYawOffsetValue.get(), rotation.pitch)
+            "Custom" -> Rotation(mc.thePlayer.rotationYaw + customYawValue.get(), customPitchValue.get())
             else -> rotation
         }
     }
@@ -1030,17 +1079,17 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
         if (!isReplaceable(blockPosition)) return false
 
         // Search Ranges
-        val xzRV = xzRangeValue.get().toDouble()
-        val xzSSV = calcStepSize(xzRV.toFloat())
-        val yRV = yRangeValue.get().toDouble()
-        val ySSV = calcStepSize(yRV.toFloat())
+        val xzRV = if (towerState) towerXZRangeValue.get().toDouble() else xzRangeValue.get().toDouble()
+        val xzSSV = if (towerState) calcTowerStepSize(xzRV.toFloat()) else calcStepSize(xzRV.toFloat())
+        val yRV = if (towerState) towerYRangeValue.get().toDouble() else yRangeValue.get().toDouble()
+        val ySSV = if (towerState) calcTowerStepSize(yRV.toFloat()) else calcStepSize(yRV.toFloat())
         val eyesPos = Vec3(
             mc.thePlayer!!.posX,
             mc.thePlayer!!.entityBoundingBox.minY + mc.thePlayer!!.eyeHeight,
             mc.thePlayer!!.posZ
         )
         var placeRotation: PlaceRotation? = null
-        if (searchMode equal "Sigma" && !shouldGoDown) { // Sigma的搜索无法处理下降
+        if ((if (towerState) towerSearchMode else searchMode) equal "Sigma" && !shouldGoDown) { // Sigma的搜索无法处理下降
             val data = getBlockData(blockPosition)
             if (data != null) {
                 placeRotation = PlaceRotation(PlaceInfo(data.first, data.second, getVec3(data.first, data.second)), getRotations(data.first, data.second))
@@ -1050,8 +1099,8 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
                 val neighbor = blockPosition.offset(facingType)
                 if (!canBeClicked(neighbor)) continue
                 val dirVec = Vec3(facingType.directionVec)
-                val auto = searchMode.get().equals("Auto", true)
-                val center = searchMode.get().equals("AutoCenter", true)
+                val auto = (if (towerState) towerSearchMode else searchMode).get().equals("Auto", true)
+                val center = (if (towerState) towerSearchMode else searchMode).get().equals("AutoCenter", true)
                 var xSearch = if (auto) 0.1 else 0.5 - xzRV / 2
                 while (xSearch <= if (auto) 0.9 else 0.5 + xzRV / 2) {
                     var ySearch = if (auto) 0.1 else 0.5 - yRV / 2
@@ -1083,10 +1132,10 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
                             val diffY = hitVec.yCoord - eyesPos.yCoord
                             val diffZ = hitVec.zCoord - eyesPos.zCoord
                             val diffXZ = sqrt(diffX * diffX + diffZ * diffZ)
-                            if ((facingType == EnumFacing.NORTH || facingType == EnumFacing.EAST || facingType == EnumFacing.SOUTH || facingType == EnumFacing.WEST) && minDistValue.get() > 0) {
+                            if ((facingType == EnumFacing.NORTH || facingType == EnumFacing.EAST || facingType == EnumFacing.SOUTH || facingType == EnumFacing.WEST) && (if (towerState) towerMinDistValue else minDistValue).get() > 0) {
                                 val diff: Double =
                                     abs(if (facingType == EnumFacing.NORTH || facingType == EnumFacing.SOUTH) diffZ else diffX)
-                                if (diff < minDistValue.get() || diff > 0.3f) {
+                                if (diff < (if (towerState) towerMinDistValue else minDistValue).get() || diff > 0.3f) {
                                     zSearch += if (auto) 0.1 else xzSSV
                                     continue
                                 }
@@ -1166,6 +1215,12 @@ class Scaffold : Module("Scaffold", "Automatically places blocks beneath your fe
     private fun calcStepSize(range: Float): Double {
         var accuracy: Double = searchAccuracyValue.get().toDouble()
         accuracy += accuracy % 2 // If it is set to uneven it changes it to even. Fixes a bug
+        return if (range / accuracy < 0.01) 0.01 else (range / accuracy)
+    }
+
+    private fun calcTowerStepSize(range: Float): Double {
+        var accuracy: Double = towerSearchAccuracyValue.get().toDouble()
+        accuracy += accuracy % 2
         return if (range / accuracy < 0.01) 0.01 else (range / accuracy)
     }
 

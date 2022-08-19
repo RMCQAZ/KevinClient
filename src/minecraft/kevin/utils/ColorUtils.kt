@@ -110,6 +110,10 @@ object ColorUtils {
     fun stripColor(input: String?): String? {
         return COLOR_PATTERN.matcher(input ?: return null).replaceAll("")
     }
+    @JvmStatic
+    fun stripColorNoNull(input: String): String {
+        return COLOR_PATTERN.matcher(input).replaceAll("")
+    }
 
     @JvmStatic
     fun translateAlternateColorCodes(textToTranslate: String): String {

@@ -48,6 +48,7 @@ class ModuleManager : Listenable {
             ForceUnicodeChat(),
             Ghost(),
             GhostHand(),
+            IllegalItems,
             KeepContainer(),
             Kick(),
             Log4j2(),
@@ -63,7 +64,7 @@ class ModuleManager : Listenable {
         )
         miscList = arrayListOf(
             AdminDetector,
-            AntiBot(),
+            AntiBot,
             AntiInvalidBlockPlacement(),
             AntiShop(),
             AutoCommand(),
@@ -75,6 +76,7 @@ class ModuleManager : Listenable {
             HideAndSeekHack,
             KillerDetector(),
             NameProtect(),
+            NoAchievement,
             NoCommand,
             NoRotateSet(),
             NoScoreboard,

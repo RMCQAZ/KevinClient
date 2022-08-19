@@ -8,15 +8,12 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.texture.TextureUtil
 import org.apache.commons.io.IOUtils
 import org.lwjgl.opengl.*
-import java.awt.Color
-import java.awt.Font
-import java.awt.Graphics2D
-import java.awt.RenderingHints
+import java.awt.*
 import java.awt.image.BufferedImage
 import java.io.*
 
 class FontManager : MinecraftInstance(){
-    @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+    @Retention(AnnotationRetention.RUNTIME)
     annotation class FontDetails(val fontName: String, val fontSize: Int = -1)
 
     @FontDetails(fontName = "Minecraft Font")
@@ -67,10 +64,10 @@ class FontManager : MinecraftInstance(){
 
         constructor(font: Font) : this(font.name, font.size) {}
 
-        override fun equals(o: Any?): Boolean {
-            if (this === o) return true
-            if (o == null || javaClass != o.javaClass) return false
-            val fontInfo = o as FontInfo
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other == null || javaClass != other.javaClass) return false
+            val fontInfo = other as FontInfo
             return if (fontSize != fontInfo.fontSize) false else name == fontInfo.name
         }
 

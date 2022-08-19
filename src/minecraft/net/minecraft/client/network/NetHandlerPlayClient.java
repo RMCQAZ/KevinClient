@@ -1477,7 +1477,8 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
                 {
                     Achievement achievement = (Achievement)statbase;
                     this.gameController.guiAchievement.displayAchievement(achievement);
-                    this.gameController.getTwitchStream().func_152911_a(new MetadataAchievement(achievement), 0L);
+                    if (this.gameController.getTwitchStream()!=null)
+                        this.gameController.getTwitchStream().func_152911_a(new MetadataAchievement(achievement), 0L);
 
                     if (statbase == AchievementList.openInventory)
                     {

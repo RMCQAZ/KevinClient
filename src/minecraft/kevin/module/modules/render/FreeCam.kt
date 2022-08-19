@@ -8,6 +8,7 @@ import kevin.module.FloatValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
 import kevin.utils.MovementUtils
+import kevin.utils.PacketUtils
 import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.client.C0BPacketEntityAction
@@ -16,12 +17,14 @@ class FreeCam : Module("FreeCam", "Allows you to move out of your body.", catego
     private val speedValue = FloatValue("Speed", 0.8f, 0.1f, 2f)
     private val flyValue = BooleanValue("Fly", true)
     private val noClipValue = BooleanValue("NoClip", true)
+    private val bypass = BooleanValue("Bypass", false)
 
     private var fakePlayer: EntityOtherPlayerMP? = null
 
     private var oldX = 0.0
     private var oldY = 0.0
     private var oldZ = 0.0
+    private var oldOnGround = false
 
     override fun onEnable() {
         val thePlayer = mc.thePlayer ?: return
@@ -29,6 +32,7 @@ class FreeCam : Module("FreeCam", "Allows you to move out of your body.", catego
         oldX = thePlayer.posX
         oldY = thePlayer.posY
         oldZ = thePlayer.posZ
+        oldOnGround = thePlayer.onGround
 
         val playerMP = EntityOtherPlayerMP(mc.theWorld!!, thePlayer.gameProfile)
 
@@ -91,8 +95,12 @@ class FreeCam : Module("FreeCam", "Allows you to move out of your body.", catego
     @EventTarget
     fun onPacket(event: PacketEvent) {
         val packet = event.packet
-
-        if ((packet) is C03PacketPlayer || (packet) is C0BPacketEntityAction)
+        if(packet is C03PacketPlayer) {
+            if (bypass.get())
+                PacketUtils.sendPacketNoEvent(C03PacketPlayer(oldOnGround))
+            event.cancelEvent()
+        }
+        if (packet is C0BPacketEntityAction)
             event.cancelEvent()
     }
 }
