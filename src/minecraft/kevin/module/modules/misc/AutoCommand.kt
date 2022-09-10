@@ -3,6 +3,7 @@ package kevin.module.modules.misc
 import kevin.event.EventTarget
 import kevin.event.PacketEvent
 import kevin.event.UpdateEvent
+import kevin.hud.element.elements.ConnectNotificationType
 import kevin.hud.element.elements.Notification
 import kevin.main.KevinClient
 
@@ -55,7 +56,7 @@ class AutoCommand : Module("AutoCommand","Send commands automatically.",category
             join=true
             autoJoinTimer.reset()
             when(autoJoinNotificationMode.get()){
-                "Notification" -> KevinClient.hud.addNotification(Notification("Send command after ${autoJoinDelay.get()} MS."),"AutoJoin")
+                "Notification" -> KevinClient.hud.addNotification(Notification("Send command after ${autoJoinDelay.get()} MS.", "AutoJoin"))
                 "Chat" -> ChatUtils.messageWithStart("[AutoJoin] Send command after ${autoJoinDelay.get()} MS.")
             }
         }
@@ -70,7 +71,7 @@ class AutoCommand : Module("AutoCommand","Send commands automatically.",category
             mc.thePlayer.sendChatMessage(autoJoinMessage.get())
             join = false
             when(autoJoinNotificationMode.get()){
-                "Notification" -> KevinClient.hud.addNotification(Notification("Auto Join..."),"AutoJoin")
+                "Notification" -> KevinClient.hud.addNotification(Notification("Auto Join...", "AutoJoin", ConnectNotificationType.OK))
                 "Chat" -> ChatUtils.messageWithStart("[AutoJoin] Auto Join...")
             }
         }

@@ -117,28 +117,19 @@ public class TileEntityRendererDispatcher
 
     public void renderTileEntity(TileEntity tileentityIn, float partialTicks, int destroyStage)
     {
-        XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        XRay xRay = KevinClient.moduleManager.getXRay();
         if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Simple")&&!xRay.getXrayBlocks().contains(tileentityIn.getBlockType())) return;
 
         if (tileentityIn.getDistanceSq(this.entityX, this.entityY, this.entityZ) < tileentityIn.getMaxRenderDistanceSquared())
         {
-            boolean flag = true;
 
-            if (Reflector.ForgeTileEntity_hasFastRenderer.exists())
-            {
-                flag = !this.drawingBatch || !Reflector.callBoolean(tileentityIn, Reflector.ForgeTileEntity_hasFastRenderer);
-            }
-
-            if (flag)
-            {
-                StorageESP storageESP = (StorageESP) KevinClient.moduleManager.getModule("StorageESP");
-                if (!storageESP.getState()) RenderHelper.enableStandardItemLighting();
-                int i = this.worldObj.getCombinedLight(tileentityIn.getPos(), 0);
-                int j = i % 65536;
-                int k = i / 65536;
-                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            }
+            StorageESP storageESP = KevinClient.moduleManager.getModule(StorageESP.class);
+            if (!storageESP.getState()) RenderHelper.enableStandardItemLighting();
+            int i = this.worldObj.getCombinedLight(tileentityIn.getPos(), 0);
+            int j = i % 65536;
+            int k = i / 65536;
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             BlockPos blockpos = tileentityIn.getPos();
 
@@ -186,14 +177,7 @@ public class TileEntityRendererDispatcher
             {
                 this.tileEntityRendered = tileEntityIn;
 
-                if (this.drawingBatch && Reflector.callBoolean(tileEntityIn, Reflector.ForgeTileEntity_hasFastRenderer))
-                {
-                    tileentityspecialrenderer.renderTileEntityFast(tileEntityIn, x, y, z, partialTicks, destroyStage, this.batchBuffer.getWorldRenderer());
-                }
-                else
-                {
-                    tileentityspecialrenderer.renderTileEntityAt(tileEntityIn, x, y, z, partialTicks, destroyStage);
-                }
+                tileentityspecialrenderer.renderTileEntityAt(tileEntityIn, x, y, z, partialTicks, destroyStage);
 
                 this.tileEntityRendered = null;
             }

@@ -471,7 +471,7 @@ public class Block
 
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        XRay xRay = KevinClient.moduleManager.getXRay();
         if (xRay.getState()) {
             if (xRay.getMode().get().equalsIgnoreCase("Translucent")) {
                 if (xRay.getXrayBlocks().contains(this)&&!xRay.getNoBlock().get()&&!xRay.getCave().get()) {
@@ -562,7 +562,7 @@ public class Block
      */
     public boolean isCollidable()
     {
-        final GhostHand ghostHand = (GhostHand) KevinClient.moduleManager.getModule("GhostHand");
+        final GhostHand ghostHand = KevinClient.moduleManager.getModule(GhostHand.class);
 
         return !Objects.requireNonNull(ghostHand).getState() || ghostHand.getBlockValue().get() == Block.getIdFromBlock(this);
     }
@@ -641,7 +641,7 @@ public class Block
             ret = !playerIn.canHarvestBlock(this) ? playerIn.getToolDigEfficiency(this) / f / 100.0F : playerIn.getToolDigEfficiency(this) / f / 30.0F;
         }
         // NoSlowBreak
-        final NoSlowBreak noSlowBreak = (NoSlowBreak) KevinClient.moduleManager.getModule("NoSlowBreak");
+        final NoSlowBreak noSlowBreak = KevinClient.moduleManager.getModule(NoSlowBreak.class);
 
         if (Objects.requireNonNull(noSlowBreak).getState()) {
             if (noSlowBreak.getWaterValue().get() && playerIn.isInsideOfMaterial(Material.water) &&
@@ -653,8 +653,8 @@ public class Block
                 ret *= 5.0F;
             }
         } else if (playerIn.onGround) { // NoGround
-            final NoFall noFall = (NoFall) KevinClient.moduleManager.getModule("NoFall");
-            final Criticals criticals = (Criticals) KevinClient.moduleManager.getModule("Criticals");
+            final NoFall noFall = KevinClient.moduleManager.getModule(NoFall.class);
+            final Criticals criticals = KevinClient.moduleManager.getModule(Criticals.class);
 
             if (Objects.requireNonNull(noFall).getState() && noFall.modeValue.get().equalsIgnoreCase("NoGround") ||
                     Objects.requireNonNull(criticals).getState() && criticals.getModeValue().get().equalsIgnoreCase("NoGround")) {
@@ -919,7 +919,7 @@ public class Block
 
     public EnumWorldBlockLayer getBlockLayer()
     {
-        final XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        final XRay xRay = KevinClient.moduleManager.getXRay();
         if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Translucent"))
             return xRay.getNoBlock().get() ? EnumWorldBlockLayer.TRANSLUCENT : (xRay.getXrayBlocks().contains(this) ? EnumWorldBlockLayer.SOLID : EnumWorldBlockLayer.TRANSLUCENT);
 
@@ -1194,7 +1194,7 @@ public class Block
      */
     public float getAmbientOcclusionLightValue()
     {
-        if (KevinClient.moduleManager.getModule("XRay").getState()) return 1F;
+        if (KevinClient.moduleManager.getXRay().getState()) return 1F;
         return this.isBlockNormalCube() ? 0.2F : 1.0F;
     }
 

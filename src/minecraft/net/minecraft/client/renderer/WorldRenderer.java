@@ -463,7 +463,7 @@ public class WorldRenderer
                 j = j | iR << 24 | iG << 16 | iB << 8;
             }
 
-            final XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+            final XRay xRay = KevinClient.moduleManager.getXRay();
             if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Translucent")) {
                 int color = 0;
                 color |= xRay.getOpacity().get() << 24;

@@ -157,7 +157,7 @@ public class CustomColors
             }
             else
             {
-                return Reflector.ForgeBiome_getWaterColorMultiplier.exists() ? Reflector.callInt(biomegenbase, Reflector.ForgeBiome_getWaterColorMultiplier) : biomegenbase.waterColorMultiplier;
+                return biomegenbase.waterColorMultiplier;
             }
         }
         public boolean isColorConstant()

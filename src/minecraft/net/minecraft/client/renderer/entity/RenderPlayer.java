@@ -99,21 +99,17 @@ public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
             {
                 modelplayer.heldItemRight = 1;
 
-                if (clientPlayer.getItemInUseCount() > 0)
-                {
+                if (clientPlayer.getItemInUseCount() > 0) {
                     EnumAction enumaction = itemstack.getItemUseAction();
-
-                    KillAura killAura = (KillAura) KevinClient.moduleManager.getModule("KillAura");
-
-                    if (enumaction == EnumAction.BLOCK || (this.renderEntity == Minecraft.getMinecraft().thePlayer && killAura.getBlockingStatus()))
-                    {
+                    if (enumaction == EnumAction.BLOCK) {
                         modelplayer.heldItemRight = 3;
-                    }
-                    else if (enumaction == EnumAction.BOW)
-                    {
+                    } else if (enumaction == EnumAction.BOW) {
                         modelplayer.aimedBow = true;
                     }
                 }
+                KillAura killAura = KevinClient.moduleManager.getModule(KillAura.class);
+                if (clientPlayer == Minecraft.getMinecraft().thePlayer && killAura.getBlockingStatus())
+                    modelplayer.heldItemRight = 3;
             }
         }
     }

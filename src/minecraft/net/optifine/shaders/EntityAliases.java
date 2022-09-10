@@ -51,28 +51,20 @@ public class EntityAliases
 
         if (shaderPack != null)
         {
-            if (Reflector.Loader_getActiveModList.exists() && Config.getResourceManager() == null)
+            List<Integer> list = new ArrayList<>();
+            String s = "/shaders/entity.properties";
+            InputStream inputstream = shaderPack.getResourceAsStream(s);
+
+            if (inputstream != null)
             {
-                Config.dbg("[Shaders] Delayed loading of entity mappings after resources are loaded");
-                updateOnResourcesReloaded = true;
+                loadEntityAliases(inputstream, s, list);
             }
-            else
+
+            loadModEntityAliases(list);
+
+            if (list.size() > 0)
             {
-                List<Integer> list = new ArrayList<>();
-                String s = "/shaders/entity.properties";
-                InputStream inputstream = shaderPack.getResourceAsStream(s);
-
-                if (inputstream != null)
-                {
-                    loadEntityAliases(inputstream, s, list);
-                }
-
-                loadModEntityAliases(list);
-
-                if (list.size() > 0)
-                {
-                    entityAliases = toArray(list);
-                }
+                entityAliases = toArray(list);
             }
         }
     }

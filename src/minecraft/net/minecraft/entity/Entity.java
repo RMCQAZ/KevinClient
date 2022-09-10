@@ -12,6 +12,8 @@ import kevin.event.StepEvent;
 import kevin.event.StrafeEvent;
 import kevin.main.KevinClient;
 import kevin.module.modules.combat.HitBox;
+import kevin.module.modules.exploit.NoPitchLimit;
+import kevin.module.modules.misc.PerformanceBooster;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -404,7 +406,7 @@ public abstract class Entity implements ICommandSender
      */
     public void setAngles(float yaw, float pitch)
     {
-        if (Objects.requireNonNull(KevinClient.moduleManager.getModule("NoPitchLimit")).getState()) {
+        if (Objects.requireNonNull(KevinClient.moduleManager.getModule(NoPitchLimit.class)).getState()) {
             float f = this.rotationPitch;
             float f1 = this.rotationYaw;
             this.rotationYaw = (float) ((double) this.rotationYaw + (double) yaw * 0.15D);
@@ -1300,6 +1302,12 @@ public abstract class Entity implements ICommandSender
 
     public int getBrightnessForRender(float partialTicks)
     {
+        if (PerformanceBooster.INSTANCE.getFastEntityLightning()) {
+            int n, n2, n3 = MathHelper.floor_double(this.posX);
+            World world = this.worldObj;
+            return world.isBlockLoaded(new BlockPos(n3, n2 = MathHelper.floor_double(this.posY + (double)this.getEyeHeight()), n = MathHelper.floor_double(this.posZ))) ? world.getCombinedLight(new BlockPos(n3, n2, n), 0) : 0;
+        }
+
         BlockPos blockpos = new BlockPos(this.posX, this.posY + (double)this.getEyeHeight(), this.posZ);
         return this.worldObj.isBlockLoaded(blockpos) ? this.worldObj.getCombinedLight(blockpos, 0) : 0;
     }
@@ -1309,6 +1317,12 @@ public abstract class Entity implements ICommandSender
      */
     public float getBrightness(float partialTicks)
     {
+        if (PerformanceBooster.INSTANCE.getFastEntityLightning()) {
+            int n, n2, n3 = MathHelper.floor_double(this.posX);
+            World world = this.worldObj;
+            return world.isBlockLoaded(new BlockPos(n3, n2 = MathHelper.floor_double(this.posY + (double) this.getEyeHeight()), n = MathHelper.floor_double(this.posZ))) ? world.getLightBrightness(new BlockPos(n3, n2, n)) : 0.0f;
+        }
+
         BlockPos blockpos = new BlockPos(this.posX, this.posY + (double)this.getEyeHeight(), this.posZ);
         return this.worldObj.isBlockLoaded(blockpos) ? this.worldObj.getLightBrightness(blockpos) : 0.0F;
     }
@@ -2089,7 +2103,7 @@ public abstract class Entity implements ICommandSender
 
     public float getCollisionBorderSize()
     {
-        final HitBox hitBox = (HitBox) KevinClient.moduleManager.getModule("HitBox");
+        final HitBox hitBox = KevinClient.moduleManager.getModule(HitBox.class);
 
         if (Objects.requireNonNull(hitBox).getState()) return 0.1F + hitBox.getSizeValue().get();
 

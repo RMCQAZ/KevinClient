@@ -32,7 +32,7 @@ public class BlockSoulSand extends Block
      */
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
-        final NoSlow noSlow = (NoSlow) KevinClient.moduleManager.getModule("NoSlow");
+        final NoSlow noSlow = KevinClient.moduleManager.getModule(NoSlow.class);
 
         if (Objects.requireNonNull(noSlow).getState() && noSlow.getSoulsandValue().get()) return;
         entityIn.motionX *= 0.4D;

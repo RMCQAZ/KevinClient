@@ -4,13 +4,16 @@ package kevin.module.modules.player
 
 import kevin.event.EventTarget
 import kevin.event.MoveEvent
+import kevin.event.PacketEvent
 import kevin.event.UpdateEvent
 import kevin.module.*
+import kevin.utils.ChatUtils
 import kevin.utils.MSTimer
 import net.minecraft.item.ItemBucketMilk
 import net.minecraft.item.ItemFood
 import net.minecraft.item.ItemPotion
 import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.network.play.server.S19PacketEntityStatus
 
 class FastUse : Module("FastUse", "Allows you to use items faster.", category = ModuleCategory.PLAYER) {
     private val modeValue = ListValue("Mode", arrayOf("Instant", "NCP", "AAC", "Custom"), "NCP")
@@ -21,8 +24,12 @@ class FastUse : Module("FastUse", "Allows you to use items faster.", category = 
     private val customSpeedValue = IntegerValue("CustomSpeed", 2, 1, 35)
     private val customTimer = FloatValue("CustomTimer", 1.1f, 0.5f, 2f)
 
+    private val debug = BooleanValue("Debug", false)
+
     private val msTimer = MSTimer()
     private var usedTimer = false
+    private var debugTimer = 0L
+    private var first = true
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
@@ -38,12 +45,17 @@ class FastUse : Module("FastUse", "Allows you to use items faster.", category = 
 
         if (!thePlayer.isUsingItem) {
             msTimer.reset()
+            first = true
             return
         }
 
         val usingItem = thePlayer.itemInUse!!.item
 
         if ((usingItem)is ItemFood || (usingItem)is ItemBucketMilk || (usingItem)is ItemPotion) {
+            if (first) {
+                first = false
+                debugTimer = System.currentTimeMillis()
+            }
             when (modeValue.get().toLowerCase()) {
                 "instant" -> {
                     repeat(35) {
@@ -96,6 +108,15 @@ class FastUse : Module("FastUse", "Allows you to use items faster.", category = 
 
         if ((usingItem)is ItemFood || (usingItem)is ItemBucketMilk || (usingItem)is ItemPotion)
             event.zero()
+    }
+
+    @EventTarget
+    fun onPacket(event: PacketEvent) {
+        val packet = event.packet
+        if (debug.get() && packet is S19PacketEntityStatus && packet.opCode.toInt() == 9 && packet.getEntity(mc.theWorld) == mc.thePlayer) {
+            ChatUtils.messageWithStart("§7[§bFastUse§7] §aUsed ${System.currentTimeMillis()-debugTimer} MS.")
+            debugTimer = System.currentTimeMillis()
+        }
     }
 
     override fun onDisable() {

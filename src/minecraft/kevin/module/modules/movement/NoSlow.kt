@@ -26,7 +26,7 @@ class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and
     private val bowForwardMultiplier = FloatValue("BowForwardMultiplier", 1.0F, 0.2F, 1.0F)
     private val bowStrafeMultiplier = FloatValue("BowStrafeMultiplier", 1.0F, 0.2F, 1.0F)
 
-    private val packetMode = ListValue("PacketMode", arrayOf("None","AntiCheat","AAC5","Matrix","Vulcan"),"None")
+    private val packetMode = ListValue("PacketMode", arrayOf("None","AntiCheat","AntiCheat2","AAC","AAC5","Matrix","Vulcan"),"None")
 
     val soulsandValue = BooleanValue("Soulsand", true)
     val liquidPushValue = BooleanValue("LiquidPush", true)
@@ -37,7 +37,7 @@ class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and
     private val msTimer = MSTimer()
     private var packetBuf = LinkedList<Packet<INetHandlerPlayServer>>()
     private val isBlocking: Boolean
-        get() = (mc.thePlayer.isUsingItem || (KevinClient.moduleManager.getModule("KillAura")!! as KillAura).blockingStatus) && mc.thePlayer.heldItem != null && mc.thePlayer.heldItem.item is ItemSword
+        get() = (mc.thePlayer.isUsingItem || (KevinClient.moduleManager.getModule(KillAura::class.java)).blockingStatus) && mc.thePlayer.heldItem != null && mc.thePlayer.heldItem.item is ItemSword
 
     override fun onDisable() {
         msTimer.reset()
@@ -54,7 +54,7 @@ class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and
         if ((heldItem.item) !is ItemSword || !MovementUtils.isMoving)
             return
 
-        val aura = KevinClient.moduleManager.getModule("KillAura") as KillAura
+        val aura = KevinClient.moduleManager.getModule(KillAura::class.java)
         if (!thePlayer.isBlocking && !aura.blockingStatus)
             return
 
@@ -69,6 +69,20 @@ class NoSlow : Module("NoSlow", "Cancels slowness effects caused by soulsand and
                         val blockPlace = C08PacketPlayerBlockPlacement(BlockPos(-1, -1, -1), 255, mc.thePlayer!!.inventory.getCurrentItem(), 0.0F, 0.0F, 0.0F)
                         mc.netHandler.addToSendQueue(blockPlace)
                     }
+                }
+            }
+            "AntiCheat2" -> {
+                if (event.eventState == EventState.PRE) {
+                    mc.netHandler.addToSendQueue(C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN))
+                } else {
+                    mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(BlockPos(-1, -1, -1), 255, null, 0.0f, 0.0f, 0.0f))
+                }
+            }
+            "AAC" -> {
+                if (mc.thePlayer.ticksExisted % 3 == 0 && event.eventState == EventState.PRE) {
+                    mc.netHandler.addToSendQueue(C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos(-1, -1, -1), EnumFacing.DOWN))
+                } else if (mc.thePlayer.ticksExisted % 3 == 1 && event.eventState == EventState.POST) {
+                    C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem())
                 }
             }
             "AAC5" -> {

@@ -53,7 +53,7 @@ class Nuker : Module("Nuker", "Breaks all blocks around you.", category = Module
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         // Block hit delay
-        if (blockHitDelay > 0 && !KevinClient.moduleManager.getModule("FastBreak")!!.state) {
+        if (blockHitDelay > 0 && !KevinClient.moduleManager.getModule(FastBreak::class.java).state) {
             blockHitDelay--
             return
         }
@@ -132,7 +132,7 @@ class Nuker : Module("Nuker", "Breaks all blocks around you.", category = Module
                 attackedBlocks.add(blockPos)
 
                 // Call auto tool
-                val autoTool = KevinClient.moduleManager.getModule("AutoTool") as AutoTool
+                val autoTool = KevinClient.moduleManager.getModule(AutoTool::class.java)
                 if (autoTool.state)
                     autoTool.switchSlot(blockPos)
 

@@ -101,7 +101,7 @@ public abstract class GuiContainer extends GuiScreen
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        ChestStealer chestStealer=(ChestStealer) KevinClient.moduleManager.getModule("ChestStealer");
+        ChestStealer chestStealer = KevinClient.moduleManager.getModule(ChestStealer.class);
         try {
             Minecraft mc=Minecraft.getMinecraft();
             GuiScreen guiScreen=mc.currentScreen;

@@ -271,7 +271,7 @@ public class ItemInWorldManager
     public boolean tryHarvestBlock(BlockPos pos)
     {
         ItemStack heldItem = this.thisPlayerMP.getHeldItem();
-        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
         if (autoTool.getState()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=this.thisPlayerMP.inventory.currentItem){
             heldItem = this.thisPlayerMP.inventory.getStackInSlot(autoTool.getNowSlot());
         }

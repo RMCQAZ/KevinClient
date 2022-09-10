@@ -6,6 +6,7 @@ import kevin.event.PacketEvent
 import kevin.event.UpdateEvent
 import kevin.main.KevinClient
 import kevin.module.*
+import kevin.module.modules.movement.Speed
 import kevin.utils.MSTimer
 import kevin.utils.MovementUtils
 import kevin.utils.PacketUtils
@@ -135,7 +136,7 @@ class AntiKnockback : Module("AntiKnockback","Allows you to modify the amount of
 
                     // Reduce Y
                     if (thePlayer.hurtResistantTime > 0 && aacPushYReducerValue.get()
-                        && !KevinClient.moduleManager.getModule("Speed")!!.state)
+                        && !KevinClient.moduleManager.getModule(Speed::class.java).state)
                         thePlayer.motionY -= 0.014999993
                 }
 

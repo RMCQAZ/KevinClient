@@ -1,5 +1,6 @@
 package kevin.command
 
+import kevin.command.bind.BindCommandManager
 import kevin.command.commands.*
 import kevin.main.KevinClient
 import kevin.module.modules.misc.AdminDetector
@@ -46,6 +47,10 @@ class CommandManager {
         commands[arrayOf("DisableAllModule")] = DisableAllCommand()
 
         commands[arrayOf("ClearMainConfig")] = ClearMainConfigCommand()
+
+        commands[arrayOf("font", "fonts")] = FontCommand()
+
+        commands[arrayOf("bindCommand")] = BindCommandManager
     }
 
     fun execCommand(message: String): Boolean{

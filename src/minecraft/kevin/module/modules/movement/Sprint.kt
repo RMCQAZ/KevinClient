@@ -6,6 +6,7 @@ import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
+import kevin.module.modules.combat.SuperKnockback
 import kevin.utils.MovementUtils
 import kevin.utils.Rotation
 import kevin.utils.RotationUtils
@@ -23,7 +24,7 @@ class Sprint : Module("Sprint","Automatically sprints all the time.", Keyboard.K
 
     @EventTarget
     fun onUpdate(event: UpdateEvent?) {
-        val keepSprint = KevinClient.moduleManager.getModule("KeepSprint") as KeepSprint
+        val keepSprint = KevinClient.moduleManager.getModule(SuperKnockback::class.java)
         if (keepSprint.stopSprint && keepSprint.stopTimer.hasTimePassed(keepSprint.delay/2+50)) {
             keepSprint.stopSprint = false
         }
@@ -35,7 +36,7 @@ class Sprint : Module("Sprint","Automatically sprints all the time.", Keyboard.K
             || (checkServerSide.get() && (mc.thePlayer.onGround || !checkServerSideGround.get())
                     && !allDirectionsValue.get() && RotationUtils.targetRotation != null && RotationUtils.getRotationDifference(
                 Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)
-            ) > 30) || keepSprint.stopSprint) {
+            ) > 30) || keepSprint.stopSprint || KevinClient.moduleManager.getModule(InvMove::class.java).needStopSprint) {
             mc.thePlayer.isSprinting = false
             return
         }

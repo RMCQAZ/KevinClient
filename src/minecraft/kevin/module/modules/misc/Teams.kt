@@ -3,6 +3,7 @@ package kevin.module.modules.misc
 import kevin.event.EventTarget
 import kevin.event.UpdateEvent
 import kevin.event.WorldEvent
+import kevin.hud.element.elements.ConnectNotificationType
 import kevin.hud.element.elements.Notification
 import kevin.main.KevinClient
 import kevin.module.*
@@ -160,7 +161,7 @@ class Teams : Module("Teams","Prevents Killaura from attacking team mates.", cat
                 } else {
                     val pos = teamBed.first()
                     bedCheckState.set("Fond team bed at X:${pos.x} Y:${pos.y} Z:${pos.z}.")
-                    KevinClient.hud.addNotification(Notification("Fond team bed at X:${pos.x} Y:${pos.y} Z:${pos.z}."),"Bed Checker")
+                    KevinClient.hud.addNotification(Notification("Fond team bed at X:${pos.x} Y:${pos.y} Z:${pos.z}.", "Bed Checker", ConnectNotificationType.OK))
                     needCheck = false
                 }
             },"BedCheckerThread")

@@ -8,6 +8,8 @@ import kevin.module.ListValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
 import kevin.utils.*
+import kevin.utils.render.shader.shaders.GlowShader
+import kevin.utils.render.shader.shaders.OutlineShader
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
 import net.minecraft.entity.item.EntityMinecartChest

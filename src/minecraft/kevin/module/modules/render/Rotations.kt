@@ -46,10 +46,10 @@ class Rotations : Module("Rotations", description = "Allows you to see server-si
         }
     }
 
-    private fun getState(module: String) = KevinClient.moduleManager.getModule(module)!!.state
+    private fun getState(module: String) = KevinClient.moduleManager.getModuleByName(module)!!.state
 
     private fun shouldRotate(): Boolean {
-        val killAura = KevinClient.moduleManager.getModule("KillAura") as KillAura
+        val killAura = KevinClient.moduleManager.getModule(KillAura::class.java)
         return (getState("KillAura") && (killAura.target != null || killAura.sTarget != null))
                 || getState("Scaffold") || getState("Breaker") || getState("Nuker")/**getState(Tower::class.java) ||
                 getState(BowAimbot::class.java) ||

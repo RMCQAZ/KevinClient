@@ -51,11 +51,6 @@ public class ExtendedBlockStorage
 
     public void set(int x, int y, int z, IBlockState state)
     {
-        if (Reflector.IExtendedBlockState.isInstance(state))
-        {
-            state = (IBlockState)Reflector.call(state, Reflector.IExtendedBlockState_getClean);
-        }
-
         IBlockState iblockstate = this.get(x, y, z);
         Block block = iblockstate.getBlock();
         Block block1 = state.getBlock();

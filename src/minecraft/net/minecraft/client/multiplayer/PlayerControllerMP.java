@@ -158,7 +158,7 @@ public class PlayerControllerMP
             }
         }
         ItemStack heldItem = this.mc.thePlayer.getHeldItem();
-        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
         if (autoTool.getState()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=mc.thePlayer.inventory.currentItem){
             heldItem = mc.thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }

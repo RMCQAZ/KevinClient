@@ -383,7 +383,7 @@ public class ItemRenderer
     public void renderItemInFirstPerson(float partialTicks)
     {
         if(animations==null){
-            animations = (Animations) KevinClient.moduleManager.getModule("Animations");
+            animations = KevinClient.moduleManager.getModule(Animations.class);
         }
 
         if (!Config.isShaders() || !Shaders.isSkipRenderHand())
@@ -401,7 +401,7 @@ public class ItemRenderer
 
             if (this.itemToRender != null)
             {
-                final KillAura killAura = (KillAura) KevinClient.moduleManager.getModule("KillAura");
+                final KillAura killAura = KevinClient.moduleManager.getModule(KillAura.class);
 
                 if (this.itemToRender.getItem() instanceof ItemMap)
                 {
@@ -711,7 +711,6 @@ public class ItemRenderer
         if (this.mc.thePlayer.isEntityInsideOpaqueBlock())
         {
             IBlockState iblockstate = this.mc.theWorld.getBlockState(new BlockPos(this.mc.thePlayer));
-            BlockPos blockpos = new BlockPos(this.mc.thePlayer);
             EntityPlayer entityplayer = this.mc.thePlayer;
 
             for (int i = 0; i < 8; ++i)
@@ -725,29 +724,23 @@ public class ItemRenderer
                 if (iblockstate1.getBlock().isVisuallyOpaque())
                 {
                     iblockstate = iblockstate1;
-                    blockpos = blockpos1;
                 }
             }
 
             if (iblockstate.getBlock().getRenderType() != -1)
             {
-                Object object = Reflector.getFieldValue(Reflector.RenderBlockOverlayEvent_OverlayType_BLOCK);
-
-                if (!Reflector.callBoolean(Reflector.ForgeEventFactory_renderBlockOverlay, this.mc.thePlayer, partialTicks, object, iblockstate, blockpos))
-                {
-                    this.renderBlockInHand(partialTicks, this.mc.getBlockRendererDispatcher().getBlockModelShapes().getTexture(iblockstate));
-                }
+                this.renderBlockInHand(partialTicks, this.mc.getBlockRendererDispatcher().getBlockModelShapes().getTexture(iblockstate));
             }
         }
 
         if (!this.mc.thePlayer.isSpectator())
         {
-            if (this.mc.thePlayer.isInsideOfMaterial(Material.water) && !Reflector.callBoolean(Reflector.ForgeEventFactory_renderWaterOverlay, this.mc.thePlayer, partialTicks))
+            if (this.mc.thePlayer.isInsideOfMaterial(Material.water))
             {
                 this.renderWaterOverlayTexture(partialTicks);
             }
 
-            if (this.mc.thePlayer.isBurning() && !Reflector.callBoolean(Reflector.ForgeEventFactory_renderFireOverlay, this.mc.thePlayer, partialTicks))
+            if (this.mc.thePlayer.isBurning())
             {
                 this.renderFireInFirstPerson(partialTicks);
             }
@@ -834,7 +827,7 @@ public class ItemRenderer
      */
     private void renderFireInFirstPerson(float partialTicks)
     {
-        final AntiBlind antiBlind = (AntiBlind) KevinClient.moduleManager.getModule("AntiBlind");
+        final AntiBlind antiBlind = KevinClient.moduleManager.getModule(AntiBlind.class);
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         float f = 1.0F;
@@ -892,18 +885,6 @@ public class ItemRenderer
         {
             if (!this.itemToRender.getIsItemStackEqual(itemstack))
             {
-                if (Reflector.ForgeItem_shouldCauseReequipAnimation.exists())
-                {
-                    boolean flag1 = Reflector.callBoolean(this.itemToRender.getItem(), Reflector.ForgeItem_shouldCauseReequipAnimation, this.itemToRender, itemstack, this.equippedItemSlot != entityplayer.inventory.currentItem);
-
-                    if (!flag1)
-                    {
-                        this.itemToRender = itemstack;
-                        this.equippedItemSlot = entityplayer.inventory.currentItem;
-                        return;
-                    }
-                }
-
                 flag = true;
             }
         }

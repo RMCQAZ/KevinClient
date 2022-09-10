@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 
 import kevin.event.EntityMovementEvent;
 import kevin.main.KevinClient;
+import kevin.module.modules.render.Particles;
 import net.minecraft.block.Block;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
@@ -893,11 +894,13 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
             }
             else if (packetIn.getAnimationType() == 4)
             {
-                this.gameController.effectRenderer.emitParticleAtEntity(entity, EnumParticleTypes.CRIT);
+                if (!Particles.INSTANCE.getNoCriticalParticlesFromServer())
+                    this.gameController.effectRenderer.emitParticleAtEntity(entity, EnumParticleTypes.CRIT);
             }
             else if (packetIn.getAnimationType() == 5)
             {
-                this.gameController.effectRenderer.emitParticleAtEntity(entity, EnumParticleTypes.CRIT_MAGIC);
+                if (!Particles.INSTANCE.getNoSharpParticlesFromServer())
+                    this.gameController.effectRenderer.emitParticleAtEntity(entity, EnumParticleTypes.CRIT_MAGIC);
             }
         }
     }
@@ -1529,7 +1532,8 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         {
             long i = (long)(1000 * packetIn.field_179772_d / 20);
             MetadataCombat metadatacombat = new MetadataCombat(this.gameController.thePlayer, entitylivingbase);
-            this.gameController.getTwitchStream().func_176026_a(metadatacombat, 0L - i, 0L);
+            if (this.gameController.getTwitchStream() != null)
+                this.gameController.getTwitchStream().func_176026_a(metadatacombat, 0L - i, 0L);
         }
         else if (packetIn.eventType == S42PacketCombatEvent.Event.ENTITY_DIED)
         {
@@ -1539,7 +1543,8 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
             {
                 MetadataPlayerDeath metadataplayerdeath = new MetadataPlayerDeath((EntityPlayer)entity1, entitylivingbase);
                 metadataplayerdeath.func_152807_a(packetIn.deathMessage);
-                this.gameController.getTwitchStream().func_152911_a(metadataplayerdeath, 0L);
+                if (this.gameController.getTwitchStream() != null)
+                    this.gameController.getTwitchStream().func_152911_a(metadataplayerdeath, 0L);
             }
         }
     }

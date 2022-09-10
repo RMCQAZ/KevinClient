@@ -92,5 +92,21 @@ class ScriptModule(name: String, description: String, category: ModuleCategory, 
 
     @EventTarget fun onShutdown(shutdownEvent: ClientShutdownEvent) = callEvent("shutdown")
 
-    @EventTarget fun onEntityKilled(entityKilledEvent: EntityKilledEvent) = callEvent("entityKilled",entityKilledEvent)
+    @EventTarget fun onEntityKilled(entityKilledEvent: EntityKilledEvent) = callEvent("entityKilled", entityKilledEvent)
+
+    @EventTarget fun onBlockBB(blockBBEvent: BlockBBEvent) = callEvent("blockBB", blockBBEvent)
+
+    @EventTarget fun onEntityMovement(entityMovementEvent: EntityMovementEvent) = callEvent("entityMovement", entityMovementEvent)
+
+    @EventTarget fun onPushOut(pushOutEvent: PushOutEvent) = callEvent("pushOut", pushOutEvent)
+
+    @EventTarget fun onRenderEntity(renderEntityEvent: RenderEntityEvent) = callEvent("renderEntity", renderEntityEvent)
+
+    @EventTarget fun onScreen(screenEvent: ScreenEvent) = callEvent("screen", screenEvent)
+
+    @EventTarget fun onText(textEvent: TextEvent) = callEvent("text", textEvent)
+
+    @EventTarget fun onTick(tickEvent: TickEvent) = callEvent("tick", tickEvent)
+
+    @EventTarget fun onClickWindow(clickWindowEvent: ClickWindowEvent) = callEvent("clickWindow", clickWindowEvent)
 }

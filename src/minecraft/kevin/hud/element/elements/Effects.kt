@@ -8,7 +8,6 @@ import kevin.hud.element.Side
 import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.ListValue
-import kevin.utils.FontManager.AWTFontRenderer.Companion.assumeNonVolatile
 import kevin.utils.RenderUtils
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.client.renderer.GlStateManager
@@ -47,7 +46,7 @@ class Effects(x: Double = 5.0, y: Double = 50.0, scale: Float = 1F,
 
         return when (mode.get()) {
             "LiquidBounce" -> {
-                assumeNonVolatile = true
+                //assumeNonVolatile = true
 
                 for (effect in effects) {
                     val potion = Potion.potionTypes[effect.potionID]
@@ -76,8 +75,8 @@ class Effects(x: Double = 5.0, y: Double = 50.0, scale: Float = 1F,
                     val liquidColor = if (liquidColor.get()) potion.liquidColor else Color.WHITE.rgb
 
                     y += if (clientFont.get()) {
-                        KevinClient.fontManager.font35!!.drawString(name, 0F, y, liquidColor, true)
-                        KevinClient.fontManager.font35!!.fontHeight
+                        KevinClient.fontManager.font35.drawString(name, 0F, y, liquidColor, true)
+                        KevinClient.fontManager.font35.fontHeight
                     } else {
                         fontRenderer.drawString(name, 0F, y, liquidColor, true)
                         fontRenderer.FONT_HEIGHT
@@ -86,7 +85,7 @@ class Effects(x: Double = 5.0, y: Double = 50.0, scale: Float = 1F,
                     if (fontRenderer.getStringWidth(name).toFloat()>width) { width = fontRenderer.getStringWidth(name).toFloat() }
                 }
 
-                assumeNonVolatile = false
+                //assumeNonVolatile = false
 
                 if (width == 0F)
                     width = 40F
@@ -129,8 +128,18 @@ class Effects(x: Double = 5.0, y: Double = 50.0, scale: Float = 1F,
                         mc.textureManager.bindTexture(GuiContainer.inventoryBackground)
 
                         if (potion.hasStatusIcon()) {
+                            GlStateManager.pushMatrix()
+                            GL11.glDisable(GL_DEPTH_TEST)
+                            GL11.glEnable(GL_BLEND)
+                            GL11.glDepthMask(false)
+                            OpenGlHelper.glBlendFunc(770, 771, 1, 0)
+                            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F)
                             val i1 = potion.statusIconIndex
                             drawTexturedModalRect((i + 6F).toFloat(), (j + 7F).toFloat(), 0 + i1 % 8 * 18, 198 + i1 / 8 * 18, 18, 18)
+                            GL11.glDepthMask(true)
+                            GL11.glDisable(GL_BLEND)
+                            GL11.glEnable(GL_DEPTH_TEST)
+                            GlStateManager.popMatrix()
                         }
 
                         var s1 = I18n.format(potion.name)
@@ -157,7 +166,7 @@ class Effects(x: Double = 5.0, y: Double = 50.0, scale: Float = 1F,
                             s1 = "$s1 " + (effect.amplifier+1).toString()
                         }
 
-                        fontRenderer.drawStringWithShadow(
+                        (if (clientFont.get()) KevinClient.fontManager.font35 else fontRenderer).drawStringWithShadow(
                             s1,
                             (i + 10 + 18).toFloat(),
                             (j + 6).toFloat(),
@@ -165,7 +174,7 @@ class Effects(x: Double = 5.0, y: Double = 50.0, scale: Float = 1F,
                         )
                         val s = Potion.getDurationString(effect)
                         if (clientFont.get())
-                            KevinClient.fontManager.font35!!.drawStringWithShadow(
+                            KevinClient.fontManager.font35.drawStringWithShadow(
                                 s,
                                 (i + 10 + 18).toFloat(),
                                 (j + 6 + 10).toFloat(),
@@ -251,7 +260,7 @@ class Effects(x: Double = 5.0, y: Double = 50.0, scale: Float = 1F,
                             s1 = "$s1 " + (effect.amplifier+1).toString()
                         }
 
-                        fontRenderer.drawStringWithShadow(
+                        (if (clientFont.get()) KevinClient.fontManager.font35 else fontRenderer).drawStringWithShadow(
                             s1,
                             (i + 10 + 18).toFloat(),
                             (j + 6).toFloat(),
@@ -259,7 +268,7 @@ class Effects(x: Double = 5.0, y: Double = 50.0, scale: Float = 1F,
                         )
                         val s = Potion.getDurationString(effect)
                         if (clientFont.get())
-                            KevinClient.fontManager.font35!!.drawStringWithShadow(
+                            KevinClient.fontManager.font35.drawStringWithShadow(
                                 s,
                                 (i + 10 + 18).toFloat(),
                                 (j + 6 + 10).toFloat(),

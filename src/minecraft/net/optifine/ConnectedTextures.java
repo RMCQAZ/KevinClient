@@ -1873,10 +1873,6 @@ public class ConnectedTextures
         }
         else
         {
-            if (Reflector.ForgeBlock_getExtendedState.exists())
-            {
-                neighbourState = (IBlockState)Reflector.call(neighbourState.getBlock(), Reflector.ForgeBlock_getExtendedState, neighbourState, iblockaccess, blockPos);
-            }
 
             EnumFacing enumfacing = getFacing(side);
             List list = ibakedmodel.getFaceQuads(enumfacing);

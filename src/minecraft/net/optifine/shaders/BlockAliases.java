@@ -72,28 +72,20 @@ public class BlockAliases
 
         if (shaderPack != null)
         {
-            if (Reflector.Loader_getActiveModList.exists() && Minecraft.getMinecraft().getResourcePackRepository() == null)
+            List<List<BlockAlias>> list = new ArrayList<>();
+            String s = "/shaders/block.properties";
+            InputStream inputstream = shaderPack.getResourceAsStream(s);
+
+            if (inputstream != null)
             {
-                Config.dbg("[Shaders] Delayed loading of block mappings after resources are loaded");
-                updateOnResourcesReloaded = true;
+                loadBlockAliases(inputstream, s, list);
             }
-            else
+
+            loadModBlockAliases(list);
+
+            if (list.size() > 0)
             {
-                List<List<BlockAlias>> list = new ArrayList<>();
-                String s = "/shaders/block.properties";
-                InputStream inputstream = shaderPack.getResourceAsStream(s);
-
-                if (inputstream != null)
-                {
-                    loadBlockAliases(inputstream, s, list);
-                }
-
-                loadModBlockAliases(list);
-
-                if (list.size() > 0)
-                {
-                    blockAliases = toArrays(list);
-                }
+                blockAliases = toArrays(list);
             }
         }
     }

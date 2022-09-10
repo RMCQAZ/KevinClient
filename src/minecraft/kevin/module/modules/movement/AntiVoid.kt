@@ -6,6 +6,7 @@ import kevin.event.Render3DEvent
 import kevin.event.UpdateEvent
 import kevin.main.KevinClient
 import kevin.module.*
+import kevin.module.modules.world.Scaffold
 import kevin.utils.BlockUtils
 import kevin.utils.FallingPlayer
 import kevin.utils.MovementUtils
@@ -110,7 +111,7 @@ class AntiVoid : Module("AntiVoid","Automatically setbacks you after falling a c
                 }
             }
         }
-        if(modeValue.get().toLowerCase() == "minemora-blink" && !KevinClient.moduleManager.getModule("Fly")!!.state && !KevinClient.moduleManager.getModule("HighJump")!!.state){
+        if(modeValue.get().toLowerCase() == "minemora-blink" && !KevinClient.moduleManager.getModule(Fly::class.java).state && !KevinClient.moduleManager.getModule(HighJump::class.java).state) {
             if(!blink){
                 if(canBlink && thePlayer.fallDistance - lastFound > maxDistanceWithoutGround.get()){
                     posX=mc.thePlayer!!.posX
@@ -136,7 +137,7 @@ class AntiVoid : Module("AntiVoid","Automatically setbacks you after falling a c
                     mc.thePlayer!!.motionZ=motionZ
 
                     if(autoScaffold.get()){
-                        KevinClient.moduleManager.getModule("Scaffold")?.state = true
+                        KevinClient.moduleManager.getModule(Scaffold::class.java).state = true
                         scaffoldOn = true
                     }
 
@@ -153,7 +154,7 @@ class AntiVoid : Module("AntiVoid","Automatically setbacks you after falling a c
             }
             if(scaffoldOn){
                 if(mc.thePlayer!!.onGround || mc.thePlayer!!.isOnLadder || mc.thePlayer!!.isInWater || mc.thePlayer!!.isInWeb || mc.thePlayer!!.fallDistance > 10){
-                    KevinClient.moduleManager.getModule("Scaffold")?.state = false
+                    KevinClient.moduleManager.getModule(Scaffold::class.java).state = false
                     scaffoldOn = false
                 }
             }

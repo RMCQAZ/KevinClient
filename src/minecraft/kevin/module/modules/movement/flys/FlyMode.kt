@@ -9,7 +9,7 @@ import kevin.utils.MinecraftInstance
 
 abstract class FlyMode(val modeName: String): MinecraftInstance() {
     protected val valuePrefix = "$modeName-"
-    protected val fly by lazy { KevinClient.moduleManager.getModule("Fly") as Fly }
+    protected val fly by lazy { KevinClient.moduleManager.getModule(Fly::class.java) }
     open val values: List<Value<*>>
         get() = ClassUtils.getValues(this.javaClass,this)
     open fun onEnable() {}

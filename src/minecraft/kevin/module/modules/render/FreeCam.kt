@@ -7,10 +7,13 @@ import kevin.module.BooleanValue
 import kevin.module.FloatValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
+import kevin.utils.ChatUtils
 import kevin.utils.MovementUtils
 import kevin.utils.PacketUtils
 import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
+import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook
 import net.minecraft.network.play.client.C0BPacketEntityAction
 
 class FreeCam : Module("FreeCam", "Allows you to move out of your body.", category = ModuleCategory.RENDER) {
@@ -18,6 +21,7 @@ class FreeCam : Module("FreeCam", "Allows you to move out of your body.", catego
     private val flyValue = BooleanValue("Fly", true)
     private val noClipValue = BooleanValue("NoClip", true)
     private val bypass = BooleanValue("Bypass", false)
+    private val debug = BooleanValue("Debug", false)
 
     private var fakePlayer: EntityOtherPlayerMP? = null
 
@@ -25,6 +29,7 @@ class FreeCam : Module("FreeCam", "Allows you to move out of your body.", catego
     private var oldY = 0.0
     private var oldZ = 0.0
     private var oldOnGround = false
+    private var positionUpdateTicks = 0
 
     override fun onEnable() {
         val thePlayer = mc.thePlayer ?: return
@@ -36,9 +41,10 @@ class FreeCam : Module("FreeCam", "Allows you to move out of your body.", catego
 
         val playerMP = EntityOtherPlayerMP(mc.theWorld!!, thePlayer.gameProfile)
 
+        positionUpdateTicks = mc.thePlayer.positionUpdateTicks
 
-        playerMP.rotationYawHead = thePlayer.rotationYawHead;
-        playerMP.renderYawOffset = thePlayer.renderYawOffset;
+        playerMP.rotationYawHead = thePlayer.rotationYawHead
+        playerMP.renderYawOffset = thePlayer.renderYawOffset
         playerMP.rotationYawHead = thePlayer.rotationYawHead
         playerMP.copyLocationAndAnglesFrom(thePlayer)
 
@@ -95,9 +101,20 @@ class FreeCam : Module("FreeCam", "Allows you to move out of your body.", catego
     @EventTarget
     fun onPacket(event: PacketEvent) {
         val packet = event.packet
-        if(packet is C03PacketPlayer) {
-            if (bypass.get())
-                PacketUtils.sendPacketNoEvent(C03PacketPlayer(oldOnGround))
+        if (packet is C03PacketPlayer) {
+            if (bypass.get()) {
+                PacketUtils.sendPacketNoEvent(
+                    if (positionUpdateTicks >= 20) {
+                        positionUpdateTicks = 0
+                        if (debug.get())
+                            ChatUtils.messageWithStart("FreeCam: C04")
+                        C04PacketPlayerPosition(fakePlayer!!.posX, fakePlayer!!.posY, fakePlayer!!.posZ, oldOnGround)
+                    } else {
+                        positionUpdateTicks++
+                        C03PacketPlayer(oldOnGround)
+                    }
+                )
+            }
             event.cancelEvent()
         }
         if (packet is C0BPacketEntityAction)

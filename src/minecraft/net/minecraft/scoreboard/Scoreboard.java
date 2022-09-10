@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
@@ -291,12 +293,13 @@ public class Scoreboard
     /**
      * Removes the team from the scoreboard, updates all player memberships and broadcasts the deletion to all players
      */
-    public void removeTeam(ScorePlayerTeam p_96511_1_)
-    {
+    public void removeTeam(ScorePlayerTeam p_96511_1_) {
+        if (p_96511_1_ == null || p_96511_1_.getRegisteredName() == null || p_96511_1_.getMembershipCollection() == null)
+            return;
+
         this.teams.remove(p_96511_1_.getRegisteredName());
 
-        for (String s : p_96511_1_.getMembershipCollection())
-        {
+        for (String s : p_96511_1_.getMembershipCollection()) {
             this.teamMemberships.remove(s);
         }
 
@@ -354,7 +357,8 @@ public class Scoreboard
     {
         if (this.getPlayersTeam(p_96512_1_) != p_96512_2_)
         {
-            throw new IllegalStateException("Player is either on another team or not on any team. Cannot remove from team '" + p_96512_2_.getRegisteredName() + "'.");
+            Minecraft.logger.error("Player is either on another team or not on any team. Cannot remove from team '" + p_96512_2_.getRegisteredName() + "'.");
+            //throw new IllegalStateException("Player is either on another team or not on any team. Cannot remove from team '" + p_96512_2_.getRegisteredName() + "'.");
         }
         else
         {

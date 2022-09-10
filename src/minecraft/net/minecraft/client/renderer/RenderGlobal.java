@@ -651,18 +651,8 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
     {
         int i = 0;
 
-        if (Reflector.MinecraftForgeClient_getRenderPass.exists())
-        {
-            i = Reflector.callInt(Reflector.MinecraftForgeClient_getRenderPass);
-        }
-
         if (this.renderEntitiesStartupCounter > 0)
         {
-            if (i > 0)
-            {
-                return;
-            }
-
             --this.renderEntitiesStartupCounter;
         }
         else
@@ -675,13 +665,10 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             this.renderManager.cacheActiveRenderInfo(this.theWorld, this.mc.fontRendererObj, this.mc.getRenderViewEntity(), this.mc.pointedEntity, this.mc.gameSettings, partialTicks);
             ++renderEntitiesCounter;
 
-            if (i == 0)
-            {
-                this.countEntitiesTotal = 0;
-                this.countEntitiesRendered = 0;
-                this.countEntitiesHidden = 0;
-                this.countTileEntitiesRendered = 0;
-            }
+            this.countEntitiesTotal = 0;
+            this.countEntitiesRendered = 0;
+            this.countEntitiesHidden = 0;
+            this.countTileEntitiesRendered = 0;
 
             Entity entity = this.mc.getRenderViewEntity();
             double d3 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)partialTicks;
@@ -695,31 +682,24 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             this.theWorld.theProfiler.endStartSection("global");
             List<Entity> list = this.theWorld.getLoadedEntityList();
 
-            if (i == 0)
-            {
-                this.countEntitiesTotal = list.size();
-            }
+            this.countEntitiesTotal = list.size();
 
             if (Config.isFogOff() && this.mc.entityRenderer.fogStandard)
             {
                 GlStateManager.disableFog();
             }
 
-            boolean flag = Reflector.ForgeEntity_shouldRenderInPass.exists();
-            boolean flag1 = Reflector.ForgeTileEntity_shouldRenderInPass.exists();
+            boolean flag1 = false;
 
             for (int j = 0; j < this.theWorld.weatherEffects.size(); ++j)
             {
                 Entity entity1 = this.theWorld.weatherEffects.get(j);
 
-                if (!flag || Reflector.callBoolean(entity1, Reflector.ForgeEntity_shouldRenderInPass, i))
-                {
-                    ++this.countEntitiesRendered;
+                ++this.countEntitiesRendered;
 
-                    if (entity1.isInRangeToRender3d(d0, d1, d2))
-                    {
-                        this.renderManager.renderEntitySimple(entity1, partialTicks);
-                    }
+                if (entity1.isInRangeToRender3d(d0, d1, d2))
+                {
+                    this.renderManager.renderEntitySimple(entity1, partialTicks);
                 }
             }
 
@@ -797,40 +777,35 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
                             entity2 = (Entity)iterator.next();
 
-                            if (!flag || Reflector.callBoolean(entity2, Reflector.ForgeEntity_shouldRenderInPass, i))
+                            flag4 = this.renderManager.shouldRender(entity2, camera, d0, d1, d2) || entity2.riddenByEntity == this.mc.thePlayer;
+
+                            if (!flag4)
                             {
-                                flag4 = this.renderManager.shouldRender(entity2, camera, d0, d1, d2) || entity2.riddenByEntity == this.mc.thePlayer;
+                                break;
+                            }
 
-                                if (!flag4)
+                            boolean flag5 = this.mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase) this.mc.getRenderViewEntity()).isPlayerSleeping();
+
+                            if ((entity2 != this.mc.getRenderViewEntity() || this.mc.gameSettings.thirdPersonView != 0 || flag5) && (entity2.posY < 0.0D || entity2.posY >= 256.0D || this.theWorld.isBlockLoaded(new BlockPos(entity2))))
+                            {
+                                ++this.countEntitiesRendered;
+                                this.renderedEntity = entity2;
+
+                                if (flag6)
                                 {
-                                    break;
+                                    Shaders.nextEntity(entity2);
                                 }
 
-                                boolean flag5 = this.mc.getRenderViewEntity() instanceof EntityLivingBase ? ((EntityLivingBase)this.mc.getRenderViewEntity()).isPlayerSleeping() : false;
-
-                                if ((entity2 != this.mc.getRenderViewEntity() || this.mc.gameSettings.thirdPersonView != 0 || flag5) && (entity2.posY < 0.0D || entity2.posY >= 256.0D || this.theWorld.isBlockLoaded(new BlockPos(entity2))))
-                                {
-                                    ++this.countEntitiesRendered;
-                                    this.renderedEntity = entity2;
-
-                                    if (flag6)
-                                    {
-                                        Shaders.nextEntity(entity2);
-                                    }
-
-                                    this.renderManager.renderEntitySimple(entity2, partialTicks);
-                                    this.renderedEntity = null;
-                                    break;
-                                }
+                                this.renderManager.renderEntitySimple(entity2, partialTicks);
+                                this.renderedEntity = null;
+                                break;
                             }
                         }
 
-                        if (!flag4 && entity2 instanceof EntityWitherSkull && (!flag || Reflector.callBoolean(entity2, Reflector.ForgeEntity_shouldRenderInPass, i)))
-                        {
+                        if (!flag4 && entity2 instanceof EntityWitherSkull) {
                             this.renderedEntity = entity2;
 
-                            if (flag6)
-                            {
+                            if (flag6) {
                                 Shaders.nextEntity(entity2);
                             }
 
@@ -851,11 +826,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
             this.theWorld.theProfiler.endStartSection("blockentities");
             RenderHelper.enableStandardItemLighting();
-
-            if (Reflector.ForgeTileEntity_hasFastRenderer.exists())
-            {
-                TileEntityRendererDispatcher.instance.preDrawBatch();
-            }
 
             TileEntitySignRenderer.updateTextRenderDistance();
             label255:
@@ -887,16 +857,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                             {
                                 break;
                             }
-
-                            if (Reflector.callBoolean(tileentity1, Reflector.ForgeTileEntity_shouldRenderInPass, i))
-                            {
-                                AxisAlignedBB axisalignedbb1 = (AxisAlignedBB)Reflector.call(tileentity1, Reflector.ForgeTileEntity_getRenderBoundingBox);
-
-                                if (axisalignedbb1 == null || camera.isBoundingBoxInFrustum(axisalignedbb1))
-                                {
-                                    break;
-                                }
-                            }
                         }
 
                         if (flag6)
@@ -914,7 +874,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             {
                 for (TileEntity tileentity : this.setTileEntities)
                 {
-                    if (!flag1 || Reflector.callBoolean(tileentity, Reflector.ForgeTileEntity_shouldRenderInPass, i))
+                    if (!flag1)
                     {
                         if (flag6)
                         {
@@ -924,11 +884,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                         TileEntityRendererDispatcher.instance.renderTileEntity(tileentity, partialTicks, -1);
                     }
                 }
-            }
-
-            if (Reflector.ForgeTileEntity_hasFastRenderer.exists())
-            {
-                TileEntityRendererDispatcher.instance.drawBatch(i);
             }
 
             this.renderOverlayDamaged = true;
@@ -958,24 +913,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 Block block = this.theWorld.getBlockState(blockpos).getBlock();
                 boolean flag8;
 
-                if (flag1)
-                {
-                    flag8 = false;
-
-                    if (tileentity2 != null && Reflector.callBoolean(tileentity2, Reflector.ForgeTileEntity_shouldRenderInPass, i) && Reflector.callBoolean(tileentity2, Reflector.ForgeTileEntity_canRenderBreaking))
-                    {
-                        AxisAlignedBB axisalignedbb = (AxisAlignedBB)Reflector.call(tileentity2, Reflector.ForgeTileEntity_getRenderBoundingBox);
-
-                        if (axisalignedbb != null)
-                        {
-                            flag8 = camera.isBoundingBoxInFrustum(axisalignedbb);
-                        }
-                    }
-                }
-                else
-                {
-                    flag8 = tileentity2 != null && (block instanceof BlockChest || block instanceof BlockEnderChest || block instanceof BlockSign || block instanceof BlockSkull);
-                }
+                flag8 = tileentity2 != null && (block instanceof BlockChest || block instanceof BlockEnderChest || block instanceof BlockSign || block instanceof BlockSkull);
 
                 if (flag8)
                 {
@@ -1329,7 +1267,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
     private boolean isPositionInRenderChunk(BlockPos pos, RenderChunk renderChunkIn)
     {
         BlockPos blockpos = renderChunkIn.getPosition();
-        return MathHelper.abs_int(pos.getX() - blockpos.getX()) > 16 ? false : (MathHelper.abs_int(pos.getY() - blockpos.getY()) > 16 ? false : MathHelper.abs_int(pos.getZ() - blockpos.getZ()) <= 16);
+        return MathHelper.abs_int(pos.getX() - blockpos.getX()) <= 16 && (MathHelper.abs_int(pos.getY() - blockpos.getY()) <= 16 && MathHelper.abs_int(pos.getZ() - blockpos.getZ()) <= 16);
     }
 
     private Set<EnumFacing> getVisibleFacings(BlockPos pos)
@@ -1658,18 +1596,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
     public void renderSky(float partialTicks, int pass)
     {
-        if (Reflector.ForgeWorldProvider_getSkyRenderer.exists())
-        {
-            WorldProvider worldprovider = this.mc.theWorld.provider;
-            Object object = Reflector.call(worldprovider, Reflector.ForgeWorldProvider_getSkyRenderer);
-
-            if (object != null)
-            {
-                Reflector.callVoid(object, Reflector.IRenderHandler_render, partialTicks, this.theWorld, this.mc);
-                return;
-            }
-        }
-
         if (this.mc.theWorld.provider.getDimensionId() == 1)
         {
             this.renderSkyEnd();
@@ -2004,18 +1930,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
     {
         if (!Config.isCloudsOff())
         {
-            if (Reflector.ForgeWorldProvider_getCloudRenderer.exists())
-            {
-                WorldProvider worldprovider = this.mc.theWorld.provider;
-                Object object = Reflector.call(worldprovider, Reflector.ForgeWorldProvider_getCloudRenderer);
-
-                if (object != null)
-                {
-                    Reflector.callVoid(object, Reflector.IRenderHandler_render, partialTicks, this.theWorld, this.mc);
-                    return;
-                }
-            }
-
             if (this.mc.theWorld.provider.isSurfaceWorld())
             {
                 if (Config.isShaders())
@@ -2538,26 +2452,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 Block block = this.theWorld.getBlockState(blockpos).getBlock();
                 boolean flag;
 
-                if (Reflector.ForgeTileEntity_canRenderBreaking.exists())
-                {
-                    boolean flag1 = block instanceof BlockChest || block instanceof BlockEnderChest || block instanceof BlockSign || block instanceof BlockSkull;
-
-                    if (!flag1)
-                    {
-                        TileEntity tileentity = this.theWorld.getTileEntity(blockpos);
-
-                        if (tileentity != null)
-                        {
-                            flag1 = Reflector.callBoolean(tileentity, Reflector.ForgeTileEntity_canRenderBreaking);
-                        }
-                    }
-
-                    flag = !flag1;
-                }
-                else
-                {
-                    flag = !(block instanceof BlockChest) && !(block instanceof BlockEnderChest) && !(block instanceof BlockSign) && !(block instanceof BlockSkull);
-                }
+                flag = !(block instanceof BlockChest) && !(block instanceof BlockEnderChest) && !(block instanceof BlockSign) && !(block instanceof BlockSkull);
 
                 if (flag)
                 {

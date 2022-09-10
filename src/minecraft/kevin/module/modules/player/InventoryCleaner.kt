@@ -74,7 +74,7 @@ class InventoryCleaner : Module(name = "InventoryCleaner", description = "Automa
              mc.currentScreen !is GuiInventory && invOpenValue.get() ||
             noMoveValue.get() && MovementUtils.isMoving ||
             thePlayer.openContainer != null && thePlayer.openContainer!!.windowId != 0
-            || (KevinClient.moduleManager.getModule("AutoArmor") as AutoArmor).isLocked)
+            || (KevinClient.moduleManager.getModule(AutoArmor::class.java)).isLocked)
             return
 
         if (sortValue.get())

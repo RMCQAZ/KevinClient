@@ -4,6 +4,7 @@ import kevin.command.ICommand
 import kevin.event.EventTarget
 import kevin.event.PacketEvent
 import kevin.event.WorldEvent
+import kevin.hud.element.elements.ConnectNotificationType
 import kevin.hud.element.elements.Notification
 import kevin.main.KevinClient
 import kevin.module.BooleanValue
@@ -19,7 +20,7 @@ object AutoDisable : Module("AutoDisable","Auto disable modules.(Use Command .Au
             usageMessage()
             return
         }
-        val module = KevinClient.moduleManager.getModule(args[0])
+        val module = KevinClient.moduleManager.getModuleByName(args[0])
         if (module==null){
             ChatUtils.messageWithStart("§cNo module called ${args[0]}")
             return
@@ -61,7 +62,7 @@ object AutoDisable : Module("AutoDisable","Auto disable modules.(Use Command .Au
             .filter { it.autoDisable.first&&(it.autoDisable.second=="world"||it.autoDisable.second=="all")&&it.state }
             .forEach {
                 it.state = false
-                if (notification.get()) KevinClient.hud.addNotification(Notification("Auto disabled module ${it.name}."),"AutoDisable")
+                if (notification.get()) KevinClient.hud.addNotification(Notification("Auto disabled module ${it.name}.", "AutoDisable", ConnectNotificationType.OK))
             }
         timer.reset()
     }
@@ -71,7 +72,7 @@ object AutoDisable : Module("AutoDisable","Auto disable modules.(Use Command .Au
             .filter { it.autoDisable.first&&(it.autoDisable.second=="setback"||it.autoDisable.second=="all")&&it.state }
             .forEach {
                 it.state = false
-                if (notification.get()) KevinClient.hud.addNotification(Notification("Auto disabled module ${it.name}."),"AutoDisable")
+                if (notification.get()) KevinClient.hud.addNotification(Notification("Auto disabled module ${it.name}.", "AutoDisable", ConnectNotificationType.OK))
             }
     }
 }

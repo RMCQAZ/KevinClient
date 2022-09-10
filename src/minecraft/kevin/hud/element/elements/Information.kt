@@ -131,7 +131,10 @@ class Information(x: Double = 0.0, y: Double = 30.0, scale: Float = 1F,side: Sid
     }
 
     private fun updateBPS(){
-        if (mc.thePlayer == null || mc.thePlayer.ticksExisted < 1) bps=0.0
+        if (mc.thePlayer == null || mc.thePlayer.ticksExisted < 1) {
+            bps = 0.0
+            return
+        }
         val distance = mc.thePlayer.getDistance(lastX, lastY, lastZ)
         lastX = mc.thePlayer.posX
         lastY = mc.thePlayer.posY

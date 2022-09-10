@@ -51,7 +51,7 @@ open class HUD : MinecraftInstance()  {
     }
 
     fun disableMinecraftScoreboard() =
-        (elements.filterIsInstance<ScoreboardElement>().isNotEmpty() && (KevinClient.moduleManager.getModule("HUD")!!.state || (KevinClient.moduleManager.getModule("HUD")!! as kevin.module.modules.render.HUD).keepScoreboard.get())) || NoScoreboard.state
+        (elements.filterIsInstance<ScoreboardElement>().isNotEmpty() && (KevinClient.moduleManager.getModule(kevin.module.modules.render.HUD::class.java).state || KevinClient.moduleManager.getModule(kevin.module.modules.render.HUD::class.java).keepScoreboard.get())) || NoScoreboard.state
 
     fun renderScoreboardOnly() {
         elements.filterIsInstance<ScoreboardElement>()
@@ -230,8 +230,7 @@ open class HUD : MinecraftInstance()  {
     /**
      * Add [notification]
      */
-    fun addNotification(notification: Notification,text:String = ""): Boolean {
-        notification.text1 = text
+    fun addNotification(notification: Notification): Boolean {
         return elements.any { it is Notifications } && notifications.add(notification)
     }
     /**

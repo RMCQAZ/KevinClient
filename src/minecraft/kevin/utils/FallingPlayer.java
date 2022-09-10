@@ -1,6 +1,7 @@
 package kevin.utils;
 
 import com.sun.istack.internal.Nullable;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
@@ -31,6 +32,18 @@ public class FallingPlayer extends MinecraftInstance {
         this.yaw = yaw;
         this.strafe = strafe;
         this.forward = forward;
+    }
+
+    public FallingPlayer(EntityPlayer player) {
+        this.x = player.posX;
+        this.y = player.posY;
+        this.z = player.posZ;
+        this.motionX = player.motionX;
+        this.motionY = player.motionY;
+        this.motionZ = player.motionZ;
+        this.yaw = player.rotationYaw;
+        this.strafe = player.moveStrafing;
+        this.forward = player.moveForward;
     }
 
     private void calculateForTick() {

@@ -1,6 +1,7 @@
 package kevin.module.modules.misc
 
 import kevin.event.*
+import kevin.hud.element.elements.ConnectNotificationType
 import kevin.hud.element.elements.Notification
 import kevin.main.KevinClient
 import kevin.module.*
@@ -206,7 +207,7 @@ object AntiBot : Module("AntiBot","Prevents KillAura from attacking AntiCheat bo
     private fun removeBot(bot: Entity){
         mc.theWorld.removeEntityFromWorld(bot.entityId)
         if (debugValue.get())
-            KevinClient.hud.addNotification(Notification("Removed Bot"),"AntiBot")
+            KevinClient.hud.addNotification(Notification("Removed Bot", "AntiBot", ConnectNotificationType.OK))
     }
     @JvmStatic
     fun isBot(entity: EntityLivingBase): Boolean {

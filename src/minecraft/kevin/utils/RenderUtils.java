@@ -1,6 +1,8 @@
 package kevin.utils;
 
 import kevin.main.KevinClient;
+import kevin.utils.render.GL.DirectTessCallback;
+import kevin.utils.render.GL.VertexData;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,9 +16,19 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Timer;
+import net.optifine.util.MathUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.glu.GLUtessellator;
+import org.lwjgl.util.glu.GLUtessellatorCallbackAdapter;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.PathIterator;
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +37,7 @@ import static java.lang.Math.sin;
 import static org.lwjgl.opengl.GL11.*;
 
 public final class RenderUtils extends MinecraftInstance{
-    private static final Map<Integer, Boolean> glCapMap = new HashMap<>();
+    private static final Map<String, Map<Integer, Boolean>> glCapMap = new HashMap<>();
     private static final int[] DISPLAY_LISTS_2D = new int[4];
 
     static {
@@ -68,6 +80,177 @@ public final class RenderUtils extends MinecraftInstance{
         quickDrawRect(-7.3F, -20.3F, -4F, -20F);
 
         glEndList();
+    }
+
+    public static void drawCircle(final Entity entity, double rad, final Color color, final boolean shade) {
+        if (rad == -1D) {
+            AxisAlignedBB bb = entity.getEntityBoundingBox();
+            rad = ((bb.maxX - bb.minX) + (bb.maxZ - bb.minZ)) * 0.5f;
+        }
+        GL11.glPushMatrix();
+        GL11.glDisable(3553);
+        GL11.glEnable(2848);
+        GL11.glEnable(2832);
+        GL11.glEnable(3042);
+        GL11.glBlendFunc(770, 771);
+        GL11.glHint(3154, 4354);
+        GL11.glHint(3155, 4354);
+        GL11.glHint(3153, 4354);
+        GL11.glDepthMask(false);
+        GlStateManager.alphaFunc(516, 0.0f);
+        if (shade) {
+            GL11.glShadeModel(7425);
+        }
+        GlStateManager.disableCull();
+        GL11.glBegin(5);
+        final double n = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * mc.getTimer().renderPartialTicks;
+        final double x = n - mc.getRenderManager().getRenderPosX();
+        final double n2 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * mc.getTimer().renderPartialTicks;
+        final double y = n2 - mc.getRenderManager().getRenderPosY() + Math.sin(System.currentTimeMillis() / 200.0) + 1.0;
+        final double n3 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * mc.getTimer().renderPartialTicks;
+        final double z = n3 - mc.getRenderManager().getRenderPosZ();
+        for (float i = 0.0f; i < 6.283185307179586; i += (float)0.09817477042468103) {
+            final double vecX = x + rad * Math.cos(i);
+            final double vecZ = z + rad * Math.sin(i);
+            if (shade) {
+                GL11.glColor4f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, 0.0f);
+                GL11.glVertex3d(vecX, y - Math.cos(System.currentTimeMillis() / 200.0) / 2.0, vecZ);
+                GL11.glColor4f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, 0.35f);
+            }
+            GL11.glVertex3d(vecX, y, vecZ);
+        }
+        GL11.glEnd();
+        if (shade) {
+            GL11.glShadeModel(7424);
+        }
+        GL11.glDepthMask(true);
+        GL11.glEnable(2929);
+        GlStateManager.alphaFunc(516, 0.1f);
+        GlStateManager.enableCull();
+        GL11.glDisable(2848);
+        GL11.glDisable(2848);
+        GL11.glEnable(2832);
+        GL11.glEnable(3553);
+        GL11.glPopMatrix();
+        GL11.glColor3f(255.0f, 255.0f, 255.0f);
+    }
+    public static int loadGlTexture(BufferedImage bufferedImage){
+        int textureId = GL11.glGenTextures();
+
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
+
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, bufferedImage.getWidth(), bufferedImage.getHeight(),
+                0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, readImageToBuffer(bufferedImage));
+
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+
+        return textureId;
+    }
+
+    public static ByteBuffer readImageToBuffer(BufferedImage bufferedImage){
+        int[] rgbArray = bufferedImage.getRGB(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null, 0, bufferedImage.getWidth());
+
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * rgbArray.length);
+        for(int rgb : rgbArray){
+            byteBuffer.putInt(rgb << 8 | rgb >> 24 & 255);
+        }
+        byteBuffer.flip();
+
+        return byteBuffer;
+    }
+
+    public static void directDrawAWTShape(Shape shape, double epsilon) {
+        drawAWTShape(shape, epsilon, DirectTessCallback.INSTANCE);
+    }
+
+    /**
+     * 在LWJGL中渲染AWT图形
+     * @param shape 准备渲染的图形
+     * @param epsilon 图形精细度，传0不做处理
+     */
+    public static void drawAWTShape(Shape shape, double epsilon, GLUtessellatorCallbackAdapter gluTessCallback) {
+        PathIterator path=shape.getPathIterator(new AffineTransform());
+        Double[] cp=new Double[2]; // 记录上次操作的点用于计算曲线
+
+        GLUtessellator tess = GLU.gluNewTess(); // 创建GLUtessellator用于渲染凹多边形（GL_POLYGON只能渲染凸多边形）
+
+        tess.gluTessCallback(GLU.GLU_TESS_BEGIN, gluTessCallback);
+        tess.gluTessCallback(GLU.GLU_TESS_END, gluTessCallback);
+        tess.gluTessCallback(GLU.GLU_TESS_VERTEX, gluTessCallback);
+        tess.gluTessCallback(GLU.GLU_TESS_COMBINE, gluTessCallback);
+
+        switch (path.getWindingRule()){
+            case PathIterator.WIND_EVEN_ODD:{
+                tess.gluTessProperty(GLU.GLU_TESS_WINDING_RULE, GLU.GLU_TESS_WINDING_ODD);
+                break;
+            }
+            case PathIterator.WIND_NON_ZERO:{
+                tess.gluTessProperty(GLU.GLU_TESS_WINDING_RULE, GLU.GLU_TESS_WINDING_NONZERO);
+                break;
+            }
+        }
+
+        // 缓存单个图形路径上的点用于精简以提升性能
+        ArrayList<Double[]> pointsCache = new ArrayList<>();
+
+        tess.gluTessBeginPolygon(null);
+
+        while (!path.isDone()){
+            double[] segment=new double[6];
+            int type=path.currentSegment(segment);
+            switch (type){
+                case PathIterator.SEG_MOVETO:{
+                    tess.gluTessBeginContour();
+                    pointsCache.add(new Double[] {segment[0], segment[1]});
+                    cp[0] = segment[0];
+                    cp[1] = segment[1];
+                    break;
+                }
+                case PathIterator.SEG_LINETO:{
+                    pointsCache.add(new Double[] {segment[0], segment[1]});
+                    cp[0] = segment[0];
+                    cp[1] = segment[1];
+                    break;
+                }
+                case PathIterator.SEG_QUADTO:{
+                    Double[][] points=kevin.utils.MathUtils.getPointsOnCurve(new Double[][]{new Double[]{cp[0], cp[1]}, new Double[]{segment[0], segment[1]}, new Double[]{segment[2], segment[3]}}, 10);
+                    pointsCache.addAll(Arrays.asList(points));
+                    cp[0] = segment[2];
+                    cp[1] = segment[3];
+                    break;
+                }
+                case PathIterator.SEG_CUBICTO:{
+                    Double[][] points=kevin.utils.MathUtils.getPointsOnCurve(new Double[][]{new Double[]{cp[0], cp[1]}, new Double[]{segment[0], segment[1]}, new Double[]{segment[2], segment[3]}, new Double[]{segment[4], segment[5]}}, 10);
+                    pointsCache.addAll(Arrays.asList(points));
+                    cp[0] = segment[4];
+                    cp[1] = segment[5];
+                    break;
+                }
+                case PathIterator.SEG_CLOSE:{
+                    // 精简路径上的点
+                    for(Double[] point : kevin.utils.MathUtils.simplifyPoints(pointsCache.toArray(new Double[0][0]), epsilon)){
+                        tessVertex(tess, new double[] {point[0], point[1], 0.0, 0.0, 0.0, 0.0});
+                    }
+                    // 清除缓存以便画下一个图形
+                    pointsCache.clear();
+                    tess.gluTessEndContour();
+                    break;
+                }
+            }
+            path.next();
+        }
+
+        tess.gluEndPolygon();
+        tess.gluDeleteTess();
+    }
+
+    public static void tessVertex(GLUtessellator tessellator, double[] coords) {
+        tessellator.gluTessVertex(coords, 0, new VertexData(coords));
     }
 
     public static void quickDrawRect(final float x, final float y, final float x2, final float y2) {
@@ -296,6 +479,20 @@ public final class RenderUtils extends MinecraftInstance{
         if (!enableBlend) glEnable(GL_BLEND);
         if (!disableAlpha) glDisable(GL_ALPHA_TEST);
         mc.getTextureManager().bindTexture(new ResourceLocation("kevin/shadows/" + image + ".png"));
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        RenderUtils.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
+        if (!enableBlend) glDisable(GL_BLEND);
+        if (!disableAlpha) glEnable(GL_ALPHA_TEST);
+        glPopMatrix();
+    }
+
+    public static void drawIcon(float x, float y, float width, float height, String image) {
+        glPushMatrix();
+        final boolean enableBlend = glIsEnabled(GL_BLEND);
+        final boolean disableAlpha = !glIsEnabled(GL_ALPHA_TEST);
+        if (!enableBlend) glEnable(GL_BLEND);
+        if (!disableAlpha) glDisable(GL_ALPHA_TEST);
+        mc.getTextureManager().bindTexture(new ResourceLocation("kevin/icons/" + image + ".png"));
         GlStateManager.color(1F, 1F, 1F, 1F);
         RenderUtils.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
         if (!enableBlend) glDisable(GL_BLEND);
@@ -720,37 +917,74 @@ public final class RenderUtils extends MinecraftInstance{
         if (outline) glDisable(GL_LINE_SMOOTH);
     }
 
-    /**
-     * GL CAP MANAGER
-     * <p>
-     * TODO: Remove gl cap manager and replace by something better
-     */
+
+    public static void resetCaps(final String scale) {
+        if(!glCapMap.containsKey(scale)) {
+            return;
+        }
+        Map<Integer, Boolean> map = glCapMap.get(scale);
+        map.forEach(RenderUtils::setGlState);
+        map.clear();
+    }
 
     public static void resetCaps() {
-        glCapMap.forEach(RenderUtils::setGlState);
+        resetCaps("COMMON");
+    }
+
+    public static void clearCaps(final String scale) {
+        if(!glCapMap.containsKey(scale)) {
+            return;
+        }
+        Map<Integer, Boolean> map = glCapMap.get(scale);
+        //if(!map.isEmpty()) {
+            //ClientUtils.INSTANCE.logWarn("Cap map is not empty! [" + map.size() + "]");
+        //}
+        map.clear();
+    }
+
+    public static void clearCaps() {
+        clearCaps("COMMON");
+    }
+
+    public static void enableGlCap(final int cap, final String scale) {
+        setGlCap(cap, true, scale);
     }
 
     public static void enableGlCap(final int cap) {
-        setGlCap(cap, true);
+        enableGlCap(cap, "COMMON");
     }
 
-    public static void enableGlCap(final int... caps) {
-        for (final int cap : caps)
-            setGlCap(cap, true);
+    public static void disableGlCap(final int cap, final String scale) {
+        setGlCap(cap, false, scale);
     }
 
     public static void disableGlCap(final int cap) {
-        setGlCap(cap, true);
+        disableGlCap(cap, "COMMON");
+    }
+
+
+    public static void enableGlCap(final int... caps) {
+        for(int cap : caps) {
+            setGlCap(cap, true, "COMMON");
+        }
     }
 
     public static void disableGlCap(final int... caps) {
-        for (final int cap : caps)
-            setGlCap(cap, false);
+        for(int cap : caps) {
+            setGlCap(cap, false, "COMMON");
+        }
+    }
+
+    public static void setGlCap(final int cap, final boolean state, final String scale) {
+        if(!glCapMap.containsKey(scale)) {
+            glCapMap.put(scale, new HashMap<>());
+        }
+        glCapMap.get(scale).put(cap, glGetBoolean(cap));
+        setGlState(cap, state);
     }
 
     public static void setGlCap(final int cap, final boolean state) {
-        glCapMap.put(cap, glGetBoolean(cap));
-        setGlState(cap, state);
+        setGlCap(cap, state, "COMMON");
     }
 
     public static void setGlState(final int cap, final boolean state) {

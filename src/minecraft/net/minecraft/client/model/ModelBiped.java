@@ -2,6 +2,7 @@ package net.minecraft.client.model;
 
 import kevin.main.KevinClient;
 import kevin.module.modules.combat.KillAura;
+import kevin.module.modules.render.Rotations;
 import kevin.module.modules.world.Breaker;
 import kevin.module.modules.world.Nuker;
 import kevin.module.modules.world.Scaffold;
@@ -183,13 +184,13 @@ public class ModelBiped extends ModelBase
 
         this.bipedLeftArm.rotateAngleY = 0.0F;
 
-        final KillAura killAura = (KillAura) KevinClient.moduleManager.getModule("KillAura");
-        final Scaffold scaffold = (Scaffold) KevinClient.moduleManager.getModule("Scaffold");
-        final Breaker breaker = (Breaker) KevinClient.moduleManager.getModule("Breaker");
-        final Nuker nuker = (Nuker) KevinClient.moduleManager.getModule("Nuker");
+        final KillAura killAura = KevinClient.moduleManager.getModule(KillAura.class);
+        final Scaffold scaffold = KevinClient.moduleManager.getModule(Scaffold.class);
+        final Breaker breaker = KevinClient.moduleManager.getModule(Breaker.class);
+        final Nuker nuker = KevinClient.moduleManager.getModule(Nuker.class);
         final boolean needRotate = (killAura.getState() && (killAura.getTarget() != null || killAura.getSTarget() != null)) || scaffold.getState() || (breaker.getState() && breaker.getCurrentDamage() > 0) || (nuker.getState() && nuker.getCurrentDamage() > 0);
 
-        if (KevinClient.moduleManager.getModule("Rotations").getState() && RotationUtils.serverRotation != null && entityIn instanceof EntityPlayer
+        if (KevinClient.moduleManager.getModule(Rotations.class).getState() && RotationUtils.serverRotation != null && entityIn instanceof EntityPlayer
                 && entityIn.equals(Minecraft.getMinecraft().thePlayer) && needRotate) {
             this.bipedHead.rotateAngleX = RotationUtils.serverRotation.getPitch() / (180F / (float) Math.PI);
         }

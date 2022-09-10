@@ -42,11 +42,11 @@ object EntityUtils : MinecraftInstance() {
                         if (entity.isSpectator)
                             return false
 
-                        val antiShop = KevinClient.moduleManager.getModule("AntiShop") as AntiShop
+                        val antiShop = KevinClient.moduleManager.getModule(AntiShop::class.java)
                         if (antiShop.isShop(entity))
                             return false
 
-                        val teams = KevinClient.moduleManager.getModule("Teams") as Teams
+                        val teams = KevinClient.moduleManager.getModule(Teams::class.java)
                         return !teams.state || !teams.isInYourTeam(entity)
                     }
                     return true

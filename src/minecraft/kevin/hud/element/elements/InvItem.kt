@@ -7,8 +7,8 @@ import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.IntegerValue
 import kevin.module.modules.world.ChestStealer
-import kevin.utils.FontManager
-import kevin.utils.RainbowShader
+import kevin.font.RainbowFontShader
+import kevin.utils.render.shader.shaders.RainbowShader
 import kevin.utils.RenderUtils
 import net.minecraft.client.gui.inventory.GuiChest
 import net.minecraft.client.renderer.GlStateManager
@@ -43,7 +43,7 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
         return Border(0F,startY,174F,getY2())
     }
     private fun getY2(): Float{
-        val chestStealer = KevinClient.moduleManager.getModule("ChestStealer") as ChestStealer
+        val chestStealer = KevinClient.moduleManager.getModule(ChestStealer::class.java)
         return if (
             chestStealer.state &&
             chestStealer.chestItems.size > 27 &&
@@ -72,7 +72,7 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
     private fun drawInv() {
         GL11.glPushMatrix()
         RenderHelper.enableGUIStandardItemLighting()
-        val chestStealer = KevinClient.moduleManager.getModule("ChestStealer") as ChestStealer
+        val chestStealer = KevinClient.moduleManager.getModule(ChestStealer::class.java)
         val chest = (mc.currentScreen) is GuiChest && chestStealer.state && chestStealer.overrideShowInvValue.get()
 
         if (chestStealer.chestItems.isEmpty()&&chest) {
@@ -137,7 +137,7 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
         }
     }
     private val isChest: Boolean get() {
-        val chestStealer = KevinClient.moduleManager.getModule("ChestStealer") as ChestStealer
+        val chestStealer = KevinClient.moduleManager.getModule(ChestStealer::class.java)
         return (mc.currentScreen) is GuiChest && chestStealer.state && chestStealer.overrideShowInvValue.get()
     }
     private fun drawChestItems(slot: Int,endSlot: Int,y: Int,chestItems: MutableList<ItemStack?>){
@@ -151,7 +151,7 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
         }
     }
     private fun drawTitle(){
-        val chestStealer = KevinClient.moduleManager.getModule("ChestStealer") as ChestStealer
+        val chestStealer = KevinClient.moduleManager.getModule(ChestStealer::class.java)
         val name = if (
             chestStealer.overrideShowInvValue.get()
             && (mc.currentScreen) is GuiChest
@@ -159,7 +159,7 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
         ) "Chest"
         else "Inventory"
         if (titleRainbow.get()) {
-            FontManager.RainbowFontShader.begin(true, 1.0F / 1000, 1.0F / 1000, System.currentTimeMillis() % 10000 / 10000F).use {
+            RainbowFontShader.begin(true, 1.0F / 1000, 1.0F / 1000, System.currentTimeMillis() % 10000 / 10000F).use {
                 KevinClient.fontManager.font35!!.drawString(
                     name,
                     (174F / 2F) - (KevinClient.fontManager.font35!!.getStringWidth(name) * 0.5F),
@@ -184,10 +184,10 @@ class InvItem(x: Double = 10.0, y: Double = 10.0, scale: Float = 1F) : Element(x
         return true
     }
     private fun drawInvEmptyString(){
-        val chestStealer = KevinClient.moduleManager.getModule("ChestStealer") as ChestStealer
+        val chestStealer = KevinClient.moduleManager.getModule(ChestStealer::class.java)
         if (chestStealer.overrideShowInvValue.get() && (mc.currentScreen) is GuiChest && chestStealer.state) return
         if (invEmptyStringRainbow.get()) {
-            FontManager.RainbowFontShader.begin(true, 1.0F / 1000, 1.0F / 1000, System.currentTimeMillis() % 10000 / 10000F).use {
+            RainbowFontShader.begin(true, 1.0F / 1000, 1.0F / 1000, System.currentTimeMillis() % 10000 / 10000F).use {
                 KevinClient.fontManager.font35!!.drawString(
                     "Your inventory is empty...",
                     (174F / 2F) - (KevinClient.fontManager.font35!!.getStringWidth("Your inventory is empty...") * 0.5F),

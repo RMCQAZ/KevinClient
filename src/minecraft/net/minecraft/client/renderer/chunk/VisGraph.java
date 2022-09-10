@@ -23,7 +23,7 @@ public class VisGraph
 
     public void func_178606_a(BlockPos pos)
     {
-        XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        XRay xRay = KevinClient.moduleManager.getXRay();
         if (xRay.getState())
             return;
 
@@ -45,7 +45,7 @@ public class VisGraph
     {
         SetVisibility setvisibility = new SetVisibility();
 
-        final XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        final XRay xRay = KevinClient.moduleManager.getXRay();
         if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Translucent")) {
             setvisibility.setAllVisible(true);
             return setvisibility;

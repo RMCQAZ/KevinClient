@@ -4,6 +4,7 @@ import kevin.event.PacketEvent
 import kevin.event.Render3DEvent
 import kevin.event.UpdateEvent
 import kevin.event.WorldEvent
+import kevin.hud.element.elements.ConnectNotificationType
 import kevin.hud.element.elements.Notification
 import kevin.main.KevinClient
 import kevin.module.BooleanValue
@@ -43,7 +44,7 @@ object AAC5 : FlyMode("AAC5") {
     override fun onEnable() {
         if (mc.isSingleplayer) {
             KevinClient.hud.addNotification(
-                Notification("Use AAC5 Flys will crash single player"),"Fly")
+                Notification("Use AAC5 Flys will crash single player", "Fly", ConnectNotificationType.Error))
             fly.state = false
             return
         }

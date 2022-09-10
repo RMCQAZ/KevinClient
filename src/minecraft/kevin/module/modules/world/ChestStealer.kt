@@ -114,7 +114,7 @@ class ChestStealer : Module("ChestStealer", description = "Automatically steals 
             return
 
         // inventory cleaner
-        val inventoryCleaner = KevinClient.moduleManager.getModule("InventoryCleaner") as InventoryCleaner
+        val inventoryCleaner = KevinClient.moduleManager.getModule(InventoryCleaner::class.java)
 
         // Is empty?
         if (!isEmpty(screen) && (!closeOnFullValue.get() || !fullInventory)) {
@@ -186,7 +186,7 @@ class ChestStealer : Module("ChestStealer", description = "Automatically steals 
     }
 
     private fun isEmpty(chest: GuiChest): Boolean {
-        val inventoryCleaner = KevinClient.moduleManager.getModule("InventoryCleaner") as InventoryCleaner
+        val inventoryCleaner = KevinClient.moduleManager.getModule(InventoryCleaner::class.java)
 
         for (i in 0 until chest.inventoryRows * 9) {
             val slot = chest.inventorySlots!!.getSlot(i)

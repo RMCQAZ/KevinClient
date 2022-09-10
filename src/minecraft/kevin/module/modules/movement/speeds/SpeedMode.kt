@@ -10,7 +10,7 @@ import kevin.utils.MinecraftInstance
 
 abstract class SpeedMode(val modeName: String): MinecraftInstance() {
     protected val valuePrefix = "$modeName-"
-    protected val speed by lazy { KevinClient.moduleManager.getModule("Speed") as Speed }
+    protected val speed by lazy { KevinClient.moduleManager.getModule(Speed::class.java) }
     open val values: List<Value<*>>
         get() = ClassUtils.getValues(this.javaClass,this)
     open fun onEnable() {}

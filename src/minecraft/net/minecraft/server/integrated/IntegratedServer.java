@@ -97,7 +97,7 @@ public class IntegratedServer extends MinecraftServer
     protected void loadAllWorlds(String saveName, String worldNameIn, long seed, WorldType type, String worldNameIn2)
     {
         this.convertMapIfNeeded(saveName);
-        boolean flag = Reflector.DimensionManager.exists();
+        boolean flag = false;
 
         if (!flag)
         {
@@ -122,7 +122,7 @@ public class IntegratedServer extends MinecraftServer
         {
             WorldServer worldserver = this.isDemo() ? (WorldServer)(new DemoWorldServer(this, isavehandler, worldinfo, 0, this.theProfiler)).init() : (WorldServer)(new WorldServer(this, isavehandler, worldinfo, 0, this.theProfiler)).init();
             worldserver.initialize(this.theWorldSettings);
-            Integer[] ainteger = (Integer[])Reflector.call(Reflector.DimensionManager_getStaticDimensionIDs);
+            Integer[] ainteger = null;
             Integer[] ainteger1 = ainteger;
             int i = ainteger.length;
 
@@ -137,10 +137,6 @@ public class IntegratedServer extends MinecraftServer
                     worldserver1.getWorldInfo().setGameType(this.getGameType());
                 }
 
-                if (Reflector.EventBus.exists())
-                {
-                    Reflector.postForgeBusEvent(Reflector.WorldEvent_Load_Constructor, worldserver1);
-                }
             }
 
             this.getConfigurationManager().setPlayerManager(new WorldServer[] {worldserver});
@@ -212,30 +208,8 @@ public class IntegratedServer extends MinecraftServer
         logger.info("Generating keypair");
         this.setKeyPair(CryptManager.generateKeyPair());
 
-        if (Reflector.FMLCommonHandler_handleServerAboutToStart.exists())
-        {
-            Object object = Reflector.call(Reflector.FMLCommonHandler_instance);
-
-            if (!Reflector.callBoolean(object, Reflector.FMLCommonHandler_handleServerAboutToStart, this))
-            {
-                return false;
-            }
-        }
-
         this.loadAllWorlds(this.getFolderName(), this.getWorldName(), this.theWorldSettings.getSeed(), this.theWorldSettings.getTerrainType(), this.theWorldSettings.getWorldName());
         this.setMOTD(this.getServerOwner() + " - " + this.worldServers[0].getWorldInfo().getWorldName());
-
-        if (Reflector.FMLCommonHandler_handleServerStarting.exists())
-        {
-            Object object1 = Reflector.call(Reflector.FMLCommonHandler_instance);
-
-            if (Reflector.FMLCommonHandler_handleServerStarting.getReturnType() == Boolean.TYPE)
-            {
-                return Reflector.callBoolean(object1, Reflector.FMLCommonHandler_handleServerStarting, this);
-            }
-
-            Reflector.callVoid(object1, Reflector.FMLCommonHandler_handleServerStarting, this);
-        }
 
         return true;
     }
@@ -506,19 +480,16 @@ public class IntegratedServer extends MinecraftServer
      */
     public void initiateShutdown()
     {
-        if (!Reflector.MinecraftForge.exists() || this.isServerRunning())
+        Futures.getUnchecked(this.addScheduledTask(new Runnable()
         {
-            Futures.getUnchecked(this.addScheduledTask(new Runnable()
+            public void run()
             {
-                public void run()
+                for (EntityPlayerMP entityplayermp : Lists.newArrayList(IntegratedServer.this.getConfigurationManager().getPlayerList()))
                 {
-                    for (EntityPlayerMP entityplayermp : Lists.newArrayList(IntegratedServer.this.getConfigurationManager().getPlayerList()))
-                    {
-                        IntegratedServer.this.getConfigurationManager().playerLoggedOut(entityplayermp);
-                    }
+                    IntegratedServer.this.getConfigurationManager().playerLoggedOut(entityplayermp);
                 }
-            }));
-        }
+            }
+        }));
 
         super.initiateShutdown();
 

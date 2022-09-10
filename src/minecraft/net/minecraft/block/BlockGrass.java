@@ -158,7 +158,7 @@ public class BlockGrass extends Block implements IGrowable
 
     public EnumWorldBlockLayer getBlockLayer()
     {
-        final XRay xRay = (XRay) KevinClient.moduleManager.getModule("XRay");
+        final XRay xRay = KevinClient.moduleManager.getXRay();
         if (xRay.getState()&&xRay.getMode().get().equalsIgnoreCase("Translucent"))
             return super.getBlockLayer();
         return EnumWorldBlockLayer.CUTOUT_MIPPED;

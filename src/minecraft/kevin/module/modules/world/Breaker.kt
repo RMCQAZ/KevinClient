@@ -70,7 +70,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
         val thePlayer = mc.thePlayer ?: return
 
         if (noHitValue.get()) {
-            val killAura = KevinClient.moduleManager.getModule("KillAura") as KillAura
+            val killAura = KevinClient.moduleManager.getModule(KillAura::class.java)
 
             if (killAura.state && (killAura.target != null || killAura.sTarget != null))
                 return
@@ -89,7 +89,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
         }
 
         // BedCheck
-        val teams = KevinClient.moduleManager.getModule("Teams") as Teams
+        val teams = KevinClient.moduleManager.getModule(Teams::class.java)
         if (Block.getBlockById(targetId)==Blocks.bed&&teams.bedCheckValue.get()&&(pos in teams.teamBed||(bypassValue.get()&&teams.teamBed.any { pos == it.up() }))){
             pos = null
             currentDamage = 0F
@@ -142,7 +142,7 @@ class Breaker : Module("Breaker",description = "Destroys selected blocks around 
             // Destory block
             actionValue.get().equals("destroy", true) || surroundings || !isRealBlock -> {
                 // Auto Tool
-                val autoTool = KevinClient.moduleManager.getModule("AutoTool") as AutoTool
+                val autoTool = KevinClient.moduleManager.getModule(AutoTool::class.java)
                 if (autoTool.state)
                     autoTool.switchSlot(currentPos)
 

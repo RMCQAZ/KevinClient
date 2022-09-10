@@ -162,65 +162,50 @@ public class LoadingScreenRenderer implements IProgressUpdate
                     GlStateManager.clear(16640);
                 }
 
-                boolean flag = true;
+                Tessellator tessellator = Tessellator.getInstance();
+                WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+                CustomLoadingScreen customloadingscreen = CustomLoadingScreens.getCustomLoadingScreen();
 
-                if (Reflector.FMLClientHandler_handleLoadingScreen.exists())
+                if (customloadingscreen != null)
                 {
-                    Object object = Reflector.call(Reflector.FMLClientHandler_instance);
-
-                    if (object != null)
-                    {
-                        flag = !Reflector.callBoolean(object, Reflector.FMLClientHandler_handleLoadingScreen, scaledresolution);
-                    }
+                    customloadingscreen.drawBackground(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight());
+                }
+                else
+                {
+                    this.mc.getTextureManager().bindTexture(Gui.optionsBackground);
+                    float f = 32.0F;
+                    worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+                    worldrenderer.pos(0.0D, (double)l, 0.0D).tex(0.0D, (double)((float)l / f)).color(64, 64, 64, 255).endVertex();
+                    worldrenderer.pos((double)k, (double)l, 0.0D).tex((double)((float)k / f), (double)((float)l / f)).color(64, 64, 64, 255).endVertex();
+                    worldrenderer.pos((double)k, 0.0D, 0.0D).tex((double)((float)k / f), 0.0D).color(64, 64, 64, 255).endVertex();
+                    worldrenderer.pos(0.0D, 0.0D, 0.0D).tex(0.0D, 0.0D).color(64, 64, 64, 255).endVertex();
+                    tessellator.draw();
                 }
 
-                if (flag)
+                if (progress >= 0)
                 {
-                    Tessellator tessellator = Tessellator.getInstance();
-                    WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-                    CustomLoadingScreen customloadingscreen = CustomLoadingScreens.getCustomLoadingScreen();
-
-                    if (customloadingscreen != null)
-                    {
-                        customloadingscreen.drawBackground(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight());
-                    }
-                    else
-                    {
-                        this.mc.getTextureManager().bindTexture(Gui.optionsBackground);
-                        float f = 32.0F;
-                        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-                        worldrenderer.pos(0.0D, (double)l, 0.0D).tex(0.0D, (double)((float)l / f)).color(64, 64, 64, 255).endVertex();
-                        worldrenderer.pos((double)k, (double)l, 0.0D).tex((double)((float)k / f), (double)((float)l / f)).color(64, 64, 64, 255).endVertex();
-                        worldrenderer.pos((double)k, 0.0D, 0.0D).tex((double)((float)k / f), 0.0D).color(64, 64, 64, 255).endVertex();
-                        worldrenderer.pos(0.0D, 0.0D, 0.0D).tex(0.0D, 0.0D).color(64, 64, 64, 255).endVertex();
-                        tessellator.draw();
-                    }
-
-                    if (progress >= 0)
-                    {
-                        int l1 = 100;
-                        int i1 = 2;
-                        int j1 = k / 2 - l1 / 2;
-                        int k1 = l / 2 + 16;
-                        GlStateManager.disableTexture2D();
-                        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-                        worldrenderer.pos((double)j1, (double)k1, 0.0D).color(128, 128, 128, 255).endVertex();
-                        worldrenderer.pos((double)j1, (double)(k1 + i1), 0.0D).color(128, 128, 128, 255).endVertex();
-                        worldrenderer.pos((double)(j1 + l1), (double)(k1 + i1), 0.0D).color(128, 128, 128, 255).endVertex();
-                        worldrenderer.pos((double)(j1 + l1), (double)k1, 0.0D).color(128, 128, 128, 255).endVertex();
-                        worldrenderer.pos((double)j1, (double)k1, 0.0D).color(128, 255, 128, 255).endVertex();
-                        worldrenderer.pos((double)j1, (double)(k1 + i1), 0.0D).color(128, 255, 128, 255).endVertex();
-                        worldrenderer.pos((double)(j1 + progress), (double)(k1 + i1), 0.0D).color(128, 255, 128, 255).endVertex();
-                        worldrenderer.pos((double)(j1 + progress), (double)k1, 0.0D).color(128, 255, 128, 255).endVertex();
-                        tessellator.draw();
-                        GlStateManager.enableTexture2D();
-                    }
-
-                    GlStateManager.enableBlend();
-                    GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-                    this.mc.fontRendererObj.drawStringWithShadow(this.currentlyDisplayedText, (float)((k - this.mc.fontRendererObj.getStringWidth(this.currentlyDisplayedText)) / 2), (float)(l / 2 - 4 - 16), 16777215);
-                    this.mc.fontRendererObj.drawStringWithShadow(this.message, (float)((k - this.mc.fontRendererObj.getStringWidth(this.message)) / 2), (float)(l / 2 - 4 + 8), 16777215);
+                    int l1 = 100;
+                    int i1 = 2;
+                    int j1 = k / 2 - l1 / 2;
+                    int k1 = l / 2 + 16;
+                    GlStateManager.disableTexture2D();
+                    worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+                    worldrenderer.pos((double)j1, (double)k1, 0.0D).color(128, 128, 128, 255).endVertex();
+                    worldrenderer.pos((double)j1, (double)(k1 + i1), 0.0D).color(128, 128, 128, 255).endVertex();
+                    worldrenderer.pos((double)(j1 + l1), (double)(k1 + i1), 0.0D).color(128, 128, 128, 255).endVertex();
+                    worldrenderer.pos((double)(j1 + l1), (double)k1, 0.0D).color(128, 128, 128, 255).endVertex();
+                    worldrenderer.pos((double)j1, (double)k1, 0.0D).color(128, 255, 128, 255).endVertex();
+                    worldrenderer.pos((double)j1, (double)(k1 + i1), 0.0D).color(128, 255, 128, 255).endVertex();
+                    worldrenderer.pos((double)(j1 + progress), (double)(k1 + i1), 0.0D).color(128, 255, 128, 255).endVertex();
+                    worldrenderer.pos((double)(j1 + progress), (double)k1, 0.0D).color(128, 255, 128, 255).endVertex();
+                    tessellator.draw();
+                    GlStateManager.enableTexture2D();
                 }
+
+                GlStateManager.enableBlend();
+                GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+                this.mc.fontRendererObj.drawStringWithShadow(this.currentlyDisplayedText, (float)((k - this.mc.fontRendererObj.getStringWidth(this.currentlyDisplayedText)) / 2), (float)(l / 2 - 4 - 16), 16777215);
+                this.mc.fontRendererObj.drawStringWithShadow(this.message, (float)((k - this.mc.fontRendererObj.getStringWidth(this.message)) / 2), (float)(l / 2 - 4 + 8), 16777215);
 
                 this.framebuffer.unbindFramebuffer();
 

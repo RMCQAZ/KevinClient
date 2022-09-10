@@ -1,5 +1,6 @@
 package kevin.hud.element.elements
 
+import kevin.font.RainbowFontShader
 import kevin.hud.designer.GuiHudDesigner
 import kevin.hud.element.Border
 import kevin.hud.element.Element
@@ -8,9 +9,8 @@ import kevin.hud.element.Side
 import kevin.main.KevinClient
 import kevin.module.*
 import kevin.utils.AnimationUtils
-import kevin.utils.FontManager
-import kevin.utils.RainbowShader
 import kevin.utils.RenderUtils
+import kevin.utils.render.shader.shaders.RainbowShader
 import net.minecraft.client.renderer.GlStateManager
 import org.lwjgl.opengl.GL11
 import java.awt.Color
@@ -63,7 +63,7 @@ class Arraylist(x: Double = 1.0, y: Double = 2.0, scale: Float = 1F,
         val tagsArrayColor = arrayListTagsArrayColor
         val rectWidth = arrayListRectWidth
 
-        FontManager.AWTFontRenderer.assumeNonVolatile = true
+        //AWTFontRenderer.assumeNonVolatile = true
 
         // Slide animation - update every render
         val delta = RenderUtils.deltaTime
@@ -147,7 +147,7 @@ class Arraylist(x: Double = 1.0, y: Double = 2.0, scale: Float = 1F,
             val rainbow = colorMode.equals("Rainbow", ignoreCase = true)
 
             GlStateManager.resetColor()
-            FontManager.RainbowFontShader.begin(rainbow, if (rainbowX.get() == 0.0F) 0.0F else 1.0F / rainbowX.get(), if (rainbowY.get() == 0.0F) 0.0F else 1.0F / rainbowY.get(), System.currentTimeMillis() % 10000 / 10000F).use {
+            RainbowFontShader.begin(rainbow, if (rainbowX.get() == 0.0F) 0.0F else 1.0F / rainbowX.get(), if (rainbowY.get() == 0.0F) 0.0F else 1.0F / rainbowY.get(), System.currentTimeMillis() % 10000 / 10000F).use {
                 fontRenderer.drawString(displayString, xPos - if (rectMode.equals("right", true)||rectMode.equals("all",true)) rectWidth.get() else 0F, yPos + textY, when {
                     rainbow -> 0
                     colorMode.equals("Random", ignoreCase = true) -> moduleColor
@@ -217,7 +217,7 @@ class Arraylist(x: Double = 1.0, y: Double = 2.0, scale: Float = 1F,
             return Border(0F, 0F, x2 - 7F, y2 - if (side.vertical == Side.Vertical.DOWN) 1F else 0F)
         }
 
-        FontManager.AWTFontRenderer.assumeNonVolatile = false
+        //AWTFontRenderer.assumeNonVolatile = false
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
         return null
     }

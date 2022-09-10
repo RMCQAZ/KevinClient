@@ -217,7 +217,7 @@ public abstract class BlockLiquid extends Block
 
     public Vec3 modifyAcceleration(World worldIn, BlockPos pos, Entity entityIn, Vec3 motion)
     {
-        final NoSlow noSlow = (NoSlow) KevinClient.moduleManager.getModule("NoSlow");
+        final NoSlow noSlow = KevinClient.moduleManager.getModule(NoSlow.class);
 
         if (noSlow.getState() && noSlow.getLiquidPushValue().get()) {
             return (new Vec3(0.0D, 0.0D, 0.0D));

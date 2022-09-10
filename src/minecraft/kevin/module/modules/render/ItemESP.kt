@@ -5,8 +5,8 @@ import kevin.event.Render2DEvent
 import kevin.event.Render3DEvent
 import kevin.module.*
 import kevin.utils.ColorUtils.rainbow
-import kevin.utils.GlowShader
-import kevin.utils.OutlineShader
+import kevin.utils.render.shader.shaders.GlowShader
+import kevin.utils.render.shader.shaders.OutlineShader
 import kevin.utils.RenderUtils
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.projectile.EntityArrow

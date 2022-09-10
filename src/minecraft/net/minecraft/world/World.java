@@ -11,6 +11,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+
+import kevin.module.modules.misc.PerformanceBooster;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockLiquid;
@@ -2611,6 +2613,41 @@ public abstract class World implements IBlockAccess
 
     protected void setActivePlayerChunksAndCheckLight()
     {
+        if (PerformanceBooster.INSTANCE.getFastBlockLightning()) {
+            int n;
+            int n2;
+            int n3;
+            this.activeChunkSet.clear();
+            this.theProfiler.startSection("buildList");
+            //this.activeChunkSet.addAll(this.getPersistentChunks().keySet());
+            for (EntityPlayer entityPlayer : this.playerEntities) {
+                n3 = MathHelper.floor_double(entityPlayer.posX / 16.0);
+                n2 = MathHelper.floor_double(entityPlayer.posZ / 16.0);
+                n = this.getRenderDistanceChunks();
+                for (int i = -n; i <= n; ++i) {
+                    for (int j = -n; j <= n; ++j) {
+                        this.activeChunkSet.add(new ChunkCoordIntPair(i + n3, j + n2));
+                    }
+                }
+            }
+            this.theProfiler.endSection();
+            if (this.ambientTickCountdown > 0) {
+                --this.ambientTickCountdown;
+            }
+            this.theProfiler.startSection("playerCheckLight");
+            if (!this.playerEntities.isEmpty()) {
+                EntityPlayer entityPlayer;
+                int n4 = this.rand.nextInt(this.playerEntities.size());
+                entityPlayer = this.playerEntities.get(n4);
+                n3 = MathHelper.floor_double(entityPlayer.posX) + this.rand.nextInt(11) - 5;
+                n2 = MathHelper.floor_double(entityPlayer.posY) + this.rand.nextInt(11) - 5;
+                n = MathHelper.floor_double(entityPlayer.posZ) + this.rand.nextInt(11) - 5;
+                this.checkLight(new BlockPos(n3, n2, n));
+            }
+            this.theProfiler.endSection();
+            return;
+        }
+
         this.activeChunkSet.clear();
         this.theProfiler.startSection("buildList");
 

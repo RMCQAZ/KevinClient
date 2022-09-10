@@ -6,6 +6,7 @@ import kevin.main.KevinClient
 import kevin.module.BooleanValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
+import kevin.module.modules.exploit.Ghost
 import net.minecraft.client.gui.GuiGameOver
 
 class AutoRespawn : Module("AutoRespawn", "Automatically respawns you after dying.", category = ModuleCategory.PLAYER) {
@@ -16,7 +17,7 @@ class AutoRespawn : Module("AutoRespawn", "Automatically respawns you after dyin
     fun onUpdate(event: UpdateEvent) {
         val thePlayer = mc.thePlayer
 
-        if (thePlayer == null || KevinClient.moduleManager.getModule("Ghost")!!.state)
+        if (thePlayer == null || KevinClient.moduleManager.getModule(Ghost::class.java).state)
             return
 
         if (if (instantValue.get()) thePlayer.health == 0F || thePlayer.isDead else (mc.currentScreen)is GuiGameOver

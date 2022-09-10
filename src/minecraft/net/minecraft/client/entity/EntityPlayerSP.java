@@ -3,10 +3,13 @@ package net.minecraft.client.entity;
 import kevin.event.*;
 import kevin.main.KevinClient;
 import kevin.module.modules.combat.KillAura;
+import kevin.module.modules.exploit.AntiHunger;
+import kevin.module.modules.exploit.PortalMenu;
+import kevin.module.modules.misc.NoCommand;
 import kevin.module.modules.movement.InvMove;
 import kevin.module.modules.movement.NoSlow;
 import kevin.module.modules.movement.Sprint;
-import kevin.module.modules.render.NoSwing;
+import kevin.module.modules.render.*;
 import kevin.module.modules.world.Scaffold;
 import kevin.utils.Rotation;
 import kevin.utils.RotationUtils;
@@ -81,7 +84,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
      * Reset to 0 every time position is sent to the server, used to send periodic updates every 20 ticks even when the
      * player is not moving.
      */
-    private int positionUpdateTicks;
+    public int positionUpdateTicks;
     private boolean hasValidHealth;
     private String clientBrand;
     public MovementInput movementInput;
@@ -173,12 +176,14 @@ public class EntityPlayerSP extends AbstractClientPlayer
     /**
      * called every tick when the player is on foot. Performs all the things that normally happen during movement.
      */
-    public void onUpdateWalkingPlayer()
-    {
+    public void onUpdateWalkingPlayer() {
         try {
             KevinClient.eventManager.callEvent(new MotionEvent(EventState.PRE));
-            final InvMove invMove = (InvMove) KevinClient.moduleManager.getModule("InvMove");
-            final boolean fakeSprint = (invMove.getState() && invMove.getFakeSprint().get()) || KevinClient.moduleManager.getModule("AntiHunger").getState();
+            final InvMove invMove = KevinClient.moduleManager.getModule(InvMove.class);
+            final boolean fakeSprint =
+                    invMove.getNeedFakeSprint()
+                    || KevinClient.moduleManager.getModule(AntiHunger.class).getState()
+                    || KevinClient.moduleManager.getModule(FreeCam.class).getState();
 
             boolean sprinting = this.isSprinting() && !fakeSprint;
 
@@ -297,7 +302,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void sendChatMessage(String message)
     {
-        if (KevinClient.moduleManager.getModule("NoCommand").getState()) {
+        if (KevinClient.moduleManager.getModule(NoCommand.class).getState()) {
             this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
         } else {
             if (!KevinClient.commandManager.execCommand(message)) {
@@ -311,7 +316,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void swingItem()
     {
-        final NoSwing noSwing = (NoSwing) KevinClient.moduleManager.getModule("NoSwing");
+        final NoSwing noSwing = KevinClient.moduleManager.getModule(NoSwing.class);
 
         if (noSwing.getState()) {
             if (!noSwing.getServerSideValue().get()) this.sendQueue.addToSendQueue(new C0APacketAnimation());
@@ -690,11 +695,17 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onCriticalHit(Entity entityHit)
     {
+        if (Particles.INSTANCE.getNoCriticalParticles())
+            return;
+
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT);
     }
 
     public void onEnchantmentCritical(Entity entityHit)
     {
+        if (Particles.INSTANCE.getNoSharpParticles())
+            return;
+
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT_MAGIC);
     }
 
@@ -757,7 +768,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         if (this.inPortal)
         {
             if (this.mc.currentScreen != null && !this.mc.currentScreen.doesGuiPauseGame()
-                    && !KevinClient.moduleManager.getModule("PortalMenu").getState())
+                    && !KevinClient.moduleManager.getModule(PortalMenu.class).getState())
             {
                 this.mc.displayGuiScreen(null);
             }
@@ -809,8 +820,8 @@ public class EntityPlayerSP extends AbstractClientPlayer
         boolean flag2 = this.movementInput.moveForward >= f;
         this.movementInput.updatePlayerMoveState();
 
-        final NoSlow noSlow = (NoSlow) KevinClient.moduleManager.getModule("NoSlow");
-        final KillAura killAura = (KillAura) KevinClient.moduleManager.getModule("KillAura");
+        final NoSlow noSlow = KevinClient.moduleManager.getModule(NoSlow.class);
+        final KillAura killAura = KevinClient.moduleManager.getModule(KillAura.class);
 
         if (getHeldItem() != null && getHeldItem().getItem() != null && (this.isUsingItem() || (getHeldItem().getItem() instanceof ItemSword && killAura.getBlockingStatus())) && !this.isRiding())
         {
@@ -826,7 +837,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         this.pushOutOfBlocks(this.posX + (double)this.width * 0.35D, this.getEntityBoundingBox().minY + 0.5D, this.posZ - (double)this.width * 0.35D);
         this.pushOutOfBlocks(this.posX + (double)this.width * 0.35D, this.getEntityBoundingBox().minY + 0.5D, this.posZ + (double)this.width * 0.35D);
 
-        final Sprint sprint = (Sprint) KevinClient.moduleManager.getModule("Sprint");
+        final Sprint sprint = KevinClient.moduleManager.getModule(Sprint.class);
 
         boolean flag3 = !sprint.getFoodValue().get() || (float)this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying;
 
@@ -847,9 +858,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
             this.setSprinting(true);
         }
 
-        final Scaffold scaffold = (Scaffold) KevinClient.moduleManager.getModule("Scaffold");
+        final Scaffold scaffold = KevinClient.moduleManager.getModule(Scaffold.class);
 
-        if ((scaffold.getState() && !scaffold.getCanSprint()) || (sprint.getState() && sprint.getCheckServerSide().get() && (onGround || !sprint.getCheckServerSideGround().get()) && !sprint.getAllDirectionsValue().get() && RotationUtils.targetRotation != null && RotationUtils.getRotationDifference(new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)) > 30))
+        if (KevinClient.moduleManager.getModule(InvMove.class).getNeedStopSprint() || (scaffold.getState() && !scaffold.getCanSprint()) || (sprint.getState() && sprint.getCheckServerSide().get() && (onGround || !sprint.getCheckServerSideGround().get()) && !sprint.getAllDirectionsValue().get() && RotationUtils.targetRotation != null && RotationUtils.getRotationDifference(new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)) > 30))
             this.setSprinting(false);
 
         if (this.isSprinting() && ((!(sprint.getState() && sprint.getAllDirectionsValue().get()) && this.movementInput.moveForward < f) || this.isCollidedHorizontally || !flag3))

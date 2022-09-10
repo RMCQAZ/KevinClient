@@ -52,28 +52,20 @@ public class ItemAliases
 
         if (shaderPack != null)
         {
-            if (Reflector.Loader_getActiveModList.exists() && Config.getResourceManager() == null)
+            List<Integer> list = new ArrayList<>();
+            String s = "/shaders/item.properties";
+            InputStream inputstream = shaderPack.getResourceAsStream(s);
+
+            if (inputstream != null)
             {
-                Config.dbg("[Shaders] Delayed loading of item mappings after resources are loaded");
-                updateOnResourcesReloaded = true;
+                loadItemAliases(inputstream, s, list);
             }
-            else
+
+            loadModItemAliases(list);
+
+            if (list.size() > 0)
             {
-                List<Integer> list = new ArrayList<>();
-                String s = "/shaders/item.properties";
-                InputStream inputstream = shaderPack.getResourceAsStream(s);
-
-                if (inputstream != null)
-                {
-                    loadItemAliases(inputstream, s, list);
-                }
-
-                loadModItemAliases(list);
-
-                if (list.size() > 0)
-                {
-                    itemAliases = toArray(list);
-                }
+                itemAliases = toArray(list);
             }
         }
     }

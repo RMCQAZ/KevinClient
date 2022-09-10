@@ -235,7 +235,7 @@ public class EnchantmentHelper
         if (p_151384_1_ instanceof EntityPlayer)
         {
             ItemStack heldItem = p_151384_0_.getHeldItem();
-            AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+            AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
             if (autoTool.getState()&&p_151384_0_==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
                 heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
             }
@@ -256,7 +256,7 @@ public class EnchantmentHelper
         if (p_151385_0_ instanceof EntityPlayer)
         {
             ItemStack heldItem = p_151385_0_.getHeldItem();
-            AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+            AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
             if (autoTool.getState()&&p_151385_0_==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
                 heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
             }
@@ -270,7 +270,7 @@ public class EnchantmentHelper
     public static int getKnockbackModifier(EntityLivingBase player)
     {
         ItemStack heldItem = player.getHeldItem();
-        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
         if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
@@ -283,7 +283,7 @@ public class EnchantmentHelper
     public static int getFireAspectModifier(EntityLivingBase player)
     {
         ItemStack heldItem = player.getHeldItem();
-        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
         if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
@@ -312,7 +312,7 @@ public class EnchantmentHelper
     public static int getEfficiencyModifier(EntityLivingBase player)
     {
         ItemStack heldItem = player.getHeldItem();
-        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
         if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
@@ -325,7 +325,7 @@ public class EnchantmentHelper
     public static boolean getSilkTouchModifier(EntityLivingBase player)
     {
         ItemStack heldItem = player.getHeldItem();
-        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
         if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
@@ -338,7 +338,7 @@ public class EnchantmentHelper
     public static int getFortuneModifier(EntityLivingBase player)
     {
         ItemStack heldItem = player.getHeldItem();
-        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
         if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
@@ -351,7 +351,7 @@ public class EnchantmentHelper
     public static int getLuckOfSeaModifier(EntityLivingBase player)
     {
         ItemStack heldItem = player.getHeldItem();
-        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
         if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
@@ -364,7 +364,7 @@ public class EnchantmentHelper
     public static int getLureModifier(EntityLivingBase player)
     {
         ItemStack heldItem = player.getHeldItem();
-        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
         if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }
@@ -377,7 +377,7 @@ public class EnchantmentHelper
     public static int getLootingModifier(EntityLivingBase player)
     {
         ItemStack heldItem = player.getHeldItem();
-        AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+        AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
         if (autoTool.getState()&&player==Minecraft.getMinecraft().thePlayer&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=Minecraft.getMinecraft().thePlayer.inventory.currentItem) {
             heldItem = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(autoTool.getNowSlot());
         }

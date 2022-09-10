@@ -19,7 +19,7 @@ object LightningDetector : Module("LightningDetector","Detect lightning.",catego
             if(packet.func_149053_g() != 1) return
             when(mode.get()){
                 "Chat" -> ChatUtils.messageWithStart("§eLightning §9at §cX:${packet.func_149051_d()/32} §cY:${packet.func_149050_e()/32} §cZ:${packet.func_149049_f()/32}")
-                "Notification" -> KevinClient.hud.addNotification(Notification("Lightning at X:${packet.func_149051_d()/32} Y:${packet.func_149050_e()/32} Z:${packet.func_149049_f()/32}"),name)
+                "Notification" -> KevinClient.hud.addNotification(Notification("Lightning at X:${packet.func_149051_d()/32} Y:${packet.func_149050_e()/32} Z:${packet.func_149049_f()/32}", name))
             }
         }
     }

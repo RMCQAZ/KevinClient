@@ -1,5 +1,7 @@
 package net.minecraft.client.particle;
 
+import kevin.module.modules.misc.PerformanceBooster;
+import kevin.module.modules.render.Particles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -60,14 +62,22 @@ public class EntityFX extends Entity
     public EntityFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)
     {
         this(worldIn, xCoordIn, yCoordIn, zCoordIn);
-        this.motionX = xSpeedIn + (Math.random() * 2.0D - 1.0D) * (double)0.4F;
-        this.motionY = ySpeedIn + (Math.random() * 2.0D - 1.0D) * (double)0.4F;
-        this.motionZ = zSpeedIn + (Math.random() * 2.0D - 1.0D) * (double)0.4F;
-        float f = (float)(Math.random() + Math.random() + 1.0D) * 0.15F;
-        float f1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-        this.motionX = this.motionX / (double)f1 * (double)f * (double)0.4F;
-        this.motionY = this.motionY / (double)f1 * (double)f * (double)0.4F + (double)0.1F;
-        this.motionZ = this.motionZ / (double)f1 * (double)f * (double)0.4F;
+        this.motionX = xSpeedIn + (Math.random() * 2.0D - 1.0D) * 0.4000000059604645;
+        this.motionY = ySpeedIn + (Math.random() * 2.0D - 1.0D) * 0.4000000059604645;
+        this.motionZ = zSpeedIn + (Math.random() * 2.0D - 1.0D) * 0.4000000059604645;
+        final float f = (float)(Math.random() + Math.random() + 1.0D) * 0.15F;
+        final float f1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+
+        final double motionSpeed =
+                Particles.INSTANCE.getState() ?
+                        this instanceof EntityDiggingFX ?
+                                Particles.INSTANCE.getBlockParticleSpeed() :
+                                Particles.INSTANCE.getOtherParticleSpeed()
+                        : 0.4000000059604645;
+
+        this.motionX = this.motionX / f1 * f * motionSpeed;
+        this.motionY = this.motionY / f1 * f * motionSpeed + 0.10000000149011612;
+        this.motionZ = this.motionZ / f1 * f * motionSpeed;
     }
 
     public EntityFX multiplyVelocity(float multiplier)
@@ -191,7 +201,7 @@ public class EntityFX extends Entity
         float f5 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
         float f6 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
         float f7 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
-        int i = this.getBrightnessForRender(partialTicks);
+        int i = PerformanceBooster.INSTANCE.getStaticParticleColor() ? 0xF000F0 : this.getBrightnessForRender(partialTicks);
         int j = i >> 16 & 65535;
         int k = i & 65535;
         worldRendererIn.pos((double)(f5 - rotationX * f4 - rotationXY * f4), (double)(f6 - rotationZ * f4), (double)(f7 - rotationYZ * f4 - rotationXZ * f4)).tex((double)f1, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();

@@ -14,6 +14,9 @@ import java.util.concurrent.Callable;
 import kevin.event.Render3DEvent;
 import kevin.main.KevinClient;
 import kevin.module.modules.player.Reach;
+import kevin.module.modules.render.CameraClip;
+import kevin.module.modules.render.NoHurtCam;
+import kevin.module.modules.render.Tracers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -298,10 +301,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
             {
                 this.loadShader(new ResourceLocation("shaders/post/invert.json"));
             }
-            else if (Reflector.ForgeHooksClient_loadEntityShader.exists())
-            {
-                Reflector.call(Reflector.ForgeHooksClient_loadEntityShader, entityIn, this);
-            }
         }
     }
 
@@ -470,7 +469,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             this.mc.mcProfiler.startSection("pick");
             this.mc.pointedEntity = null;
 
-            final Reach reach = (Reach) KevinClient.moduleManager.getModule("Reach");
+            final Reach reach = KevinClient.moduleManager.getModule(Reach.class);
 
             double d0 = reach.getState() ? reach.getMaxRange() : (double)this.mc.playerController.getBlockReachDistance();
             this.mc.objectMouseOver = entity.rayTrace(reach.getState() ? reach.getBuildReachValue().get() : d0, partialTicks);
@@ -538,14 +537,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
                     if (d3 < d2 || d2 == 0.0D)
                     {
-                        boolean flag1 = false;
-
-                        if (Reflector.ForgeEntity_canRiderInteract.exists())
-                        {
-                            flag1 = Reflector.callBoolean(entity1, Reflector.ForgeEntity_canRiderInteract);
-                        }
-
-                        if (!flag1 && entity1 == entity.ridingEntity)
+                        if (entity1 == entity.ridingEntity)
                         {
                             if (d2 == 0.0D)
                             {
@@ -680,13 +672,13 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 f = f * 60.0F / 70.0F;
             }
 
-            return Reflector.ForgeHooksClient_getFOVModifier.exists() ? Reflector.callFloat(Reflector.ForgeHooksClient_getFOVModifier, this, entity, block, partialTicks, f) : f;
+            return f;
         }
     }
 
     private void hurtCameraEffect(float partialTicks)
     {
-        if (KevinClient.moduleManager.getModule("NoHurtCam").getState()) return;
+        if (KevinClient.moduleManager.getModule(NoHurtCam.class).getState()) return;
 
         if (this.mc.getRenderViewEntity() instanceof EntityLivingBase)
         {
@@ -737,7 +729,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
      */
     private void orientCamera(float partialTicks)
     {
-        if (KevinClient.moduleManager.getModule("CameraClip").getState()){
+        if (KevinClient.moduleManager.getModule(CameraClip.class).getState()){
             Entity entity = this.mc.getRenderViewEntity();
             float f = entity.getEyeHeight();
 
@@ -750,11 +742,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                     IBlockState iblockstate = this.mc.theWorld.getBlockState(blockpos);
                     Block block = iblockstate.getBlock();
 
-                    if (Reflector.ForgeHooksClient_orientBedCamera.exists())
-                    {
-                        Reflector.callVoid(Reflector.ForgeHooksClient_orientBedCamera, this.mc.theWorld, blockpos, iblockstate, entity);
-                    }
-                    else if (block == Blocks.bed)
+                    if (block == Blocks.bed)
                     {
                         int j = iblockstate.getValue(BlockBed.FACING).getHorizontalIndex();
                         GlStateManager.rotate((float)(j * 90), 0.0F, 1.0F, 0.0F);
@@ -797,11 +785,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 }
 
                 Block block1 = ActiveRenderInfo.getBlockAtEntityViewpoint(this.mc.theWorld, entity, partialTicks);
-                Object object = Reflector.newInstance(Reflector.EntityViewRenderEvent_CameraSetup_Constructor, this, entity, block1, partialTicks, yaw, pitch, roll);
-                Reflector.postForgeBusEvent(object);
-                roll = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_CameraSetup_roll, roll);
-                pitch = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_CameraSetup_pitch, pitch);
-                yaw = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_CameraSetup_yaw, yaw);
                 GlStateManager.rotate(roll, 0.0F, 0.0F, 1.0F);
                 GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
                 GlStateManager.rotate(yaw, 0.0F, 1.0F, 0.0F);
@@ -832,11 +815,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 IBlockState iblockstate = this.mc.theWorld.getBlockState(blockpos);
                 Block block = iblockstate.getBlock();
 
-                if (Reflector.ForgeHooksClient_orientBedCamera.exists())
-                {
-                    Reflector.callVoid(Reflector.ForgeHooksClient_orientBedCamera, this.mc.theWorld, blockpos, iblockstate, entity);
-                }
-                else if (block == Blocks.bed)
+                if (block == Blocks.bed)
                 {
                     int j = iblockstate.getValue(BlockBed.FACING).getHorizontalIndex();
                     GlStateManager.rotate((float)(j * 90), 0.0F, 1.0F, 0.0F);
@@ -906,7 +885,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             GlStateManager.translate(0.0F, 0.0F, -0.1F);
         }
 
-        if (Reflector.EntityViewRenderEvent_CameraSetup_Constructor.exists())
+        if (false)
         {
             if (!this.mc.gameSettings.debugCamEnable)
             {
@@ -921,11 +900,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 }
 
                 Block block1 = ActiveRenderInfo.getBlockAtEntityViewpoint(this.mc.theWorld, entity, partialTicks);
-                Object object = Reflector.newInstance(Reflector.EntityViewRenderEvent_CameraSetup_Constructor, this, entity, block1, partialTicks, f6, f7, f8);
-                Reflector.postForgeBusEvent(object);
-                f8 = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_CameraSetup_roll, f8);
-                f7 = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_CameraSetup_pitch, f7);
-                f6 = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_CameraSetup_yaw, f6);
                 GlStateManager.rotate(f8, 0.0F, 0.0F, 1.0F);
                 GlStateManager.rotate(f7, 1.0F, 0.0F, 0.0F);
                 GlStateManager.rotate(f6, 0.0F, 1.0F, 0.0F);
@@ -1005,9 +979,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         if (this.mc.gameSettings.viewBobbing)
         {
-            if (KevinClient.moduleManager.getModule("Tracers").getState()) GL11.glPushMatrix();
+            if (KevinClient.moduleManager.getModule(Tracers.class).getState()) GL11.glPushMatrix();
             this.setupViewBobbing(partialTicks);
-            if (KevinClient.moduleManager.getModule("Tracers").getState()) GL11.glPopMatrix();
+            if (KevinClient.moduleManager.getModule(Tracers.class).getState()) GL11.glPopMatrix();
         }
 
         float f1 = this.mc.thePlayer.prevTimeInPortal + (this.mc.thePlayer.timeInPortal - this.mc.thePlayer.prevTimeInPortal) * partialTicks;
@@ -1483,14 +1457,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
                 try
                 {
-                    if (Reflector.ForgeHooksClient_drawScreen.exists())
-                    {
-                        Reflector.callVoid(Reflector.ForgeHooksClient_drawScreen, this.mc.currentScreen, k1, l1, partialTicks);
-                    }
-                    else
-                    {
-                        this.mc.currentScreen.drawScreen(k1, l1, partialTicks);
-                    }
+                    this.mc.currentScreen.drawScreen(k1, l1, partialTicks);
                 }
                 catch (Throwable throwable1)
                 {
@@ -1818,17 +1785,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             RenderHelper.enableStandardItemLighting();
             this.mc.mcProfiler.endStartSection("entities");
 
-            if (Reflector.ForgeHooksClient_setRenderPass.exists())
-            {
-                Reflector.callVoid(Reflector.ForgeHooksClient_setRenderPass, 0);
-            }
-
             renderglobal.renderEntities(entity, icamera, partialTicks);
-
-            if (Reflector.ForgeHooksClient_setRenderPass.exists())
-            {
-                Reflector.callVoid(Reflector.ForgeHooksClient_setRenderPass, -1);
-            }
 
             RenderHelper.disableStandardItemLighting();
             this.disableLightmap();
@@ -1855,7 +1812,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             GlStateManager.disableAlpha();
             this.mc.mcProfiler.endStartSection("outline");
 
-            if ((!Reflector.ForgeHooksClient_onDrawBlockHighlight.exists() || !Reflector.callBoolean(Reflector.ForgeHooksClient_onDrawBlockHighlight, renderglobal, entityplayer1, this.mc.objectMouseOver, 0, entityplayer1.getHeldItem(), partialTicks)) && !this.mc.gameSettings.hideGUI)
+            if (!this.mc.gameSettings.hideGUI)
             {
                 renderglobal.drawSelectionBox(entityplayer1, this.mc.objectMouseOver, 0, partialTicks);
             }
@@ -1961,17 +1918,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
             Shaders.endWater();
         }
 
-        if (Reflector.ForgeHooksClient_setRenderPass.exists() && !this.debugView)
-        {
-            RenderHelper.enableStandardItemLighting();
-            this.mc.mcProfiler.endStartSection("entities");
-            Reflector.callVoid(Reflector.ForgeHooksClient_setRenderPass, 1);
-            this.mc.renderGlobal.renderEntities(entity, icamera, partialTicks);
-            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-            Reflector.callVoid(Reflector.ForgeHooksClient_setRenderPass, -1);
-            RenderHelper.disableStandardItemLighting();
-        }
-
         GlStateManager.shadeModel(7424);
         GlStateManager.depthMask(true);
         GlStateManager.enableCull();
@@ -1982,12 +1928,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
         {
             this.mc.mcProfiler.endStartSection("aboveClouds");
             this.renderCloudsCheck(renderglobal, partialTicks, pass);
-        }
-
-        if (Reflector.ForgeHooksClient_dispatchRenderLast.exists())
-        {
-            this.mc.mcProfiler.endStartSection("forge_render_last");
-            Reflector.callVoid(Reflector.ForgeHooksClient_dispatchRenderLast, renderglobal, partialTicks);
         }
 
         KevinClient.eventManager.callEvent(new Render3DEvent(partialTicks));
@@ -2128,18 +2068,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
      */
     protected void renderRainSnow(float partialTicks)
     {
-        if (Reflector.ForgeWorldProvider_getWeatherRenderer.exists())
-        {
-            WorldProvider worldprovider = this.mc.theWorld.provider;
-            Object object = Reflector.call(worldprovider, Reflector.ForgeWorldProvider_getWeatherRenderer);
-
-            if (object != null)
-            {
-                Reflector.callVoid(object, Reflector.IRenderHandler_render, partialTicks, this.mc.theWorld, this.mc);
-                return;
-            }
-        }
-
         float f5 = this.mc.theWorld.getRainStrength(partialTicks);
 
         if (f5 > 0.0F)
@@ -2500,15 +2428,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
             this.fogColorBlue = f7;
         }
 
-        if (Reflector.EntityViewRenderEvent_FogColors_Constructor.exists())
-        {
-            Object object = Reflector.newInstance(Reflector.EntityViewRenderEvent_FogColors_Constructor, this, entity, block, partialTicks, this.fogColorRed, this.fogColorGreen, this.fogColorBlue);
-            Reflector.postForgeBusEvent(object);
-            this.fogColorRed = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_FogColors_red, this.fogColorRed);
-            this.fogColorGreen = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_FogColors_green, this.fogColorGreen);
-            this.fogColorBlue = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_FogColors_blue, this.fogColorBlue);
-        }
-
         Shaders.setClearColor(this.fogColorRed, this.fogColorGreen, this.fogColorBlue, 0.0F);
     }
 
@@ -2535,16 +2454,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         Block block = ActiveRenderInfo.getBlockAtEntityViewpoint(this.mc.theWorld, entity, partialTicks);
         float f = -1.0F;
 
-        if (Reflector.ForgeHooksClient_getFogDensity.exists())
-        {
-            f = Reflector.callFloat(Reflector.ForgeHooksClient_getFogDensity, this, entity, block, partialTicks, 0.1F);
-        }
-
-        if (f >= 0.0F)
-        {
-            GlStateManager.setFogDensity(f);
-        }
-        else if (entity instanceof EntityLivingBase && ((EntityLivingBase)entity).isPotionActive(Potion.blindness))
+        if (entity instanceof EntityLivingBase && ((EntityLivingBase)entity).isPotionActive(Potion.blindness))
         {
             float f4 = 5.0F;
             int i = ((EntityLivingBase)entity).getActivePotionEffect(Potion.blindness).getDuration();
@@ -2631,11 +2541,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
             {
                 GlStateManager.setFogStart(f3 * 0.05F);
                 GlStateManager.setFogEnd(f3);
-            }
-
-            if (Reflector.ForgeHooksClient_onFogRender.exists())
-            {
-                Reflector.callVoid(Reflector.ForgeHooksClient_onFogRender, this, entity, block, partialTicks, startCoords, f3);
             }
         }
 

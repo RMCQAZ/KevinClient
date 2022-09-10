@@ -14,7 +14,7 @@ class BindCommand : ICommand {
             ChatUtils.messageWithStart("§cUsage: .bind <ModuleName> <Key/None>")
             return
         }
-        val module = KevinClient.moduleManager.getModule(args[0])
+        val module = KevinClient.moduleManager.getModuleByName(args[0])
         if (module == null) {
             ChatUtils.messageWithStart("§9Module §c§l" + args[0] + "§9 not found.")
             return

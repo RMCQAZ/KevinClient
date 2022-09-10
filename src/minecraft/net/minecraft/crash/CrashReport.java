@@ -136,12 +136,6 @@ public class CrashReport
                 return IntCache.getCacheSizes();
             }
         });
-
-        if (Reflector.FMLCommonHandler_enhanceCrashReport.exists())
-        {
-            final Object instance = Reflector.call(Reflector.FMLCommonHandler_instance, new Object[0]);
-            Reflector.callString(instance, Reflector.FMLCommonHandler_enhanceCrashReport, this, this.theReportCategory);
-        }
     }
 
     /**
@@ -251,8 +245,6 @@ public class CrashReport
 
         final StringBuilder stringbuilder = new StringBuilder();
         stringbuilder.append("---- Minecraft Crash Report ----\n");
-        Reflector.call(Reflector.BlamingTransformer_onCrash, stringbuilder);
-        Reflector.call(Reflector.CoreModManager_onCrash, stringbuilder);
         stringbuilder.append("// ");
         stringbuilder.append(getWittyComment());
         stringbuilder.append("\n\n");

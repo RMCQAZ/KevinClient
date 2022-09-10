@@ -482,7 +482,7 @@ object Renderer : Module("Renderer","Allows you to modify some renderings.",cate
                 head.rotateAngleY = netHeadYaw * (Math.PI.toFloat() / 180f)
             }
 
-            val killAura = KevinClient.moduleManager.getModule("Killaura") as KillAura
+            val killAura = KevinClient.moduleManager.getModule(KillAura::class.java)
             if (killAura.state&&(killAura.target!=null||killAura.sTarget!=null)){
                 head.rotateAngleX = RotationUtils.serverRotation.pitch / (180f / Math.PI.toFloat())
             }

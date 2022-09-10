@@ -2,6 +2,7 @@ package kevin.module.modules.movement
 
 import kevin.event.*
 import kevin.module.BooleanValue
+import kevin.module.ListValue
 import kevin.module.Module
 import kevin.module.ModuleCategory
 import kevin.utils.MovementUtils
@@ -12,9 +13,14 @@ import net.minecraft.network.play.client.C16PacketClientStatus
 import org.lwjgl.input.Keyboard
 
 class InvMove : Module("InvMove","Allows you to walk while an inventory is opened.",Keyboard.KEY_NONE,ModuleCategory.MOVEMENT){
-    val fakeSprint = BooleanValue("FakeSprint",true)
+    private val sprintMode = ListValue("Sprint", arrayOf("Ignore", "AlwaysFake", "StopWhenOpen", "FakeWhenOpen"), "Ignore")
     private val bypass = BooleanValue("Bypass",false)
     private val noMoveClicksValue = BooleanValue("NoMoveClicks", false)
+
+    val needFakeSprint: Boolean
+    get() = this.state && (sprintMode equal "AlwaysFake" || (sprintMode equal "FakeWhenOpen" && mc.currentScreen != null))
+    val needStopSprint: Boolean
+    get() = this.state && sprintMode equal "StopWhenOpen" && mc.currentScreen != null
 
     private val affectedBindings = arrayOf(
         mc.gameSettings.keyBindForward,
@@ -61,6 +67,7 @@ class InvMove : Module("InvMove","Allows you to walk while an inventory is opene
         }
     }
 
-    override val tag: String?
-        get() = if (fakeSprint.get()&&bypass.get()) "FakeSprint & NoPacket" else if (fakeSprint.get()) "FakeSprint" else if (bypass.get()) "NoPacket" else null
+    override val tag: String
+        get() = "Sprint:${sprintMode.get()}" + if (bypass.get()) " & NoPacket" else ""
+//if (sprintMode.get()&&bypass.get()) "FakeSprint & NoPacket" else if (sprintMode.get()) "FakeSprint" else if (bypass.get()) "NoPacket" else null
 }

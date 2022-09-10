@@ -5,6 +5,7 @@ import kevin.command.ICommand
 import kevin.event.EventTarget
 import kevin.event.PacketEvent
 import kevin.event.UpdateEvent
+import kevin.hud.element.elements.ConnectNotificationType
 import kevin.hud.element.elements.Notification
 import kevin.main.KevinClient
 import kevin.module.*
@@ -98,13 +99,13 @@ object AdminDetector : Module("AdminDetector","Detect server admins."),ICommand 
         if (findAdmins.isEmpty()) {
             if (!noNotFindNotification.get()) when(notificationMode.get()){
                 "Chat" -> ChatUtils.messageWithStart("[AdminDetector] No admin find.")
-                "Notification" -> KevinClient.hud.addNotification(Notification("No admin find."),"Admin Detector")
+                "Notification" -> KevinClient.hud.addNotification(Notification("No admin find.", "Admin Detector", ConnectNotificationType.OK))
             }
             return
         }
         when(notificationMode.get()){
             "Chat" -> ChatUtils.messageWithStart("[AdminDetector] Warning: find ${findAdmins.size} admin(s)![§c${Strings.join(findAdmins.toArray(arrayOfNulls<String>(0)), "§7, §c")}]")
-            "Notification" -> KevinClient.hud.addNotification(Notification("Warning: find ${findAdmins.size} admin(s)![§c${Strings.join(findAdmins.toArray(arrayOfNulls<String>(0)), "§7, §c")}]"),"Admin Detector")
+            "Notification" -> KevinClient.hud.addNotification(Notification("Warning: find ${findAdmins.size} admin(s)![§c${Strings.join(findAdmins.toArray(arrayOfNulls<String>(0)), "§7, §c")}]", "Admin Detector", ConnectNotificationType.Warn))
         }
     }
 }

@@ -76,6 +76,7 @@ class Config {
                     }
                 } catch (e: Exception) {
                     println("Error while loading custom hud element from config. $e")
+                    e.printStackTrace()
                 }
             }
 

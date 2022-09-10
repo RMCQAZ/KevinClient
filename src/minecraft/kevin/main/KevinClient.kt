@@ -2,11 +2,14 @@ package kevin.main
 
 import kevin.cape.CapeManager
 import kevin.command.CommandManager
+import kevin.command.bind.BindCommandManager
 import kevin.event.ClientShutdownEvent
 import kevin.event.EventManager
 import kevin.file.ConfigManager
 import kevin.file.FileManager
 import kevin.file.ImageManager
+import kevin.file.ResourceManager
+import kevin.font.FontGC
 import kevin.hud.HUD
 import kevin.hud.HUD.Companion.createDefault
 import kevin.module.ModuleManager
@@ -16,13 +19,13 @@ import kevin.module.modules.render.Renderer
 import kevin.script.ScriptManager
 import kevin.skin.SkinManager
 import kevin.utils.CombatManager
-import kevin.utils.FontManager
+import kevin.font.FontManager
 import kevin.via.ViaVersion
 import org.lwjgl.opengl.Display
 
 object KevinClient {
     var name = "Kevin"
-    var version = "b2.2"
+    var version = "b2.3"
 
     var isStarting = true
 
@@ -40,18 +43,21 @@ object KevinClient {
     var cStart = "§l§7[§l§9Kevin§l§7]"
 
     fun run() {
+        Display.setTitle("$name $version | Minecraft 1.8.9")
         moduleManager = ModuleManager()
         fileManager = FileManager()
+        fileManager.load()
         commandManager = CommandManager()
         eventManager = EventManager()
         fontManager = FontManager()
         fontManager.loadFonts()
-        Display.setTitle("$name $version | Minecraft 1.8.9")
-        fileManager.load()
+        eventManager.registerListener(FontGC)
         Renderer.load()
         moduleManager.load()
         ScriptManager.load()
         fileManager.loadConfig(fileManager.modulesConfig)
+        fileManager.loadConfig(fileManager.bindCommandConfig)
+        eventManager.registerListener(BindCommandManager)
         hud = createDefault()
         fileManager.loadConfig(fileManager.hudConfig)
         commandManager.load()
@@ -61,6 +67,7 @@ object KevinClient {
         capeManager.load()
         SkinManager.load()
         ImageManager.load()
+        ResourceManager.init()
         ConfigManager.load()
         combatManager = CombatManager()
         ViaVersion.start()

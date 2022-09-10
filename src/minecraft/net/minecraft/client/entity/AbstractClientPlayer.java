@@ -161,7 +161,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
 
     public float getFovModifier()
     {
-        final NoFOV fovModule = (NoFOV) KevinClient.moduleManager.getModule("NoFOV");
+        final NoFOV fovModule = KevinClient.moduleManager.getModule(NoFOV.class);
 
         if (Objects.requireNonNull(fovModule).getState()) {
             float newFOV = fovModule.getFovValue().get();
@@ -213,7 +213,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
             f *= 1.0F - f1 * 0.15F;
         }
 
-        return Reflector.ForgeHooksClient_getOffsetFOV.exists() ? Reflector.callFloat(Reflector.ForgeHooksClient_getOffsetFOV, this, f) : f;
+        return f;
     }
 
     public String getNameClear()

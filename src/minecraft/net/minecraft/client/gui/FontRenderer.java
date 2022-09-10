@@ -425,6 +425,36 @@ public class FontRenderer implements IResourceManagerReloadListener
         return i;
     }
 
+    public int drawStringNoColor(String text, float x, float y) {
+        this.enableAlpha();
+        if (this.blend) {
+            GlStateManager.getBlendState(this.oldBlendState);
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(770, 771);
+        }
+        this.resetStyles();
+        int i;
+        i = this.renderStringNoColor(text, x, y);
+        if (this.blend) {
+            GlStateManager.setBlendState(this.oldBlendState);
+        }
+        return i;
+    }
+
+    private int renderStringNoColor(String text, float x, float y) {
+        if (text == null) {
+            return 0;
+        } else {
+            if (this.bidiFlag) {
+                text = this.bidiReorder(text);
+            }
+            this.posX = x;
+            this.posY = y;
+            this.renderStringAtPos(text, false);
+            return (int)this.posX;
+        }
+    }
+
     /**
      * Apply Unicode Bidirectional Algorithm to string and return a new possibly reordered string for visual rendering.
      */

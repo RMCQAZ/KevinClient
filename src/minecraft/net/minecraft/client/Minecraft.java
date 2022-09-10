@@ -11,6 +11,9 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import kevin.event.*;
 import kevin.main.KevinClient;
+import kevin.module.modules.combat.AutoClicker;
+import kevin.module.modules.exploit.AbortBreaking;
+import kevin.module.modules.exploit.MultiActions;
 import kevin.module.modules.world.FastPlace;
 import kevin.utils.CPSCounter;
 import kevin.utils.MiniMapRegister;
@@ -1463,7 +1466,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.leftClickCounter = 0;
         }
 
-        if (this.leftClickCounter <= 0 && (!this.thePlayer.isUsingItem() || KevinClient.moduleManager.getModule("MultiActions").getState()))
+        if (this.leftClickCounter <= 0 && (!this.thePlayer.isUsingItem() || KevinClient.moduleManager.getModule(MultiActions.class).getState()))
         {
             if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
@@ -1477,7 +1480,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
                     this.thePlayer.swingItem();
                 }
-            } else if (!KevinClient.moduleManager.getModule("AbortBreaking").getState()){
+            } else if (!KevinClient.moduleManager.getModule(AbortBreaking.class).getState()){
                 this.playerController.resetBlockRemoving();
             }
         }
@@ -1487,7 +1490,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         CPSCounter.registerClick(CPSCounter.MouseButton.LEFT);
 
-        if (KevinClient.moduleManager.getModule("AutoClicker").getState()) leftClickCounter = 0;
+        if (KevinClient.moduleManager.getModule(AutoClicker.class).getState()) leftClickCounter = 0;
         if (this.leftClickCounter <= 0)
         {
             this.thePlayer.swingItem();
@@ -1539,7 +1542,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.rightClickDelayTimer = 4;
             CPSCounter.registerClick(CPSCounter.MouseButton.RIGHT);
 
-            final FastPlace fastPlace = (FastPlace) KevinClient.moduleManager.getModule("FastPlace");
+            final FastPlace fastPlace = KevinClient.moduleManager.getModule(FastPlace.class);
 
             if (fastPlace.getState()) rightClickDelayTimer = fastPlace.getSpeedValue().get();
 

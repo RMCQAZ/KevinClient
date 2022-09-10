@@ -28,7 +28,7 @@ public class ModulesConfig extends FileConfig {
             return;
 
         for (Map.Entry<String, JsonElement> entry : jsonElement.getAsJsonObject().entrySet()) {
-            final Module module = KevinClient.moduleManager.getModule(entry.getKey());
+            final Module module = KevinClient.moduleManager.getModuleByName(entry.getKey());
 
             if (module != null) {
                 final JsonObject jsonModule = (JsonObject) entry.getValue();

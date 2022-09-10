@@ -8,7 +8,7 @@ import kevin.module.modules.misc.KillerDetector
 import kevin.utils.ColorUtils
 import kevin.utils.ColorUtils.rainbow
 import kevin.utils.EntityUtils
-import kevin.utils.FontManager.GameFontRenderer.Companion.getColorIndex
+import kevin.font.GameFontRenderer.Companion.getColorIndex
 import kevin.utils.RenderUtils.glColor
 import kevin.utils.WorldToScreen
 import kevin.utils.isClientFriend
@@ -213,7 +213,7 @@ class ESP : Module("ESP", "Allows you to see targets through walls.", category =
         run {
             if (entity.hurtTime > 0)
                     return Color.RED
-            val killerDetector = KevinClient.moduleManager.getModule("KillerDetector") as KillerDetector
+            val killerDetector = KevinClient.moduleManager.getModule(KillerDetector::class.java)
             if (killerDetector.state&&entity==killerDetector.killer)
                 return Color.RED
                 if (entity is EntityPlayer && entity.isClientFriend())

@@ -25,12 +25,16 @@ class ModuleManager : Listenable {
     private var renderList:ArrayList<Module>? = null
     private var worldList:ArrayList<Module>? = null
 
+    val xRay by lazy { getModule(XRay::class.java) }
+
     fun load(){
         combatList = arrayListOf(
             AntiKnockback(),
             AutoArmor(),
+            AutoBow(),
             AutoClicker(),
             AutoWeapon(),
+            BowAimbot(),
             BowAura(),
             Criticals(),
             FastBow(),
@@ -42,7 +46,7 @@ class ModuleManager : Listenable {
         exploitList = arrayListOf(
             AbortBreaking(),
             AntiHunger(),
-            BoatJump(),
+            ClientSpoof,
             Clip(),
             Disabler,
             ForceUnicodeChat(),
@@ -80,6 +84,7 @@ class ModuleManager : Listenable {
             NoCommand,
             NoRotateSet(),
             NoScoreboard,
+            PerformanceBooster,
             ResourcePackSpoof(),
             SuperSpammer(),
             Teams(),
@@ -93,7 +98,6 @@ class ModuleManager : Listenable {
             Freeze(),
             HighJump(),
             InvMove(),
-            KeepSprint(),
             LiquidWalk(),
             LongJump(),
             NoClip(),
@@ -106,6 +110,7 @@ class ModuleManager : Listenable {
             Step(),
             Strafe(),
             TargetStrafe,
+            VehicleJump(),
             WallClimb(),
             WaterSpeed()
         )
@@ -145,9 +150,12 @@ class ModuleManager : Listenable {
             NoFOV(),
             NoHurtCam(),
             NoSwing(),
+            Particles,
             Projectiles(),
             Renderer,
+            RenderSettings,
             Rotations(),
+            SourceESP(),
             StorageESP(),
             TNTESP(),
             Tracers(),
@@ -185,12 +193,14 @@ class ModuleManager : Listenable {
         return modules
     }
 
-    fun getModule(name: String): Module?{
+    fun getModuleByName(name: String): Module?{
         for (module in modules){
             if (module.name.equals(name,ignoreCase = true))return module
         }
         return null
     }
+
+    fun <T: Module> getModule(module: Class<T>) = modules.first { it.javaClass == module } as T
 
     @EventTarget
     fun onKey(key: KeyEvent){

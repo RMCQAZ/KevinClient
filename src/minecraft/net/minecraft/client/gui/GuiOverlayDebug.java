@@ -249,13 +249,6 @@ public class GuiOverlayDebug extends Gui
         String s = "Native: " + bytesToMb(i1) + "/" + bytesToMb(j1) + "MB";
         list.add(4, s);
 
-        if (Reflector.FMLCommonHandler_getBrandings.exists())
-        {
-            Object object = Reflector.call(Reflector.FMLCommonHandler_instance);
-            list.add("");
-            list.addAll((Collection)Reflector.call(object, Reflector.FMLCommonHandler_getBrandings, false));
-        }
-
         if (this.isReducedDebug())
         {
             return list;

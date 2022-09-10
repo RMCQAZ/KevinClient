@@ -67,7 +67,6 @@ public class WorldClient extends World
         this.mapStorage = new SaveDataMemoryStorage();
         this.calculateInitialSkylight();
         this.calculateInitialWeather();
-        Reflector.postForgeBusEvent(Reflector.WorldEvent_Load_Constructor, this);
 
         if (this.mc.playerController != null && this.mc.playerController.getClass() == PlayerControllerMP.class)
         {
@@ -333,7 +332,7 @@ public class WorldClient extends World
             blockpos$mutableblockpos.set(k, l, i1);
             IBlockState iblockstate = this.getBlockState(blockpos$mutableblockpos);
             iblockstate.getBlock().randomDisplayTick(this, blockpos$mutableblockpos, iblockstate, random);
-            final TrueSight trueSight = (TrueSight) KevinClient.moduleManager.getModule("TrueSight");
+            final TrueSight trueSight = KevinClient.moduleManager.getModule(TrueSight.class);
             if (trueSight.getState() && trueSight.getBarriersValue().get()) flag = true;
             if (flag && iblockstate.getBlock() == Blocks.barrier)
             {

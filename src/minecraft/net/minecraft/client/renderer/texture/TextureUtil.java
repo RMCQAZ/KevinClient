@@ -155,11 +155,6 @@ public class TextureUtil
     {
         Object object = TextureUtil.class;
 
-        if (Reflector.SplashScreen.exists())
-        {
-            object = Reflector.SplashScreen.getTargetClass();
-        }
-
         synchronized (object)
         {
             deleteTexture(p_180600_0_);

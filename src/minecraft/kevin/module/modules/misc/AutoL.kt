@@ -23,6 +23,8 @@ class AutoL : Module("KillMessage","Send messages automatically when you kill a 
         if (messageFiles != null) for (i in messageFiles) modeList.add(i.name.split(fileSuffix)[0])
     }
     private val modeValue = ListValue("Mode", modeList.toTypedArray(),"Single")
+    private val prefix = ListValue("Prefix", arrayOf("None","/shout",".","@","!","Custom"), "None")
+    private val customPrefix = TextValue("CustomPrefix", "")
     private val singleMessage = TextValue("SingleMessage","L %name")
     //攻击目标列表
     private val entityList = arrayListOf<EntityPlayer>()
@@ -37,8 +39,17 @@ class AutoL : Module("KillMessage","Send messages automatically when you kill a 
         //如果玩家死亡 发送消息 从列表移除
         entityList.filter { it.isDead }.forEach { entityPlayer ->
             val text = if (modeValue equal "Single") singleMessage.get() else messageFiles!!.first { it.name.replace(fileSuffix,"") == modeValue.get() }.readLines().random()
-            mc.thePlayer.sendChatMessage(text.replace("%name",entityPlayer.name))
+            mc.thePlayer.sendChatMessage(addPrefix(text).replace("%MyName",mc.thePlayer.name).replace("%name",entityPlayer.name))
             entityList.remove(entityPlayer)
         }
     }
+    private fun addPrefix(message: String) =
+        when(prefix.get()) {
+            "/shout" -> "/shout $message"
+            "." -> ".say .$message"
+            "@" -> "@$message"
+            "!" -> "!$message"
+            "Custom" -> "${customPrefix.get()}$message"
+            else -> message
+        }
 }

@@ -15,7 +15,7 @@ class HelpCommand : ICommand {
         ChatUtils.message("§a.say §9Say.")
         ChatUtils.message("§a.modulestate §9Show module state.")
         ChatUtils.message("§a.<ModuleName> <Option> <Value> §9Set module option value.")
-        ChatUtils.message("§a.config <save/load> <Name> §9Load/Save config.")
+        ChatUtils.message("§a.config <save/forceSave/load/delete/rename/copy/reload/list> <From?> \\END <To?> §9Config commands.")
         ChatUtils.message("§a.skin <Set/Clear/List/Reload/Mode> <Value> §9Change your skin.")
         ChatUtils.message("§a.hide <ModuleName> §9Hide a module.")
         ChatUtils.message("§a.AutoDisableSet <ModuleName> <add/remove> <World/SetBack/All> §9Add/Remove a module to AutoDisable List.")
@@ -24,5 +24,7 @@ class HelpCommand : ICommand {
         ChatUtils.message("§a.Admin <Add/Remove> <Name> §9Add admin name to detect list.")
         ChatUtils.message("§a.DisableAllModule §9Disable all modules.")
         ChatUtils.message("§a.ClearMainConfig §9Clear main config.")
+        ChatUtils.message("§a.Font/Fonts <Reload/List> §9Reload/List fonts.")
+        ChatUtils.message("§a.BindCommand <Bind/List/ChangeKey/ChangeCommand/remove> <Value1?> <Value2?> §9Bind a command to a key.")
     }
 }

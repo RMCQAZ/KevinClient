@@ -8,8 +8,8 @@ import kevin.module.modules.Targets
 import kevin.module.modules.render.ClickGui.NewClickGui.Category.*
 import kevin.module.modules.render.ClickGui.NewClickGui.Category.Target
 import kevin.utils.BlockUtils
-import kevin.utils.FontManager
-import kevin.utils.RainbowShader
+import kevin.font.RainbowFontShader
+import kevin.utils.render.shader.shaders.RainbowShader
 import kevin.utils.RenderUtils
 import kevin.utils.RenderUtils.glColor
 import net.minecraft.client.audio.PositionedSoundRecord
@@ -92,7 +92,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
         override fun doesGuiPauseGame(): Boolean = false
         override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
             RenderUtils.drawRect(mc.currentScreen.width/4F,mc.currentScreen.height/4F,mc.currentScreen.width/4F*3,mc.currentScreen.height/4F*3,Color(80,80,80,255).rgb)
-            KevinClient.fontManager.fontBold180!!.drawStringWithShadow("K",mc.currentScreen.width/4F + 3,mc.currentScreen.height/4F - 4,Color(0,114,255).rgb)
+            KevinClient.fontManager.fontBold180.drawStringWithShadow("K",mc.currentScreen.width/4F + 3,mc.currentScreen.height/4F - 4,Color(0,114,255).rgb)
 
             canModuleRoll = isClick(mc.currentScreen.width/8F*3,mc.currentScreen.height / 4F,mc.currentScreen.width / 16F * 9,mc.currentScreen.height/4F*3,mouseX.toFloat(),mouseY.toFloat())
             canSettingRoll = isClick(mc.currentScreen.width / 16F * 9,mc.currentScreen.height / 4F,mc.currentScreen.width/4F*3,mc.currentScreen.height/4F*3,mouseX.toFloat(),mouseY.toFloat())
@@ -156,7 +156,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     glDisable(GL_BLEND)
                     glDisable(GL_LINE_SMOOTH)
                 }
-                FontManager.RainbowFontShader.begin(fontRainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
+                RainbowFontShader.begin(fontRainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
                     KevinClient.fontManager.font35!!.drawString(c,mc.currentScreen.width/4F+(mc.currentScreen.width/8F*3-mc.currentScreen.width/4F)/2 - KevinClient.fontManager.font35!!.getStringWidth(c)/2,y+high/2-KevinClient.fontManager.font35!!.fontHeight/3,Color(0,111,255).rgb)
                 }
 
@@ -195,7 +195,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 }
                 8 -> {
                     var setY = moduleY
-                    for (s in (KevinClient.moduleManager.getModule("Targets") as Targets).values){
+                    for (s in (KevinClient.moduleManager.getModule(Targets::class.java)).values){
                         if (s !is BooleanValue) continue
                         glPushMatrix()
                         glScalef(0.8F,0.8F,0.8F)
@@ -249,7 +249,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 }
                 8 -> {
                     var setY = moduleY
-                    for (s in (KevinClient.moduleManager.getModule("Targets") as Targets).values){
+                    for (s in (KevinClient.moduleManager.getModule(Targets::class.java)).values){
                         if (s !is BooleanValue) continue
                         if (isClick(mc.currentScreen.width/4F*3 - 13,setY + 3.5F,mc.currentScreen.width/4F*3 - 4,setY + 8.5F,mouseX.toFloat(),mouseY.toFloat())) {s.set(!s.get())}
                         setY += KevinClient.fontManager.font40!!.fontHeight + 2
@@ -317,7 +317,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     ModuleCategory.RENDER -> {moduleOpen!!["Render"]!!}
                     ModuleCategory.WORLD -> {moduleOpen!!["World"]!!}
                 }
-                FontManager.RainbowFontShader.begin(fontRainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
+                RainbowFontShader.begin(fontRainbow,-0.001F,-0.001F,System.currentTimeMillis() % 10000 / 10000F).use {
                     KevinClient.fontManager.font35!!.drawString(
                         m.name,
                         mc.currentScreen.width / 8F * 3 + 5,
@@ -728,7 +728,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
             if (lineAnim["Line1"]!!>18.75F) animLine("Line2",1.5F,false)
             if (lineAnim["Line1"]!!>18.75F&&clickButton==Target) animLine("LineTarget",1.5F,false) else if (lineAnim["LineTarget"]!!>80) lineAnim["LineTarget"] = 80F else animLine("LineTarget",1.5F,true)
             //DrawTitle
-            FontManager.RainbowFontShader.begin(true,-0.00314514F,0.00314514F,System.currentTimeMillis() % 10000 / 10000F).use {
+            RainbowFontShader.begin(true,-0.00314514F,0.00314514F,System.currentTimeMillis() % 10000 / 10000F).use {
                 KevinClient.fontManager.font35!!.drawString("Kevin",x1+10F,y1+6.5F,0)
             }
             //DrawModeButton
@@ -937,7 +937,7 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                     drawModules(ModuleCategory.WORLD,mouseX,mouseY,mouseButton,click,yS,startX,endX)
                 }
                 Target -> {
-                    val targets = KevinClient.moduleManager.getModule("Targets") as Targets
+                    val targets = KevinClient.moduleManager.getModule(Targets::class.java)
                     val buttonList = arrayListOf<Button>()
                     var yO = 1.5F
                     targets.values.forEach{
@@ -1211,15 +1211,15 @@ class ClickGui : Module("ClickGui","Opens the ClickGUI.", category = ModuleCateg
                 Gui -> {
                     when(guiOpen){
                         0 -> {
-                            val capeManager = KevinClient.moduleManager.getModule("CapeManager") as CapeManager
+                            val capeManager = KevinClient.moduleManager.getModule(CapeManager::class.java)
                             drawGuiModuleSetting(capeManager,0F,click,mouseX,mouseY)
                         }
                         1 -> {
-                            val clickGui = KevinClient.moduleManager.getModule("ClickGui") as ClickGui
+                            val clickGui = KevinClient.moduleManager.getModule(ClickGui::class.java)
                             drawGuiModuleSetting(clickGui,0F,click,mouseX,mouseY)
                         }
                         2 -> {
-                            val hudDesigner = KevinClient.moduleManager.getModule("HudDesigner") as HudDesigner
+                            val hudDesigner = KevinClient.moduleManager.getModule(HudDesigner::class.java)
                             drawGuiModuleSetting(hudDesigner,0F,click,mouseX,mouseY)
                         }
                     }

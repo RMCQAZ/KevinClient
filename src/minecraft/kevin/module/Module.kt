@@ -1,6 +1,7 @@
 package kevin.module
 
 import kevin.event.Listenable
+import kevin.hud.element.elements.ConnectNotificationType
 import kevin.hud.element.elements.Notification
 import kevin.main.KevinClient
 import kevin.utils.ClassUtils
@@ -32,7 +33,11 @@ open class Module(var name: String,
                         if(value) 1f else 0.6114514191981f
                     )
                 )
-                KevinClient.hud.addNotification(Notification("${if (value) "Enabled" else "Disabled"} $name"))
+                KevinClient.hud.addNotification(Notification(
+                    "${if (value) "Enabled" else "Disabled"} $name",
+                    "ModuleManager",
+                    if (value) ConnectNotificationType.Connect else ConnectNotificationType.Disconnect
+                ))
             }
             field = value
             if (value) onEnable() else onDisable()

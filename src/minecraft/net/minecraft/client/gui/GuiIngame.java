@@ -946,7 +946,7 @@ public class GuiIngame extends Gui
 
     private void renderPumpkinOverlay(ScaledResolution scaledRes)
     {
-        final AntiBlind antiBlind = (AntiBlind) KevinClient.moduleManager.getModule("AntiBlind");
+        final AntiBlind antiBlind = KevinClient.moduleManager.getModule(AntiBlind.class);
 
         if(antiBlind.getState() && antiBlind.getPumpkinEffect().get())
             return;

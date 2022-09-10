@@ -74,11 +74,5 @@ class Speed : Module("Speed","Allows you to move faster.", category = ModuleCate
             packet.motionZ = (packet.motionZ * horizontal).toInt()
         }
     }
-    override val values: List<Value<*>>
-    get(){
-        val valueList = arrayListOf<Value<*>>()
-        valueList.addAll(super.values)
-        speeds.forEach { valueList.addAll(it.values) }
-        return valueList.toList()
-    }
+    override val values: List<Value<*>> = super.values.toMutableList().also { list -> speeds.forEach { speedMode -> list.addAll(speedMode.values) } }
 }

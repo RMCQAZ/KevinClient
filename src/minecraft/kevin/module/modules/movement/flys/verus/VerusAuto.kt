@@ -1,6 +1,7 @@
 package kevin.module.modules.movement.flys.verus
 
 import kevin.event.*
+import kevin.hud.element.elements.ConnectNotificationType
 import kevin.hud.element.elements.Notification
 import kevin.main.KevinClient
 import kevin.module.BooleanValue
@@ -208,12 +209,12 @@ object VerusAuto : FlyMode("VerusAuto") {
             mc.gameSettings.keyBindSneak.pressed = false
 
         if (verusState == 1&&mc.thePlayer.posY < playerY) {
-            KevinClient.hud.addNotification(Notification("Try fake ground damage boost!"),"Fly")
+            KevinClient.hud.addNotification(Notification("Try fake ground damage boost!", "Fly", ConnectNotificationType.Warn))
             verusState = 3
             mc.thePlayer.speedInAir = .02F
         }
         if (verusState == 1&&mc.thePlayer.posY > playerY&&mc.thePlayer.onGround) {
-            KevinClient.hud.addNotification(Notification("Boost failed!"),"Fly")
+            KevinClient.hud.addNotification(Notification("Boost failed!", "Fly", ConnectNotificationType.Error))
             mc.thePlayer.speedInAir = .02F
             verusState = 2
             repeat(20){verusTimer.update()}

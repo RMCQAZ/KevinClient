@@ -108,10 +108,7 @@ public class BakedQuad implements IVertexProducer
         return aint;
     }
 
-    public void pipe(IVertexConsumer p_pipe_1_)
-    {
-        Reflector.callVoid(Reflector.LightUtil_putBakedQuad, p_pipe_1_, this);
-    }
+    public void pipe(IVertexConsumer p_pipe_1_) {}
 
     private static TextureAtlasSprite getSpriteByUv(int[] p_getSpriteByUv_0_)
     {

@@ -11,7 +11,7 @@ object AAC5Fast : SpeedMode("AAC5Fast") {
         if (!MovementUtils.isMoving) return
         if (mc.thePlayer.isInWater || mc.thePlayer.isInLava || mc.thePlayer.isOnLadder || mc.thePlayer.isInWeb) return
         if (mc.thePlayer.onGround) {
-            val strafe = KevinClient.moduleManager.getModule("Strafe") as Strafe
+            val strafe = KevinClient.moduleManager.getModule(Strafe::class.java)
             if (strafe.state && strafe.allDirectionsJumpValue.get()) {
                 val yaw = mc.thePlayer.rotationYaw
                 mc.thePlayer.rotationYaw = strafe.getMoveYaw()

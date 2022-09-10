@@ -10,6 +10,7 @@ import kevin.module.IntegerValue
 import kevin.module.ListValue
 import kevin.module.modules.render.ESP
 import kevin.utils.*
+import kevin.utils.render.shader.shaders.RainbowShader
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
@@ -210,7 +211,7 @@ class Radar(x: Double = 5.0, y: Double = 130.0) : Element(x, y) {
 
                 if (triangleMode) {
                     if (useESPColorsValue.get()) {
-                        val color = (KevinClient.moduleManager.getModule("ESP") as ESP).getColor(entity)
+                        val color = (KevinClient.moduleManager.getModule(ESP::class.java)).getColor(entity)
 
                         GL11.glColor4f(color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, 1.0f)
                     } else {
@@ -225,7 +226,7 @@ class Radar(x: Double = 5.0, y: Double = 130.0) : Element(x, y) {
 
                     GL11.glEnd()
                 } else {
-                    val color = (KevinClient.moduleManager.getModule("ESP") as ESP).getColor(entity)
+                    val color = (KevinClient.moduleManager.getModule(ESP::class.java)).getColor(entity)
 
                     worldRenderer.pos(((positionRelativeToPlayer.x / viewDistance) * size).toDouble(), ((positionRelativeToPlayer.y / viewDistance) * size).toDouble(), 0.0)
                         .color(color.red / 255.0f, color.green / 255.0f,

@@ -9,6 +9,7 @@ import kevin.module.modules.movement.flys.ncp.OldNCP
 import kevin.module.modules.movement.flys.matrix.Matrix
 import kevin.module.modules.movement.flys.matrix.NewMatrix
 import kevin.module.modules.movement.flys.matrix.NewMatrixClip
+import kevin.module.modules.movement.flys.ncp.NCPPacket
 import kevin.module.modules.movement.flys.other.Teleport
 import kevin.module.modules.movement.flys.vanilla.Creative
 import kevin.module.modules.movement.flys.vanilla.Vanilla
@@ -25,6 +26,7 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
         AAC5,
         Teleport,
         VerusAuto,
+        NCPPacket,
         NCPFly,
         OldNCP,
         Matrix, // from FDP
@@ -93,13 +95,7 @@ class Fly : Module("Fly","Allow you fly", Keyboard.KEY_F,ModuleCategory.MOVEMENT
     @EventTarget fun onPacket(event: PacketEvent) = nowMode.onPacket(event)
     @EventTarget fun onMove(event: MoveEvent) = nowMode.onMove(event)
 
-    override val values: List<Value<*>>
-    get() {
-        val valueList = arrayListOf<Value<*>>()
-        valueList.addAll(super.values)
-        flys.forEach { valueList.addAll(it.values) }
-        return valueList.toList()
-    }
+    override val values: List<Value<*>> = super.values.toMutableList().also { list -> flys.forEach { flyMode -> list.addAll(flyMode.values) } }
 
     override val tag: String
         get() = "${mode.get()}${if (nowMode.tagV!=null) "(${nowMode.tagV})" else ""}"

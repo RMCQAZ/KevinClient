@@ -194,6 +194,6 @@ public class ChunkCacheOF implements IBlockAccess
 
     public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default)
     {
-        return Reflector.callBoolean(this.chunkCache, Reflector.ForgeChunkCache_isSideSolid, pos, side, _default);
+        return false;
     }
 }

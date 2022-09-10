@@ -37,7 +37,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
 
     public void renderTileEntityAt(TileEntityChest te, double x, double y, double z, float partialTicks, int destroyStage)
     {
-        final Chams chams = (Chams) KevinClient.moduleManager.getModule("Chams");
+        final Chams chams = KevinClient.moduleManager.getModule(Chams.class);
 
         if (chams.getState() && chams.getChestsValue().get()) {
             GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);

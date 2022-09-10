@@ -73,7 +73,7 @@ class BlockESP : Module("BlockESP", "Allows you to see a selected block through 
     @EventTarget
     fun onRender3D(event: Render3DEvent?) {
         synchronized(posList) {
-            val teams = KevinClient.moduleManager.getModule("Teams") as Teams
+            val teams = KevinClient.moduleManager.getModule(Teams::class.java)
             for (blockPos in posList) {
                 val color = if (teams.bedCheckValue.get()&&blockPos in teams.teamBed) Color.green else if (colorRainbow.get()) rainbow() else Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get())
                 when (modeValue.get().toLowerCase()) {

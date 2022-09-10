@@ -63,55 +63,15 @@ public abstract class LayerArmorBase<T extends ModelBase> implements LayerRender
             t.setModelAttributes(this.renderer.getMainModel());
             t.setLivingAnimations(entitylivingbaseIn, p_177182_2_, p_177182_3_, partialTicks);
 
-            if (Reflector.ForgeHooksClient.exists())
-            {
-                t = this.getArmorModelHook(entitylivingbaseIn, itemstack, armorSlot, t);
-            }
-
             this.setModelPartVisible(t, armorSlot);
             boolean flag = this.isSlotForLeggings(armorSlot);
 
             if (!Config.isCustomItems() || !CustomItems.bindCustomArmorTexture(itemstack, flag ? 2 : 1, (String)null))
             {
-                if (Reflector.ForgeHooksClient_getArmorTexture.exists())
-                {
-                    this.renderer.bindTexture(this.getArmorResource(entitylivingbaseIn, itemstack, flag ? 2 : 1, (String)null));
-                }
-                else
-                {
-                    this.renderer.bindTexture(this.getArmorResource(itemarmor, flag));
-                }
+                this.renderer.bindTexture(this.getArmorResource(itemarmor, flag));
             }
 
-            if (Reflector.ForgeHooksClient_getArmorTexture.exists())
-            {
-                if (ReflectorForge.armorHasOverlay(itemarmor, itemstack))
-                {
-                    int j = itemarmor.getColor(itemstack);
-                    float f3 = (float)(j >> 16 & 255) / 255.0F;
-                    float f4 = (float)(j >> 8 & 255) / 255.0F;
-                    float f5 = (float)(j & 255) / 255.0F;
-                    GlStateManager.color(this.colorR * f3, this.colorG * f4, this.colorB * f5, this.alpha);
-                    t.render(entitylivingbaseIn, p_177182_2_, p_177182_3_, p_177182_5_, p_177182_6_, p_177182_7_, scale);
-
-                    if (!Config.isCustomItems() || !CustomItems.bindCustomArmorTexture(itemstack, flag ? 2 : 1, "overlay"))
-                    {
-                        this.renderer.bindTexture(this.getArmorResource(entitylivingbaseIn, itemstack, flag ? 2 : 1, "overlay"));
-                    }
-                }
-
-                GlStateManager.color(this.colorR, this.colorG, this.colorB, this.alpha);
-                t.render(entitylivingbaseIn, p_177182_2_, p_177182_3_, p_177182_5_, p_177182_6_, p_177182_7_, scale);
-
-                if (!this.skipRenderGlint && itemstack.hasEffect() && (!Config.isCustomItems() || !CustomItems.renderCustomArmorEffect(entitylivingbaseIn, itemstack, t, p_177182_2_, p_177182_3_, partialTicks, p_177182_5_, p_177182_6_, p_177182_7_, scale)))
-                {
-                    this.renderGlint(entitylivingbaseIn, t, p_177182_2_, p_177182_3_, partialTicks, p_177182_5_, p_177182_6_, p_177182_7_, scale);
-                }
-
-                return;
-            }
-
-            Renderer renderer =(Renderer) KevinClient.moduleManager.getModule("Renderer");
+            Renderer renderer = KevinClient.moduleManager.getModule(Renderer.class);
             if (renderer.getState()) this.alpha = renderer.getNoArmor().get() ? 0F : 1F;
 
             switch (itemarmor.getArmorMaterial())
@@ -250,7 +210,7 @@ public abstract class LayerArmorBase<T extends ModelBase> implements LayerRender
         }
 
         String s2 = String.format("%s:textures/models/armor/%s_layer_%d%s.png", s1, s, this.isSlotForLeggings(p_getArmorResource_3_) ? 2 : 1, p_getArmorResource_4_ == null ? "" : String.format("_%s", p_getArmorResource_4_));
-        s2 = Reflector.callString(Reflector.ForgeHooksClient_getArmorTexture, p_getArmorResource_1_, p_getArmorResource_2_, s2, p_getArmorResource_3_, p_getArmorResource_4_);
+        s2 = null;
         ResourceLocation resourcelocation = ARMOR_TEXTURE_RES_MAP.get(s2);
 
         if (resourcelocation == null)

@@ -98,7 +98,8 @@ class SuperSpammer : Module("SuperSpammer","Spams the chat with given messages."
     }
     private var lastLength = RandomUtils.nextInt(lastMinLength.get(),lastMaxLength.get())
 
-    private val startMode = ListValue("StartMode", arrayOf("None","/shout",".","@"),"None")
+    private val startMode = ListValue("Prefix", arrayOf("None","/shout",".","@","!","Custom"),"None")
+    private val customPrefix = TextValue("CustomPrefix", "")
     private val firstLeft = TextValue("RandomCharacterAtFirstLeft","[")
     private val firstRight = TextValue("RandomCharacterAtFirstRight","]")
     private val lastLeft = TextValue("RandomCharacterAtLastLeft","[")
@@ -118,10 +119,12 @@ class SuperSpammer : Module("SuperSpammer","Spams the chat with given messages."
         //if (event.eventState == UpdateState.OnUpdate) return
 
         val mode = modeValue.get()
-        val start = when(startMode.get()){
+        val start = when(startMode.get()) {
             "/shout" -> "/shout "
             "." -> ".say ."
             "@" -> "@"
+            "!" -> "!"
+            "Custom" -> customPrefix.get()
             else -> ""
         }
         val first = if (randomCharacterAtFirst.get()) "$start${firstLeft.get()}${RandomUtils.randomString(firstLength)}${firstRight.get()}" else start
@@ -164,7 +167,7 @@ class SuperSpammer : Module("SuperSpammer","Spams the chat with given messages."
                     lastMode = mode
                 }
                 if (spammerList.isNotEmpty()) mc.thePlayer.sendChatMessage(if (customNoRandomV.get()) "$start${spammerList[sentencesNumber]}" else "$first${spammerList[sentencesNumber]}$last")
-                if (sentencesNumber < spammerList.size - 1) sentencesNumber += 1 else if (autoDisableV.get()) KevinClient.moduleManager.getModule(this.name)?.toggle() else sentencesNumber = 0
+                if (sentencesNumber < spammerList.size - 1) sentencesNumber += 1 else if (autoDisableV.get()) KevinClient.moduleManager.getModuleByName(this.name)?.toggle() else sentencesNumber = 0
             }
             msTimer.reset()
             delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())

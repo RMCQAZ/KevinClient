@@ -3,6 +3,7 @@ package kevin.module.modules.misc
 import kevin.event.EventTarget
 import kevin.event.UpdateEvent
 import kevin.event.WorldEvent
+import kevin.hud.element.elements.ConnectNotificationType
 import kevin.hud.element.elements.Notification
 import kevin.main.KevinClient
 import kevin.module.BooleanValue
@@ -29,7 +30,7 @@ class KillerDetector : Module("KillerDetector","Detect who has a sword in his ha
             if (e.inventory.getCurrentItem()?.item is ItemSword){
                 killer = e
                 when(messageMode.get()){
-                    "Notification" -> KevinClient.hud.addNotification(Notification("Killer is ${e.name}!"),"KillerDetector")
+                    "Notification" -> KevinClient.hud.addNotification(Notification("Killer is ${e.name}!", "KillerDetector", ConnectNotificationType.Warn))
                     "Chat" -> ChatUtils.messageWithStart("[KillerDetector] §cKiller is ${e.name}!")
                 }
                 if (autoSay.get()) mc.thePlayer.sendChatMessage("is ${e.name}")

@@ -25,6 +25,7 @@ public class FileManager extends MinecraftInstance {
     public final File via = new File(dir,"Via");
     public final FileConfig modulesConfig = new ModulesConfig(new File(dir, "modules.json"));
     public final FileConfig hudConfig = new HudConfig(new File(dir, "hud.json"));
+    public final FileConfig bindCommandConfig = new BindCommandConfig(new File(dir, "bindCommand.json"));
     public final File altsFile = new File(dir,"accounts.json");
     public final File adminNamesFile = new File(dir,"AdminNames.txt");
 

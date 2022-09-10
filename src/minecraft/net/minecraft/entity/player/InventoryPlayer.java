@@ -693,7 +693,7 @@ public class InventoryPlayer implements IInventory
         else
         {
             ItemStack itemstack = this.getStackInSlot(this.currentItem);
-            AutoTool autoTool = (AutoTool) KevinClient.moduleManager.getModule("AutoTool");
+            AutoTool autoTool = KevinClient.moduleManager.getModule(AutoTool.class);
             if (autoTool.getState()&&autoTool.getSilentValue().get()&&autoTool.getNowSlot()!=this.currentItem){
                 itemstack = this.getStackInSlot(autoTool.getNowSlot());
             }

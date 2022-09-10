@@ -8,7 +8,7 @@ import kevin.main.KevinClient
 import kevin.module.FloatValue
 import kevin.module.IntegerValue
 import kevin.module.ListValue
-import kevin.utils.FontManager
+import kevin.font.RainbowFontShader
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.RenderHelper
@@ -105,7 +105,7 @@ class Armor(x: Double = -8.0, y: Double = 57.0, scale: Float = 1F,
                 }
             }
 
-            FontManager.RainbowFontShader.begin(showDamageRainbow,if (rainbowX.get() == 0.0F) 0.0F else 1.0F / rainbowX.get(), if (rainbowY.get() == 0.0F) 0.0F else 1.0F / rainbowY.get(),System.currentTimeMillis() % 10000 / 10000F).use {
+            RainbowFontShader.begin(showDamageRainbow,if (rainbowX.get() == 0.0F) 0.0F else 1.0F / rainbowX.get(), if (rainbowY.get() == 0.0F) 0.0F else 1.0F / rainbowY.get(),System.currentTimeMillis() % 10000 / 10000F).use {
                 KevinClient.fontManager.font35!!.drawStringWithShadow(damageText,x+20F,y+6F,color)
             }
 

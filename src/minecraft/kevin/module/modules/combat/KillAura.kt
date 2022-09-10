@@ -9,6 +9,8 @@ import kevin.module.modules.misc.AntiShop
 import kevin.module.modules.misc.HideAndSeekHack
 import kevin.module.modules.misc.Teams
 import kevin.module.modules.movement.Fly
+import kevin.module.modules.player.Blink
+import kevin.module.modules.render.FreeCam
 import kevin.module.modules.world.Scaffold
 import kevin.utils.*
 import net.minecraft.client.gui.inventory.GuiContainer
@@ -66,7 +68,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
     private val targetModeValue = ListValue("TargetMode", arrayOf("Single", "Switch", "Multi"), "Switch")
 
     // Bypass
-    private val swingValue = BooleanValue("Swing", true)
+    private val swingValue = ListValue("SwingMode", arrayOf("Normal", "Packet", "OFF"), "Normal")
     private val keepSprintValue = BooleanValue("KeepSprint", true)
     private val scaffoldCheck = BooleanValue("ScaffoldCheck", true)
 
@@ -136,7 +138,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
     private val limitedMultiTargetsValue = IntegerValue("LimitedMultiTargets", 0, 0, 50)
 
     // Visuals
-    private val markValue = BooleanValue("Mark", true)
+    private val markValue = ListValue("Mark", arrayOf("Off", "LiquidBounce", "Jello"), "LiquidBounce")
     private val fakeSharpValue = BooleanValue("FakeSharp", true)
 
     /**
@@ -425,10 +427,22 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
             return
         }
 
-        target ?: return
+        if (sTarget != null) when(markValue.get()) {
+            "LiquidBounce" -> {
+                if (targetModeValue.get().equals("Multi", ignoreCase = true))
+                    discoveredTargets.forEach { RenderUtils.drawPlatform(it, Color(37, 126, 255, 70)) }
+                else
+                    RenderUtils.drawPlatform(sTarget, if (hitable) Color(37, 126, 255, 70) else Color(255, 0, 0, 70))
+            }
+            "Jello" -> {
+                if (targetModeValue.get().equals("Multi", ignoreCase = true))
+                    discoveredTargets.forEach { RenderUtils.drawCircle(it, -1.0, Color(255,255,255), true) }
+                else
+                    RenderUtils.drawCircle(sTarget, -1.0, Color(255,255,255), true)
+            }
+        }
 
-        if (markValue.get() && !targetModeValue.get().equals("Multi", ignoreCase = true))
-            RenderUtils.drawPlatform(target, if (hitable) Color(37, 126, 255, 70) else Color(255, 0, 0, 70))
+        target ?: return
 
         if (currentTarget != null && attackTimer.hasTimePassed(attackDelay) &&
             (currentTarget !is EntityLivingBase || (currentTarget as EntityLivingBase).hurtTime <= hurtTimeValue.get())) {
@@ -451,6 +465,13 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         updateHitable()
     }
 
+    private fun doSwing() {
+        when(swingValue.get()) {
+            "Normal" -> mc.thePlayer.swingItem()
+            "Packet" -> mc.netHandler.addToSendQueue(C0APacketAnimation())
+        }
+    }
+
     /**
      * Attack enemy
      */
@@ -462,7 +483,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
 
         // Settings
         val failRate = failRateValue.get()
-        val swing = swingValue.get()
+        val swing = !(swingValue equal "OFF")
         val multi = targetModeValue.get().equals("Multi", ignoreCase = true)
         val openInventory = aacValue.get() && (mc.currentScreen) is GuiContainer
         val failHit = failRate > 0 && Random().nextInt(100) <= failRate
@@ -475,7 +496,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
 
         if (!hitable || failHit) {
             if (swing && (fakeSwingValue.get() || failHit))
-                thePlayer.swingItem()
+                doSwing()
         } else {
             // Attack
             if (!multi) {
@@ -583,11 +604,11 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
                 if (player.isClientFriend() && !LiquidBounce.moduleManager[NoFriends::class.java].state)
                     return false
  **/
-                val antiShop = KevinClient.moduleManager.getModule("AntiShop") as AntiShop
+                val antiShop = KevinClient.moduleManager.getModule(AntiShop::class.java)
                 if (antiShop.isShop(entity))
                     return false
 
-                val teams = KevinClient.moduleManager.getModule("Teams") as Teams
+                val teams = KevinClient.moduleManager.getModule(Teams::class.java)
                 return !teams.state || !teams.isInYourTeam(entity)
             }
 
@@ -611,7 +632,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         KevinClient.eventManager.callEvent(AttackEvent(entity))
 
         // Attack target
-        if (swingValue.get()) thePlayer.swingItem()
+        doSwing()
 
         mc.netHandler.addToSendQueue(C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK))
 
@@ -630,7 +651,7 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
         }
 
         // Extra critical effects
-        val criticals = KevinClient.moduleManager.getModule("Criticals") as Criticals
+        val criticals = KevinClient.moduleManager.getModule(Criticals::class.java)
 
         for (i in 0..2) {
             // Critical Effect
@@ -770,9 +791,11 @@ class KillAura : Module("KillAura","Automatically attacks targets around you.", 
      */
     private val cancelRun: Boolean
         inline get() = mc.thePlayer!!.isSpectator || !isAlive(mc.thePlayer!!)
-                || KevinClient.moduleManager.getModule("Blink")!!.state || KevinClient.moduleManager.getModule("FreeCam")!!.state || (KevinClient.moduleManager.getModule("TP")!!.state&&(KevinClient.moduleManager.getModule("TP") as TP).mode.get().equals("AAC",true))
-                || (KevinClient.moduleManager.getModule("Fly")!!.state&&(KevinClient.moduleManager.getModule("Fly")!! as Fly).mode.get().equals("Vulcan",true))
-                || (scaffoldCheck.get()&&KevinClient.moduleManager.getModule("Scaffold")!!.state)
+                || KevinClient.moduleManager.getModule(Blink::class.java).state
+                || KevinClient.moduleManager.getModule(FreeCam::class.java).state
+                || (KevinClient.moduleManager.getModule(TP::class.java).state&&(KevinClient.moduleManager.getModule(TP::class.java)).mode.get().equals("AAC",true))
+                || (KevinClient.moduleManager.getModule(Fly::class.java).state&&(KevinClient.moduleManager.getModule(Fly::class.java)).mode.get().equals("Vulcan",true))
+                || (scaffoldCheck.get()&&KevinClient.moduleManager.getModule(Scaffold::class.java).state)
 
     /**
      * Check if [entity] is alive
